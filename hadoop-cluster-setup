@@ -177,10 +177,8 @@ Create internet gateway  -> attach VPC
 Task 3:
 ------
 User name,Password,Access key ID,Secret access key,Console login link
-task3_user1,,acceskey,secretjey/QIC,https://426306585037.signin.aws.amazon.com/console
 
 User name,Password,Access key ID,Secret access key,Console login link
-task3_user2,,accesskey,secketkey,https://426306585037.signin.aws.amazon.com/console
 
 
 Task 2:
