@@ -1,0 +1,139 @@
+java 14 version:
+----------------
+1.switch expression [standard]
+2.Pattern Matching for instance of operator[preview]
+3.Helpful NullPointerException
+4.Records[Preview]
+5.Text Block[Preview}
+
+
+
+1.switch expression [standard]
+================================
+
+in java 13 version,we must use "yield keyword" in place of break to return value from swtich.
+
+In java 14 version,switch expression is standardized,which includes yield statement in lambda expression.
+
+
+public class Test {
+	public static void main(String[] args) {
+		var day = "SUNDAY";
+		var result = switch (day) {
+		case "MONDAY", "TUESDAY", "WEDNESDAY", "THRUSDAY", "Friday" -> "WEEKDAY";
+		case "SATURDAY", "SUNDAY" -> "WEEKEND";
+		default -> {
+			if (day.isEmpty()) {
+				yield "value of switch parameter is EMPTY,Please check the value";
+			} else {
+				yield "not a valid day " + day;
+			}
+		}
+		};
+		
+		System.out.println(result);
+
+	}
+}
+
+
+2.Pattern Matching for instance of operator[preview]
+====================================================
+we no need to type cast after instance of Operator,with this feature we just need to provide variable name , internally it will type cast.
+This is preview feature in java 14, standa in java 16.
+
+
+public class Test {
+	public static void main(String[] args) {
+	    Object obj = new String("welcome to java");
+	    if(obj instanceof String str) {
+	    	str.toUpperCase();
+	    }
+
+	}
+}
+
+
+	
+3.Helpful NullPointerException
+================================
+   Generally when we got null pointer exception we donot get any messages apart from exception name.
+   from java 14 onwards when code raise NullPointerException then it show some ,message about null pointerException.
+   for this we need to set below vm parameter.
+   -XX:+ShowCodeDetailsInExceptionMessages
+	   public class Test {
+		public static void main(String[] args) {
+		   String s=null;
+		   s.toUpperCase();
+		}
+	  }
+
+     
+   java  -XX:+ShowCodeDetailsInExceptionMessages Test
+   
+   
+   Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String.toUpperCase()" because "s" is null
+	at Test.main(Test.java:5)
+
+
+4.Records[Preview]
+===================
+in Java applications, we ae able to use java bean/POJO classes as Data carrer from one layer to another layer.
+  for java bean class we have to write.
+  1.We have to delcare a class with public access ,non abstract,non-final.
+  2.in java bean/POJO class we have to declare private properties.
+  3.in java bean/POJO class we have to write setter/getters for private properties
+  4.As per requirement we can override the equals(),hashcode(),toString() methods.
+  
+   public class Employee{
+      private int eno;
+	  private String ename;
+	  private double sal;
+	  private String eaddr;
+	  
+	  //setters,getter, constructor, toString(),hashcode(),equals()
+   }
+  
+  
+from jav 14 onwards we can use Record class alternatives for java Bean/POJO.
+
+In Records we have declare all varibles local variable but internally ,Compiler will provide all setter()/getter()/hashcode()/equals(),toString()
+
+ex: 
+
+public record Employee(int eid,String ename,double sal) {
+
+}
+	note:
+
+	i.After compilation  every record class convered to final class.
+	ii.This converted class extends java.lang.Record class.
+	iii.Every record contains a parametrized constrcutor.
+	iv.in record, all parameters are converted as private and final, 
+	  we are unable to accesss them in out side of the record and we are unable to modify the values.
+    v .in record ,each and every property a separate accessor method provided, where accessor methods are same as property name,it will not follow 
+       getXXX() method convention. 	
+	vi.toString(), equals() and hashcode() method automatically overridden in record class.
+	vii.Instance variables are not allowed inside record body,static variables are allowed.
+	viii.we can same methods in records like predefined methods.
+	ix.we can define own custructor in records.we should call cannonical constructor direct from our constructor with this().
+
+  Compact Constructor:
+  compact constructor is constructor,it will be declared with the parameters and without parameters, it will be executed just before executing 
+     cannonical constrcutor and it will be used mainly for data validation purpose.
+	 
+	  record Math(int fv,int sv){
+	     public Math{
+		      sop("executed before cannonical constructor");
+		 } 
+		 public void add(){
+		 sop(fv+sv);
+		 }
+
+	  }
+
+
+  
+
+
+
