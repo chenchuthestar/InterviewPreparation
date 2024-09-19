@@ -1,0 +1,51 @@
+Docker:
+------
+$docker ps   ->  to check running containers
+$docker ps -a   -> last run container 
+$docker run image_name   -> start  a new container
+        1.requeest to docker server
+		2.server will go and check in local repository for image 
+		3.if not found in  local repository then go to remote repository (default is dockerhub)
+		4.download the image
+		5.image is executed and create container.
+
+$docker images   ->  check list of local images
+$docker pull image_name   ->  pull the image from remote reposotory
+$docker rm <name/id of container>  -> remove the container
+$docker rm -f <name/id of container> -> forcely remove the container
+$docker ps -a -q  -> give list of container ids
+$docker rm $(docker ps -a -q)   ->  remove all containers at a time.
+$docker pull nginx:1.14-perl   ->  pull from specific tag
+$docker run -d nginx:1.14-perl  -> run docker image with specify tag
+   -d  -> run in background
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

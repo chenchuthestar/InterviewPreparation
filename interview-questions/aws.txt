@@ -1,0 +1,102 @@
+Q)The Difference Between IaaS, Paas, and SaaS ?
+	IaaS: 
+		Infrastructure as a Service or IaaS is the most affordable cloud computing service. As the name suggests, it provides the infrastructure for 
+		developing your web app/website. All the networks, servers, of course, virtualization and any infrastructural requirement can be fulfilled by IaaS. 
+		So all you need to do is optimize the website accordingly, manage the data and operate. See, it’s that easy.
+	
+	PaaS:
+		Platform as a Service or PaaS is another service of cloud computing which provides relatively more services than Infrastructure as a Service.
+		According to the name, it provides performance for the user for a respective task.
+		It wins the title of the most used services in the debate of IaaS PaaS and SaaS.
+		
+	SaaS:
+		This is a tank service. Why? It provides literally every type of service. From infrastructure to the platform to, 
+		operate it has got you covered. All you need to do is provide the data and relax. Cool isn’t it?
+	
+
+Q)What is auto-scaling?
+        Auto-scaling is a function that allows you to provision and launch new instances whenever there is a demand.
+		It allows you to automatically increase or decrease resource capacity in relation to the demand.	
+Q)What is Ec2 in aws ?
+	Amazon Elastic Compute Cloud (Amazon EC2) provides scalable computing capacity in the Amazon Web Services (AWS) Cloud. 
+	Using Amazon EC2 eliminates your need to invest in hardware up front, so you can develop and deploy applications faster.
+	You can use Amazon EC2 to launch as many or as few virtual servers as you need, configure security and networking, and manage storage.
+	Amazon EC2 enables you to scale up or down to handle changes in requirements or spikes in popularity, reducing your need to forecast traffic.
+	Below are some features: 	
+						Pause and Resume Your Instances
+						High I/O Instance
+						Flexible Storage Options
+						Elastic IP Addresses
+						Enhanced Networking
+Q)Explain Elastic Block Storage?
+	Amazon Elastic Block Store (EBS) is an easy to use, high-performance, block-storage service designed for use with Amazon Elastic Compute Cloud (EC2)
+	for both throughput and transaction intensive workloads at any scale. A broad range of workloads, such as relational and non-relational databases, 
+	enterprise applications, containerized applications, big data analytics engines, file systems, and media workflows are widely deployed on Amazon EBS.
+	
+	Below are benfit:
+			Performance for any workload
+			Highly available and durable
+			Cost-effective
+			Easy to Use
+			Virtually unlimited scale
+			Secure
+Q)Name some of the AWS services that are not region-specific
+	AWS services that are not region-specific are:
+		IAM
+		Route 53
+		Web Application Firewall 
+		CloudFront
+Q) What is S3 in AWS ?
+	Amazon Simple Storage Service (Amazon S3) is an object storage service that offers industry-leading scalability, data availability, security, and performance.
+	This means customers of all sizes and industries can use it to store and protect any amount of data for a range of use cases, such as data lakes, websites, mobile applications,
+	backup and restore, archive, enterprise applications, IoT devices, and big data analytics. Amazon S3 provides easy-to-use management features so you can organize your data and
+	configure finely-tuned access controls to meet your specific business, organizational, and compliance requirements. Amazon S3 is designed for 99.999999999% (11 9's) of durability,
+	and stores data for millions of applications for companies all around the world
+
+Q) What is EMR in AWS ?
+	Amazon EMR is the industry-leading cloud big data platform for processing vast amounts of data using open source tools such as Apache Spark,
+	Apache Hive, Apache HBase, Apache Flink, Apache Hudi, and Presto. Amazon EMR makes it easy to set up, operate, and scale your big data environments by automating time-consuming. 
+	tasks like provisioning capacity and tuning clusters. With EMR you can run petabyte-scale analysis at less than half of the cost of traditional on-premises solutions and over 
+	3x faster than standard Apache Spark. You can run workloads on Amazon EC2 instances, on Amazon Elastic Kubernetes Service (EKS) clusters, or on-premises using EMR on AWS Outposts.
+Q)What is the difference between stopping and terminating an EC2 instance? 
+	While you may think that both stopping and terminating are the same, there is a difference.
+	When you stop an EC2 instance, it performs a normal shutdown on the instance and moves to a stopped state.
+	However, when you terminate the instance, it is transferred to a stopped state, and the EBS volumes attached to
+	it are deleted and can never be recovered.
+	
+	
+Q) What are the different types of EC2 instances based on their costs?
+		The three types of EC2 instances are:
+
+		On-demand Instance :It is cheap for a short time but not when taken for the long term
+		Spot Instance :	It is less expensive than the on-demand instance and can be bought through bidding. 
+		Reserved Instance :	If you are planning to use an instance for a year or more, then this is the right one for you.
+		
+Q) Aws Lambda ?
+    it is a serverless computing services provided by amazon to reduce the configuration of server,OD.
+	this let you run code without provisioning or managing server.it scales automatically and only charge for the time your code is running.
+	 
+    advantages:
+	   1.Zero Server management.
+	   2.Flexible Scaling  
+	   3.No idle capacity (pricing is pay-as-you-go)
+	   
+	 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-function-adapter-aws</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-lambda-java-events</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-lambda-java-core</artifactId>
+            <version>1.1.0</version>
+        </dependency>

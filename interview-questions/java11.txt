@@ -1,0 +1,110 @@
+java 11 features:
+----------------
+1.Runnig java file with single command.
+========================================
+from java 11 onwards ,we can execute java file directly without compilation
+  Ex: java Test.java
+
+   if we provide more than one class with main() in single java file and if we execute that java file then jvm will  search for main() method class 
+   in the order in which have provided from starting point of the file to end point, in which class JVM indentify main() first time then jvm will 
+   treat that class as the actualmain class and jvm will executethat main class.
+   
+   NOTE: still java 11 version provided backward compatability with javac command to compile
+   
+   
+   
+   
+2.New utility methods in String class
+=====================================
+   1.public String repeat(int count);
+            to repeat the given string count number of times.
+			 +ve -> valid value ,repeat number of times.
+			 -ve -> in valid , throws IlligalArgumentException
+			 0 -> valid but no output , new line will be generated
+			 
+   2.public boolean isBlank();
+             return true when after trim , length of string is zero.
+			 
+   3.public String strip();
+            removes spaces starting and ending of string.
+   4.public String stripLeading();
+                 removes spaces starting  of string.
+   5.public String stripTrailing();
+				removes spaces ending of string.
+   6.public Stream<String>  lines();
+               convert given string as stream by deviding the string with \n or \r or \n\r
+			   
+3.Local variable syntax for lambda expression parameter:
+=======================================================
+   with this, we can declare variables with out providing data type explicitly and just by using "var", here type will be 
+calculated on the basis of the provided variable values.
+
+	interface I1
+	{
+		public String m1(int i,int j);
+	}
+
+	I1 i1 =(var i, var j) -> "";
+
+NOTE: We must provide var for all Lambda parameters, not for few lambda parameters.
+
+
+4.Nested base Access control:
+==========================
+Upto Java10 version, in inner classes, if we access private member of any inner class in the respective outer class by using reflection API
+ then we are able to get an exception like  java.lang.IllegalAccessException, but, if we use Java11 version then we will get any 
+exception , because, in JAVA11 version new methods are introduced in java.lang.Class  class like
+		1) public Class getNestHost() : It able to get the enclosed outer class java.lang.Class  object.
+		2) public Class[] getNestMembers(): It will return all nested members in the form of Class[]. 
+		3) public boolean isNestmateOf(): It will check whether a member is nested member or not.
+
+				public class Test {
+					class NestTest {
+						private int count = 10;
+					}
+
+					public static void main(String[] args) throws Exception {
+						Test.NestTest tt = new Test().new NestTest();
+						System.out.println(tt.count);
+
+						java.lang.reflect.Field f = NestTest.class.getDeclaredField("count");
+						f.setInt(tt, 2000);      /// same code will fail here with java 10.
+						System.out.println(tt.count);
+					}
+				}
+				
+	
+
+5.Reading/Writing Strings to and from the Files:
+------------------------------------------------
+Java11 version has provided the following four new methods in java.nio.file.Files class to read data from file and to write data to file.
+
+	 public static Path writeString(Path path, CharSequence csq, OpenOption... options) 	throws IOException
+	 public static Path writeString(Path path, CharSequence csq, Charset cs, OpenOption... 	options) throws IOException 
+     public static String readString(Path path) throws IOException
+	 public static String readString(Path path, Charset cs) throws IOException
+	 
+	 
+	 Path filePath = Paths.get("E:/", "abc/xyz", "welcome.txt");  
+ 	 Files.writeString(filePath, "Welcome to Durga Software Solutions"); 
+     String content = Files.readString(filePath); 
+     System.out.println(content);
+
+
+
+
+6.Collection to an Array :
+--------------------------
+	The java.util.Collection interface contains a new default toArray method which takes an IntFunction argument.
+	This makes it easier to create an array of the right type from a collection:
+	List sampleList = Arrays.asList("Java", "Kotlin");
+	String[] sampleArray = sampleList.toArray(String[]::new);
+	assertThat(sampleArray).containsExactly("Java", "Kotlin");
+	
+	
+7.Java Flight Recorder[JFR]:
+--------------------------
+java Flight Recorder is a profiling tool used to gather diagnostics and profiling data from a 
+running Java application, it is available for only for Paying Users, not for normal Users.
+
+$ java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder MyHelloWorldApp

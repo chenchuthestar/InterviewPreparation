@@ -1,0 +1,47 @@
+Serialization:
+-------------
+1.The process of saving (or) writing state of an object to a file is called serialization
+2.but strictly speaking it is the process of converting an object from java supported form to either network supported form (or) file supported form.
+3.By using FileOutputStream and ObjectOutputStream classes we can achieve serialization process.
+
+De-Serialization:
+----------------
+1.The process of reading state of an object from a file is called DeSerialization
+2.. but strictly speaking it is the process of converting an object from file supported form (or) network supported form to java supported form.
+3.By using FileInputStream and ObjectInputStream classes we can achieve DeSerialization.
+
+Transient keyword:
+-----------------
+1.While performing serialization if we don't want to save the value of a particular variable to meet security constant such type of variable , 
+ then we should declare that variable with "transient" keyword.
+2.. At the time of serialization JVM ignores the original value of transient variable and save default value to the file .
+
+Static VsTransient:
+------------------
+1.static variable is not part of object state hence they won't participate in serialization because of this declaring a static variable as transient there is no
+   use.
+  
+ Transient Vs Final:
+ ------------------
+	final variables will be participated into serialization directly by their values. Hence declaring a final variable as transient there is no use. 
+
+Object graph in serialization:
+-----------------------------
+   1.Whenever we are serializing an object the set of all objects which are reachable from that object will be serialized automatically.
+    This group of objects is nothing but object graph in serialization.
+   2.In object graph every object should be Serializable otherwise we will get runtime exception saying"NotSerializableException.
+
+         import java.io.*;
+	class Dog implements Serializable
+	{
+		Cat c=new Cat();
+	}
+	class Cat implements Serializable
+	{
+		Rat r=new Rat();
+	}
+	class Rat implements Serializable
+	{
+		int j=20;
+	}
+

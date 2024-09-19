@@ -1,0 +1,365 @@
+@Test(expected=NullPointerException.class)
+@Test(timeout=1000)
+
+JUNIT5 vs JUNIT4:
+-----------------
+@BeforeAll  	 @BeforeClass
+@AfterAll 		 @BeforeClass
+@BeforeEach  	 @Before
+@AfterEach       @After
+@Disable	     @Ignore
+@Tag  			 @Category
+assertThrows     expected attribute
+assertTimeOut    timeout attribute
+@ParameterizedTest
+
+
+New in junit 5:
+@Nested   -> nested tests
+@RepeatedTest  -> executed tests multiple times.
+
+Junit5 Annotations:
+------------------
+@Test @ParameterizedTest   @RepeatedTest   @TestFactory
+@TestTemplate @TestMethodOrder @TestInstance     @DisplayName
+@DisplayNameGeneration  @BeforeEach  @AfterEach
+@BeforeAll  @AfterAll   @Nested
+@Tag  @Disabled   @Timeout  @ExtendWith    @RegisterExtension
+@TempDir
+@CsvSource
+@ValueSource
+@CsvFileSource(resources="/data.csv","numLinesToSkip=1)
+@MethodSource
+@RepeatedTest
+
+TO test our actual business code we need  to define one class 	that we called as Test Case (Test class)
+To define one test case we should use 
+  1.junit 5 annotation 
+  2.assert api
+ Junit 5.x use jupitor Engine and junit 4.x  use junit vintage Engine 
+
+ Here Junit Runtime is provided with 3 components and one plat form runtime. 
+     1.junit Vintage Engine (Junit 5 API)
+	 2.Junit Vitage Engine(jnut 4 and 3 APIs)
+	 3.Integration (TestNg,Mock...etc)
+	 
+ ==> For our test cases (class+method) object creation and test-method calling do by Junit platform runitme.
+      <dependency>
+	     <groupId>org.junit.jupiter</groupId>
+		 <artiactId>junit-jupitor-engine</artifactId>
+		 <version>5.6.2</version>
+		 <scope>test</scope>
+	  </dependency>
+	  
+	-----Writing test case-----------
+	1.Create one Maven Project
+	2.open pom.xml and  below dependeny
+		 <dependency>
+			 <groupId>org.junit.jupiter</groupId>
+			 <artiactId>junit-jupitor-engine</artifactId>
+			 <version>5.6.2</version>
+			 <scope>test</scope>
+		  </dependency>
+     3.Create a Testcase (class) under src/test/java
+     4.add one method (test method) should be public void 
+     5.Run as  Juit Test	 
+	 
+@TestMethodOrder :
+     We can define  multiple test metods inside Test Case.Those are executed random order by default
+	 We can provide out ouwn order using @TestMethodOrder + @order 
+	 Here we need to provide @order(number)	
+	 
+	 We can use @TestMethodOrder(Alphanumeric.class) for providing test method order.
+	 First sort using 0-9 if same method found then compare then compare A-Z sorting order.
+	 
+ @BeforeEach : to execute any logic onceper test method before starting test method.
+ @AfterEach : toExecte any logic once per test method after finnishig test method.
+ 
+ @BeforeAll :  to Execute any logic once per test case before starting.
+ @AfterAll : to Execute any logic once per test case after finishing.
+ 
+ @DisplayName : this annotation is used to provide 'Readable text' in place of actual method and class names at Junit Console.
+ @Disable : this is used to specify Ignore one test-method while executing test-case (do not execute test method)
+ @RepeatedTest and TestInfo interface:
+       to execute any test method multiple times.
+	   to know the details of test case like class name ,dispaly name,method name,tag name.
+	
+	 
+@Tag : these are used to filter test methods for execution in different Environments
+       Ex:  if we want test export example in production env at sam we wanr delete operation only in development encironment then use tag concept and maven-surface-plugin in pom.xml
+       
+      @Test	
+	  @Tag("prod")
+	  public void testc(){
+	     System.out.println("hello test c");
+	  }
+Q)How to Write Test cases for private methods .
+   1.calling private method from public method.
+   2.Using reflection API
+      Method m= Library.class.getDecaredMethod("myMethodName",Integer.class,Integer.class);   
+	 m.setAccessible(true);
+	 Myclass mc = new MyClass();
+	 int sum=m.invoke(mc,10,20)
+	 assertEquals(40,sum);
+	 
+Q)How to test void methods ?
+   Whenever we mock a void method we do not expect a return value that is why we can only verify whether that method is being called or not.
+       information = new Information(publishing);
+       Person person = ObjectCreator.getPerson();
+       doNothing().when(publishing).publishInformation(person);
+       information.sendInfoForPublishing(person);
+       verify(publishing,times(1)).publishInformation(person);
+	   
+Q)How to test static methods with mockito ?
+
+  Mockito doesnot support for mock static methods.
+  we can use powermock to test static method,power mockito will work with junt 5, so we have to use junit4.
+    PowerMockito.mockStatic(Utils.class);
+		when(Utils.print("Hello")).thenReturn(true);
+		when(Utils.print("Wrong Message")).thenReturn(false);
+		
+		assertTrue(Utils.print("Hello"));
+		assertFalse(Utils.print("Wrong Message"));
+		
+		PowerMockito.verifyStatic(Utils.class, atLeast(2));
+		Utils.print(anyString());
+		
+	   
+=========================================================================*****Mockito************================================================================
+	 it is given to perform unit testing by mockingthe local dependent or external dependent objs.
+	 
+	 MockObjs are for temparary needs ,mostly they will be used in the Unit testing..
+	 These mock  objs created in test methods ot Test cases does not real code.
+	 
+	 Mocking can do in 3 ways
+	    a) Using mock objs/fake obj (provides temparary objects)
+		b)Using Stub obj (providing some functionality for the methods of mock obj like specofying for 
+		                    certain inputs or certain outputs should come)
+		c)Using Spy objects (It is called partial mock obj/Half mock obj that means if u need new 
+		                     functionality to method that will be used.. other wisereal object will be used)				
+		
+		Instead of creating  classes manually toprepare Mok,Stub and spy objects...we ca use mocking framwork avaiable in the market which are capable to generate such classesdynamically at run time as Inmemory classes( this classes are generated in the Jvm of RAM).
+		
+		List of mocking freworks are : Mockito(Popular),JMockito ,EasyMock,PowerMock and etc....
+		
+		
+		<dependency>
+		   <groupId>org.mockito</groupId>
+		   <artifactId>mockito-core</artifactId>
+		   <version>3.6.28</version>
+		   <scope>test</scope>
+		<dependency>
+		
+		
+		
+		
+@SPy and @mock
+				
+		THere are two types of mock frameworks are avaible 
+		  1.Stub based mock framework(Ex: EsayMock)
+		  2.Bytecode manupulation based framework (ex: Powermock)
+		  
+		
+		
+		
+@Mockito vs @InjectMock
+
+
+THere are two types of Mocking Frameworks:
+1.Stub based Mock Framework (EX:EASYMOCK)
+2.Byte COde Manipulation Based Mock Framework(Ex:PowerMock)
+
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+
+Q)What is mockito ?
+	Mocking in Mockito is the way to test the functionality of the class. The mock objects do the mocking process of real service in isolation. These mock objects return the dummy data corresponding to the dummy input passed to the function. The mocking process does not require you to connect to the database or file server to test functionality.
+
+Q)Some of the Mockito annotations  ?
+   @Mock - It is used to create and inject mocked instances.
+   @Spy - It is used to create a real object and spy on the real object.
+   @Captor - It is used to create an ArgumentCaptor.
+   @InjectMocks - It is used to create an object of a class and insert its dependencies.
+  

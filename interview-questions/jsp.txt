@@ -1,0 +1,205 @@
+1. Elements of jsp----> a. Scripting elements ----> 1. Scriptlet <%  %>    2. Expression <%= %>  3.declarative <%! %>
+						b.Directive Elements  ----> 1.include 
+												    2. page --> 1.import 2.session 3.isThreadSafe 4.error page 5.content type 6.buffer 
+												              	7. autoflush 8.language        9.info 10.extend ,11.isELignored
+												    3.taglib 
+						c. action elements -------> <jsp:forward> ,<jsp:include> , <jsp:plugin> <jsp:usebean> ,<jsp:setProperty> ,<jsp:getProperty> ,<jsp:param>,<jsp:params>,<jsp:fallback>
+																						
+Attrubutes in jsp:
+------------------
+1.page 2.request  3.session  4.appliation
+
+EL implicit objects:
+--------------------
+1.page scope  2.request scope 3.session scope  4.application scope  5.param  6.param values   7.coockies  8.pagecontext
+
+jsp implicit objects:
+---------------------
+1.request 2.response  3.session 4.out 5.exception 6. config 7.application  8.page 9.pagecontext 
+
+===========================================================================================================================================
+*** Difference between Include directive and Include action?
+                ---------------------------                                -----------------------
+                     Include directive                                          Include action 				 1
+				---------------------------	                  !            -----------------------
+				                                              !
+1. In Include directive source code of another                !     1. In include action ,output of another page is 
+   page is included. So it is static including.               !        included at runtime, so it is dynamic including.
+2. Include directive can include source code of               !     2. Include action can include output of a servlet.
+   a servlet.                                                 !    
+3. We can't pass express tag as a value to the                !     3. We can pass expression tag asa value to the page
+   file attribute of include directive.                       !        attribute of include action 
+4. If any changes are made in the source code in              !     4. If any changes are made in included page then 
+   the include page then the changes are not included         !        the changes are reflected in output.
+   into source page servlet.                                  !      
+5. Include directive can be added to JSP in html/xml   .      !     5. Include action can be added to JSP in xml system only.
+6. we cannot pass expression tag as value to the file         !     6. If any changes are madein included page then changes are reflected
+  attribute of include directive.							  !        in output.
+  ex:  <%@include file=" "%>								  !       ex:  <%JSP:include page=" "%>
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Q) Difference between Servelet and jsp ?
+  ------------------------------------------------------------------------------------------------------------------------------------------------------------
+  |	     	Servlet																|       Jsp                                                                  |  
+  |----------------------------------------------------------------------------------------------------------------------------------------------------------- 
+  | 1)servlet is a class so if we modify the class then we need to recompile    | 1)jsp is a page so we modify the page them there is                        |
+  |																				|	no need  recompile or reload or restart server.			                 |
+  |                                                                             |                                                                            |
+  |2)servelt technology has not given any seperation at busines and             |2)jsp technology has given seperation blw business and presentation         |
+  |  Presentation logics														|   Logics                                                                   |
+  |																				|			                                                                 | 
+  |3)In servlet business and presentation logic cannot be parallely created     |3)in jsp busines and presentation logic can be parllaly					 |
+  |                    															|                                                                            |
+  |4)In servlet we have only thre implicit object 								| 4)in jsp we have nine implicit objects									 |
+  |		request  ,  response  ,session											|  request,response,session.out,excepton,config,application,page,pagecontext |
+  |-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ 1.Every JSP page will translate into equalvalant servlet page at server side.
+ 2.When fisrt request arraived for the JSP then traslation phase and executon phase are applied on the jsp page.
+ 3.From a second request ,only the service is executed but trasnsalation will not be  done again.
+ 
+							Transalation phase
+			 |---------------------------------------------------------------------------------------
+             |																						|
+    Browser --> first req --> a.jsp (--jsp compiler) -> a_jsp.java (--java compiler)--> a_jsp.class |
+			 |																						|
+	         |----------------------------------------------------------------------------------------
+	                                                                                         |
+																							 |
+																							 |
+																			-------------------------------------
+																		    |        Object Created             |
+																			|		          |					|
+																			|									|		
+																			|		    Initialized				|
+																			|			      | 				|
+																			|				  |					|
+																			|				Service				|
+	                                                                        |									|
+																			|------------------------------------
+	
+	
+  4.A server side ,a jsp transalator convert a jsp page into on implementation class .This is implementation calss is not directly extendng HTTPServlet class but it extends indirectly .
+  
+  5.HTTPJsp page interface has provided three life cycle methods for jsp pages.
+        i. jspInit()
+		ii.JSPDestroy()
+		iii._jspService()
+   6. Among three life cycle methods of jsp,at the time of Writing a JSP page a pgmr can override jspInit() and jspDestroy() methods but not a pgmr cannot override _jspServie.
+   
+   
+  
+  Q)What is the Super class of a Servlet class that is created for a JSP page ?
+       HTTPServlet
+  Q) Canwe send a request to JSP page with other than HTTPProtocal or not?
+      No ,Because the internal servlet class of JSP page extends HTTPServlet and It i will accept only HTTP Protocol request.
+	
+
+
+1. Elements of jsp----> a. Scripting elements ----> 1. Scriptlet <%  %>    2. Expression <%= %>  3.declarative <%! %>
+						b.Directive Elements  ----> 1. include 
+												    2. page --> 1.import 2.session 3.isThreadSafe 4.error page 5.content type 6.buffer  7. autoflush 8.language 9.info 10.extend ,11.isELignored
+												    3.taglib 
+						c. action elements -------> <jsp:forward> ,<jsp:include> , <jsp:plugin> <jsp:usebean> ,<jsp:setProperty> ,<jsp:getProperty> ,<jsp:param>,<jsp:params>,<jsp:fallback>
+
+
+
+scriplet :  1.if to insert some java code in jsp page and we want to run that code for each request to the jsp page then we use scriptlet tag of tag.
+            2.In jsp page we can write the scriplet tag in html/xml syntax.
+			3.At time of translation the java code inserted  in scriplet tag goes to _jspService method.This is _jspService() will be called for each request.
+			4.in jsp page we can write multiple scriplet tag.
+			5.We can define variable in scriplet tag .these variables will be become local variables to _jspService()at translation time.
+			6.We cannot define methods in scriptlet tag because a method cannot be define in another method.
+			
+			 <%
+			   int a=10;
+			  %>
+			
+Expression : 1.This scripting elememt is used for inserting an expression into a jsp page.
+             2.the result of expression will be directly displayed on browser.
+			 3.Every expression tag of jsp will be converted to out.println statement of java at translation time.
+			 4.this ot.println stmt will be inserted ito _jspService().
+			 5.we can write expression tag in two ways called htm/xml syntax
+			 6.Expression tag will also be executed for each request.
+			 <%=
+			   a*b*c;
+			  %>
+			  
+Delcaration :
+          1.This tagis use for creating th global variables and methods in a jsp page.
+		  2.a Declaration tag can be written a jsp page using HTML/XML syntax.
+		  
+				  <%!
+					 int x=100;
+					 public static void m1(){
+					 
+					 }
+				  %>
+				  
+		  3.This methods that are called created in declation tag can be called from scriplet tag or from expression tag.
+		  4.If a method of declaration tag is called from a script or expresion then that methd will be executed fo each request.
+		  
+Q)Can we use jsp implicit objects in declaration tag ?
+     No .The jsp implement objects are only avaiable to that code that goes to _jspServce method.
+    Declaration tag goes toout of _jspServie method ,so we cannot use Jsp implimit objects in declaration tag.
+
+Q)Which scripting element is required to  overrride init and deploy methods of jsp?
+     Delararion tag
+	  <%!
+	     public vois jspUnit(){
+		 }
+		 public void jspDestoy(){
+		 }
+		%>
+		
+
+Jsp Configuration is almost similar to servlet configuration only ,but in place of servlet-class tag ,we write jsp-files tag.
+      <servet>  
+	     <servlet-name>*****</servlet-name>
+		 <jsp-files>/a.jsp</jsp-file>
+	  </servlet>	
+      <servlet-mapping>
+        <servlet-name>***</servlet-name>
+        <url-pattren>/j1</url-pattern>
+      </servlet-mapping>		
+	 
+Directives in JSP:
+-----------------
+ 1.Directive element are given by the JSP specifically to give some translation time instructions to the page translator of JSP.
+ 2.JSP specifications has given three tyoes of directives
+     i.include   ii.page    iii.taglib
+ 3.in a JSP page we can write a directive tag in a html/xml syntax.
+    <%@ directive name attribute /%>
+	
+ include directive:
+   -> this directive tells a jsp transalator about include source code of another page into current page of the current translation.
+      <%@ include file="b.jsp" %>
+   -> In theabove only source code is included but not the response.so it is called static including.
+  page directive:
+      1.import 
+	       -> this attribute tells package names to be imported.
+		   ->In a jsp page ,we can import a package at any place of the jsp ie on top ,bottom,middle
+	  2.session 
+	        -> This attribute is used to either enable or disable in a jsp.
+			-> the default value of this session attribute is true.It means a session is enabled.
+			->At the time of Translation if we want to diable sessio in the JSP then we need to set session=false.
+			->If session is diable in that page,we cannot use an implicit object called session.
+	  3.isThreadSafe
+	       -> This attribute tells a translator that weather internal servlet class should implements single thread model interface or not.
+		   ->the default value of isTHradSafe is "true".It means a translator willnot implement onternalserlvet from single thread model interface.
+		   ->If we set isThreadSafe="false" then  a translator will implement from SingleThreadModel interface.
+		   
+		    <%@page isThreadSafe="true"%>
+	  4.error page 
+	      ->This attribute tells a translator about to whom a request should be forwarded.when an exception is occur in the current Jsp page.
+		  ->If we add error page attribute with page directive then it is called local errorpage setting
+		         <%@page errorPage="b.jsp"%>
+	  5.isErrorPage
+	      -> this attribute  tells a translator weather a jsp pageis acting as an error page ot not .
+         -> The default value of isErrorPage attribute is false .it means by defult a jsp page will not act as an error.
+         -> If we set isErrorPage="true"  then a jsp page will act as Error page.
+		-> If we set isErrorpage="true" then a traslator makes a exception object as available to the internal servlet.
+		 <%page isErrorPage="true"%>
+	
+    

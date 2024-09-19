@@ -1,0 +1,167 @@
+Micro services:
+--------------
+Q)What is Monolithic Architecture? 
+	Monolithic architecture is like a big container in which all the software components of an application are clubbed inside a single package.
+Q) Drawbacks of monolythic application?
+	1)performance issue with  huge database.
+	2)Continuos deployment not possible.
+	3)adapt new technologies not possible.
+	4)over load ide and overload webcontainer.
+	5)excepton propagation  not proper.
+	6)code resuable not there. 
+
+Q)What is microserive archetecute?
+   Micro service is architecutural way to design our application uniquely with  several small modules developed individually,package individually and deployed individually.
+   in individual process
+	i)Highly maintainable and testable.
+	ii)Loosely coupled.
+	iii)Independently deployable
+	iv)Organized around business capabilities
+	v)Owned by a small team.
+	vi)Each service can be developed with any technology.
+Q) Drawbacks of microservices ?
+	1.Increase troubleshoot challanges.
+	2.Increase delay due to remote calls
+	3.Increase the effort for configuration and other services
+	4.Diffucult to maintain transaction safety
+	5.diffucult to move code between services.
+	6.debugging
+  
+Q)Comparision between monolythic and microservice ?
+	parameter       				   monolythic												  microservices
+	-----------						-----------------											  --------------
+	Developement 					develop in single language								each module can develop in different language
+	Testing 						small code change complete testing						Test only that microserivice
+	package							entire application as single war/jar					each service as one jar/war
+	runtime     					entire application as single process					eaach service as different process
+	scalability 					entire application is replicared an multile	services    can scale particular service on multiple  			  
+	                                                                                        servers														
+	code changes 					full rebuild is required								changed service is rebuild
+
+Q) micriservices disadvatanges ?
+   
+Q)saga design pattern ?
+
+
+Q)Microservices design pattern.
+ 
+
+
+
+Q) microservices charactristics:                                        
+
+	1)individual development.                               
+	2)individual deployment.
+	3)individual maintanance.
+	4)individual scaling.
+	5)individual monitoring
+	6)individual database.
+	
+Q)Microservices components
+	Service registry & discovery  -> Erueka server    (@EnableEurekaServer)
+	Client side Load balancer -> Ribbon
+	Cricuit Breaker -> Histrix       Resilince4j 
+	Api gateway -> ZUUL 
+	Config Server -> Github  
+	Logging and trace -> slueth and zipkin 
+	metrics UI -> admin 
+	feign clent -> declarative rest client 
+	Load Balancer -> 
+	Eureka server : 
+			     server.port=1313 , server.servlet.context-path=/EurekaServer eureka.client.fetch-registry=false 						eureka.client.service-url.defaultZone=http://localhost:1313/EurekaServer/eureka eureka.client.register-with-eureka=false
+				
+	Eureka client : eureka.client.service-url.defaultZone=http://localhost:1313/EurekaServer/eureka   (@EnableDiscoveryClient) 
+	      
+	Client side Load Balancer (Ribbon): 
+	
+	Config Server: @EnableConfigServer (spring.cloud.config.server.git.uri=https://github.com/chenchusubbareddy/microservices-sathya.git)
+	Config client: spring.cloud.config.uri=http://localhost:1212/ConfigServer
+	
+	Api gateway : 
+	-----------
+	Load balancing is the process of distributing traffic among different instances of the same application. To create a fault-tolerant system, it's common to run multiple instances of each application. Thus, whenever one service needs to communicate with another, it needs to pick a particular instance to send its request.
+	
+		    @EnableZuulProxy
+			
+			zuul.routes.c.path=/cust/**
+			zuul.routes.c.service-id=CustomerMicro
+
+			zuul.routes.p.path=/plan/**
+			zuul.routes.p.service-id=PlanMicro
+
+			zuul.routes.f.path=/friend**
+			zuul.routes.f.service-id=FriendMicro
+			
+			
+	Cricuit Breaker (Histrix):  @EnableCircuitBreaker
+	     @HystrixCommand(fallbackMethod = "getFriendContactsFallback")
+		 	
+Q)what is cloud native services ?
+	cloud enabled application is an application running on cloud where hardware maintainance is reponsibility of cloud provider.
+	cloud native application is an application running on cloud and taking adantages and facilitiees of cloud.
+	To make spring microservices as cloud native we use spring cloud components and spring cloud netflix components.
+Q) Best practices in microservices ?
+    1) dockerize
+	2) different databases per each services
+
+Q)What is Spring Cloud?
+	Answer: While building a distributed system, there are a few problems that are encountered. They are Configuration Management, Service Discovery, Circuit breakers,
+	and distributed sessions. Spring Boot is a collection of tools that provides solutions to such commonly encountered problems.
+	
+Q)Diffence between @EnableDiscoveryClient vs @EnableEurekaClient ?
+	There are multiple implementations of "Discovery Service" (eureka, consul, zookeeper). @EnableDiscoveryClient lives in spring-cloud-commons and picks the implementation on the classpath. @EnableEurekaClient lives in spring-cloud-netflix and only works for eureka. If eureka is on your classpath, they are effectively the same.
+	
+Q)How many ways we can implement security in Microservices ?
+  
+   1.Spring cloud oauth
+   2.jwt token
+   
+Q) What is Eureka server ?
+	The Eureka server is nothing but a service discovery pattern implementation, where every microservice is registered and a client microservice looks up the Eureka server to get a dependent microservice to get the job done.
+
+	The Eureka Server is a Netflix OSS product, and Spring Cloud offers a declarative way to register and invoke services by Java annotation.	
+	The default port is 8761.
+	
+Q)Api GateWay or ServerSide LoadBalancing or ZUUL server ?
+   To route API requests to the respective service(s).API-Gateway service brings you more benefits. The "Gateway" to send requests to the correct microservice.
+   1.Authentication and Security
+   2.Dynamic Routing and Monitoring
+   3.Static Response handling 
+   4.Rate limiting
+   
+			@EnableZuulProxy
+			zuul.routes.c.path=/cust/**
+			zuul.routes.c.service-id=CustomerMicro
+
+			zuul.routes.p.path=/plan/**
+			zuul.routes.p.service-id=PlanMicro
+
+			zuul.routes.f.path=/friend**
+			zuul.routes.f.service-id=FriendMicro
+Q)Disadvantages of Server-side load balancing ?
+   1.Server side load balancer acts as a single point of failure.
+   2.each microservice will have a separate load balancer, the overall complexity of the system increases and it becomes hard to manage.
+   3.The network latency increases as the number of hops for the request increases from one to two with the load balancer, one to the load balancer and then another from load balancer to the microservice.
+   
+Q)Client side load balancing  Or NetFlix Ribbon ?
+	Load balancer's logic is part of the client itself, it holds the list of servers and decides to which server a particular request must be directed to based on some algorithm. These client side load balancers are also known as software load balancers.
+	
+	Disadvantages:  The load balancer's logic is mixed up with the microservice code.
+	
+	Advantages: 
+	1.Netflix's Ribbon is an Inter Process Communication
+	2.Load balancing: It provides client side load balancing functionality.
+	3.Fault tolerance: It can be used to determine whether the servers are up or not and can also detect those servers that are down and hence, ignore them for sending the further requests.
+	4.Configurable load balancing rules: 
+	 By default ribbon uses RoundRobinRule for distributing requests among servers. In addition to it, it also provides 
+	 AvailabilityFilteringRule and WeightedResponseTimeRule. We can also define our custom rules as per our needs.
+	 It supports multiple protocols like HTTP, TCP, UDP etc.
+	
+Q)What Is a Feign Client?
+	Netflix provides Feign as an abstraction over REST-based calls, by which microservices can communicate with each other, but developers don't have to bother about REST internal details.
+
+Q)JWT token?
+
+Q)solid principles?
+
+

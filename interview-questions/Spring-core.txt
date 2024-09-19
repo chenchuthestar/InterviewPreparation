@@ -1,0 +1,174 @@
+spring features:
+---------------
+	1. Modular framework ,one can choose any module.
+	2. light weight ,we can use pojo classes to develop applications.
+	3. non-invasive , no need extend framework given classes/intetfaces.
+	4. it can easily integrate with other framework.
+	5. provides dependecy injection.
+	6. IOC container.	
+=================================================================================================================================================================
+POJO vs JAVA BEAN vs SPRING BEAN:
+--------------------------------
+	1. POJO class which is directly compiled by java compiler without taking support of jar file in classpath.
+	2. JAVA BEAN :
+		a. Class must public.
+		b. Class must contains default constructor.
+		c. private variables must contain either settter or getter or both.
+		d. can implement atmost Serialiable or Externalizable ( but not others).
+	3. SPRING BEAN : a bean its life cycle maintained by spring container. 
+=================================================================================================================================================================
+can we autowire a prototype under a singleton ?
+
+   When we inject prototype in  singleton , the prototype bean behave as singleton only.(ie only  one object will be created for prototype).
+   TO fox this we need to write below method in prototype.
+   
+   @Autowired
+   private ObjectFactory<PrototypeService> prototypeService;
+   
+   @LookUp
+   public PrototypeService prototypeService(){
+      return  null;
+	 
+   }
+   At runtime spring will override this method to return the prototype obj.
+   
+=================================================================================================================================================================
+Spring container:
+----------------
+The Spring IoC container is at the core of the Spring Framework. The container will create the objects, wire them together, configure them, and manage their complete life cycle from creation till destruction. The Spring container uses dependency injection (DI) to manage the components that make up an application.
+it is a class which provides runtime support for other classes.
+	BeanFactory          ApplicationContext
+	XMLBeanFactory	     ClassPathXmlApplicationContext
+					     FileSystemXmlApplicationContext
+					     XmlWebApplicationContext
+=================================================================================================================================================================						 
+BeanFactory  vs ApplicationContext 
+---------------------------------
+	1.Lazy load singleton beans          1.Early load singleton objects
+	2.supports singleton & prototype   	 2.support all scopes
+	3.Not support component scan		 3.support component scan
+	4.set BeanPostProcessor explicit     4.no need to set explict just configure in spring xml
+	5.not support txs,security           5.support txs,security
+	6.explicit BFPP                      6.just configure BFPP in spring xml
+
+==============================================================================================================================						 
+What is component scan?
+The process of discovering Spring Components within classpath of the application is called Component Scanning in Spring. Later spring will use them to add in application context.
+
+The classes annotated with @Component, @Controller, @Service, @Repository, @Configuration, @RestController etc will be treated as Spring Components
+AutoWiring:
+----------
+	combining spring beans with spring container is called autowiring.
+	Autowiring feature of spring framework enables you to inject the object dependency implicitly
+	autowiring not possible for colletion type dependecies.
+		By Name
+		By Type
+		Constructor 
+================================================================================================================================================================
+
+@Component is the most generic Spring annotation. A Java class decorated with @Component is found during classpath scanning and registered in the context as a 
+Spring bean. @Service, @Repository, and @Controller are specializations of @Component, which are used for more specific cases.
+
+@ComponentScan ensures that the classes decorated with @Component are found and registered as Spring beans. @ComponentScan is automatically included with @SpringBootApplication.
+
+@Bean servers a similar purpose as @Component. It is not autodetected. Methods decorated with @Bean produce a bean to be managed by the Spring container during configuration stage.
+	
+==================================================================================================================================================================
+     Dependency Injection:   
+	 --------------------
+		Dependency Injection is a fundamental aspect of the Spring framework, through which the Spring container "injects" objects into other objects or "dependencies". 
+		Simply put, this allows for loose coupling of components and moves the responsibility of managing components onto the container.
+	 
+		Types of dependency  injection:
+		--------------------------------
+		1.  setter injection. 
+		2.  constructor injection. 
+		3.  lookup method injection.
+		4.  interface injection (BeanNameAware,BeanFatoryAware,ApplicationContextWare)
+		
+Collection type dependecies:
+----------------------------
+	List,Set,Map,Properties
+	<list>
+	<set>
+	<map>
+	<props>
+===============================================================================================================================================================================
+Circular Dependecies:
+---------------------
+	Two beans depends on each other and constructor injection defined in both beans.
+=================================================================================================================================================================
+
+Constructor injection vs Setter injection:
+-------------------------------------------
+	1. if dependecy injection is mandotaory             1.if dependecy is optional. 
+	2. if dependecy is final then this best				2. we cannot define final dependency in setter (compile time error).
+	3. circular dependency issue not solved				3.circular dependency problem can be solved.
+	4. constructor cannot override setter value	    	4.setter  can override constructor injected value.
+	5. setter value cannot be used in constructor       5. constructor injected value can be used setter.
+	6. all dependecies can inject with one constructor  6. need to create one setter for constructor.
+	7. constructor  makes bean object imutable.			7. setter injection make bean object as mutable.
+============================================================================================================================================
+	Bean Scopes:
+	-----------
+		1.singleton : This is the default scope for the spring beans
+		2.Prototype : A new instance will be created every time the bean is requested.
+		3.Request   :   This is same as prototype scope, however it’s meant to be used for web applications. 
+						A new instance of the bean will be created for each HTTP request.
+		4.Session   : A new bean will be created for each HTTP session by the container
+		5.global session : This is used to create global session beans for Portlet applications
+		
+How to change Bean scope ?
+-------------------------
+@Bean
+@Scope(value="prototype")
+//@Scope(WebApplicationContext.SCOPE_REQUEST)
+public MyBean myBean() {
+	return new MyBean();
+}
+============================================================================================================================================
+Bean Life cycle:
+---------------
+	does not exist
+	instatiated
+	dependencies are injected
+	If BeanNameAware -> setBeanName()
+	if BeanFatoryAware -> setBeanFactory()
+	if ApplicationContextWare -> setApplicationContext()
+	if BeanPostProcessor -> postProcessBeforeInitialization()
+	if InitializingBean ->  afterpropertiesSet()
+	if init-method configured then call this method
+	if BeanPostProcessor -> postProcessAfterInitialization()
+	initialized
+	service
+	DisposableBean -> destroy()
+	destroy-method 
+	destroy 
+	
+===============================================================================================================================================
+Sterotype annotation:
+---------------------
+	
+	@Component is a generic stereotype for any Spring-managed component or bean
+	@Repository is a stereotype for the persistence layer.
+	@Service is a stereotype for the service layer.
+	@Controller is a stereotype for the presentation layer (spring-MVC).
+	all of them are used to auto-detect Spring beans when context scanning is enabled and essentially provide the same functionality with respect to dependency injection.
+	only difference comes in their purpose i.e. @Controller is used in Spring MVC to define controller
+
+=================================================================================================================================================================
+@inject vs @Autowired
+---------------------
+	The @Inject annotation also serves the same purpose, but the main difference between them is that @Inject is a standard annotation for dependency injection and @Autowired is spring specific.
+
+	You can potentially avoid that development effort by using standard annotations specified by JSR-330 e.g.  @Inject, @Named, @Qualifier, @Scope, and @Singleton.
+
+	A bean declared to be auto-wired using @Inject will work in both Google Guice and Spring framework, and potentially any other DI container which supports JSR-330 annotations.
+===========================================================================================================================================
+Spring @Primary vs @Qualifier:
+-----------------------------
+ We use @Qualifier in Spring to autowire a specific bean among same type of beans, where as @Primary is used to give high preference to the specific bean among multiple beans of same type to inject to a bean.
+ 
+===============================================Spring boot AOP ==============================================================================
+
+

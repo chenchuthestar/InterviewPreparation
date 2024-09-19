@@ -1,0 +1,496 @@
+Q) Exception handling in spring 
+	@ExceptionHandler(EntityNotFoundException.class)  -- methodlevel
+	@ControllerAdvice  -- class level
+	HandlerExceptionResolver (i) -> resolveException()
+
+Q) what is swagger ?
+	1. It is the most popular API documentation format for RESTful Web Services.
+	2. It builds around the OpenAPI Specification that helps developers to design, build, document, and consume RESTful APIs.
+	3. It provides both JSON and UI support.
+	4. JSON can be used as a machine-readable format, and Swagger-UI is for visual display, which is easy for humans to understand by just browsing the API.
+	  documentation.
+	 
+	swagger-ui.html
+	localhost:8080/V2/api-docs
+	localhost:8080/swagger-ui.html
+	
+	@Configuration
+	@EnableSwagger2
+	public class SwaggerConfig {
+    @Bean
+    public Docket productApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select().apis(RequestHandlerSelectors.basePackage("guru.springframework.controllers"))
+                .paths(regex("/product.*"))
+                .build();
+		}
+	}
+	
+	@Configuration
+@EnableSwagger2
+public class SwaggerConfig {
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .paths(PathSelectors.ant("/api/**"))
+                .apis(RequestHandlerSelectors.basePackage("com.springtutorial"))
+                .build()
+                .apiInfo(apiInfo());
+    }
+
+    private ApiInfo apiInfo() {
+        return new ApiInfo(
+                "My REST API", //title
+                "Some custom description of API.", //description
+                "Version 1.0", //version
+                "Terms of service", //terms of service URL
+                new Contact("Bhanuka Dissanayake", "www.example.com", "myeaddress@company.com"),
+                "License of API", "API license URL", Collections.emptyList()); // contact info
+    }
+}
+
+<dependency>
+   <groupId>io.springfox</groupId>
+   <artifactId>springfox-swagger-ui</artifactId>
+   <version>2.9.2</version>
+</dependency>
+
+Q)OOPS features ?
+    
+	data hiding -> Our internal data should not go out directly.By using private modifier we can impletememt data hiding.
+	abstraction -> Hiding internal Implmentaion and highliting set of services is called abstraction.
+	               Abstract classes/Interfces we can implement abstraction. 
+	encapsulation --> (datahiding + abstraction) binding of data and corresponding methods into single unit.provide security.
+	                    Every data member should be declared as private and for every member we have to maintain getter & Setter methods.
+						A class is said to be tightly encapsulated if and only if every variable of that class declared as private whether the variable has getter and setter methods are not , and whether these methods declared as public or not, these checkings are not required to perform.
+	inheritance   -> reusablity 
+	polymarphism  -> same method name with different forms   --> overloading ,method hiding (compile time)
+				  												 overriding  (run time) 
+																 
+  OverLoading: Two methods are said to be overload if and only if both having the same name but different argument types
+  Over Riding : Whatever the Parent has by default available to the Child through inheritance, if the Child is not satisfied with 
+                Parent class method implementation then Child is allow to redefine that Parent class method in Child class in its 
+				own way this process is called overriding.
+Q) Automatic promotion in overloading ?
+     byte --> short --
+	                  |
+	                 int--->  long -> float  -> double
+					  | 
+	          char ---
+Q) In Inheritance 
+         Parent P = new Parent() -> can call only parent methods.cannot call chaild specific methods.
+         Parent p = new Chaild() -> can call only parent methods,cannot call chaild specific methods.
+         Chaild c = new  Chaild()  -> can call parent and chaild specific methods.
+         Chaild c = new Parent() -> compiler time error		 
+
+Q)Multiple Inheritance ?
+  Having more than one parent class at same level is called multiple inherance.
+  Any class can extends only one class at a time and can't extends more than one class  simultaneously hence java won't provide support for multiple inheritance
+  But an interface can extends any no. Of interfaces at a time hence java provides support for multiple inheritance through interfaces.
+Q)Why java won't provide support for multiple inheritance? 
+	There may be a chance of raising ambiguity problems
+	
+Q)Co-varient Types in overriding ?
+            Object   -->  String       
+			Number -> Integer   
+Q)Overriding with respect to Var-arg methods:
+    A var-arg method should be overridden with var-arg method only. If we are trying to override with normal method then it will become overloading but not overriding.
+
+Q)What is Encapsulation ?
+    Encapsulation in Java is a mechanism of wrapping the data (variables) and code acting on the data (methods) together as a single unit. In encapsulation, the variables of a class will be hidden from other classes, and can be accessed only through the methods of their current class. Therefore, it is also known as data hiding.
+
+		To achieve encapsulation in Java −
+			1.Declare the variables of a class as private.
+			2.Provide public setter and getter methods to modify and view the variables values.
+			
+		Benefits of Encapsulation
+		 1.The fields of a class can be made read-only or write-only.
+         2.A class can have total control over what is stored in its fields.
+
+   
+Q) How to make immutable classes?
+    
+	1.Make your class final, so that no other classes can extend it.
+	2.Make all your fields final, so that they’re initialized only once inside the constructor and never modified afterward.
+	3.Don’t expose setter methods.
+	4.When exposing methods which modify the state of final class, you must always return a new instance of the class.
+	5.Make sure to always return a clone copy of the field and never return the real object instance.
+		
+Q) Differece between static and instance methods in java ?
+	
+			Instance Methods									  						Static Methods
+			----------------															---------------
+	1.require object to call method											1.call directly with class name
+	2.no keyword is required												2.use static keyword for method	
+	3. from Static methods can’t access instance							3.FROM Instance method can access static variables and static methods directly.
+		methods and instance variables directly
+		
+Q)What is different ways to create String object in java ?
+		String s = new String("abcd") ;// two objects created ,reference pointig to heap
+		String s="Abcd" ;// one object created,reference point to scp
+	    String s = "java online java";
+			 
+		 		 
+Q) What  are different types of inner clases? 
+   Without existing of one type of object if there is no chance of existing  another type of object then go for inner classes.
+	1.Normal or Regular inner classes. eg:class inside a class
+	2.Method local inner classes  eg: class inside a method.
+	3.Annonymous innner classes  : 
+				1. Annonymous inner class that extends class.
+				2. Annonymous inner class that implement interface.
+				3. Annonymous inner class that defined inside method arguments.
+	4.static nested inner classes.class inside a class with static keyword.
+
+Q) What is use inner classes?
+	Inner classes are best for the purpose of logically grouping classes that are used in one-place.
+	For example, if you want to create class which is used by ONLY enclosing class, then it doesn't make sense to create a separate file for that.
+	Instead you can add it as "inner class".
+	
+Q) Contract deffence between == and .equals
+	1.if r1==r2 is true ==> r.equals(r2) is always true
+	2.r1==r2 is false ==> r1.equals(r2) may true/false
+	3.r1.equals(r2) is true ==> r1==r2 may true/false
+	4.r1.equals(r2) is false ==> r1==r2 is always false.
+Q) Contract between .equals and hashcode ?
+   1.r1.equals(r2) is true => r1.hashcode() == r2.hashcode() is true
+   2.r1.equals(r2) is false => r1.hashcode() == r2.hashcode() is true/false
+   3.r1.hashcode == r2.hashcode is true  ==> r1.equals(r2) is true/false
+   4.r1.hashcode()==r2.hashcode() is false => r1.equals(r2)  false
+Q) Differences between == (double equal operator) and .equals() method?
+      == (double equal operator)                                .equals() method
+    ------------------------------------                     -----------------------------
+ 1.It is an operator applicable for both                     1.It is a method applicable only for object references 
+	primitives and object references.                          but not for primitives.
+	
+  2.In the case of primitives == (double equal               2.By default .equals() method present in object class is     
+	operator) meant for content comparison, but                also meant for reference comparison.
+	in the case of object references == operator                   
+	meant for reference comparison. 
+
+  3.We can't override == operator for content                 3.We can override .equals() method for content comparison.
+    comparison in object references.                                    
+   
+  4.If there is no relationship between argument             4.If there is no relationship between argument types then .equals() method
+    types then we will get compile time error                  simply returns false  and we won't get any compile time error and runtime
+	saying incompatible types.(relation means 
+	child to parent or parent to child or same type) 
+  5.For any object reference r, r==null is always false.     5.For any object reference r, r.equals(null) is also returns false.
+  
+Q)Producer and Consumer in multi threading ?
+
+Q)What is RACE condition ?
+	Executing multiple Threads simultaneously and causing data inconsistency problems is nothing but Race condition
+	we can resolve race condition by using synchronized keyword.
+Q) Difference between String and StringBuffer and  StringBuilder?
+   
+    String :If the content is fixed and won't change frequently then we should go for String.
+	StringBuffer:If the content will change frequently but Thread safety is required then we should go for StringBuffer.
+	StringBuilder: If the content will change frequently and Thread safety is not required then we should go for StringBuilder.
+	
+Q) Object Class methods? 
+      toString( ) ,hashCode() ,equals(),clone(), getClass(), finalize() , wait()  ,wait(long ms),wait(long ms,int ns) ,notify(), notifyAll()
+  
+Q) In How many ways an object of class can be restricted?
+   1. private default constructor.
+   2. make class as abstract.
+   
+Q)How many Ways to Create an Object in Java ?
+	1.new Operator
+	2.Class.newInstance()
+	3.clone() 
+	4.Object Serialization and Deserialization 
+	5.reflection api 
+	
+Q)Serialization and De-Serialization ?
+	Serialization: process of converting an object from java supported form to either network supported form (or) file supported form
+			    	By using FileOutputStream and ObjectOutputStream classes we can achieve serialization process.
+	De-Serialization  :  the process of converting an object from file supported form (or) network supported form to java supported form .
+						 By using FileInputStream and ObjectInputStream classes we can achieve DeSerialization.
+						 
+                         
+Q) Exeption vs Overrding :
+
+	While overriding if the child class method throws any checked exception compulsory the parent class method should throw the same checked exception or parent otherwise we will get compile time error.
+	
+	IOEException/Exception
+	IOEException
+	
+
+Q) Exeption vs Constructor :
+	
+	If Parent class constructor throws some checked exception compulsory Child class constructor should throw the same checked exception (or) its Parent.
+	
+	IOEException
+	IOEException/Exception
+	
+	
+Q)Read indirectly write only state  (or) RIWO  ?	
+	
+	With in the static block if we are trying to read any variable then that read is considered as "direct read" If we are calling a method , and with in the method if we are trying to read a method , that read is called Indirect read
+	If a variable is in RIWO state then we can't perform read operation directly otherwise we will get compile time error saying " illegal forward reference 
+		
+Q)Java 14 features ?
+     Switch Expressions (Standard)
+	 Records (Preview)
+	 Text Blocks (second preview)
+	 Patteren Matchig for instance of (preview)
+	 
+Q)Java SE 16 Features ?
+     Records
+	 Sealed Classes (second Preview)
+	 Patteren matching for instanceof
+	 
+Q) Final features in java 14,15,16 versions?
+    1.Switch expressions
+	2.Sealed classes.
+	3.Records
+	4.TextBlocks
+	5.Pattern matching
+	
+Q)Various memory areas in java ?
+    1.Method Area
+	   i)Method Area will be Created at the Time of JVM Start-Up.
+       ii)It will be Shared by All Threads (Global Memory).
+	   iii)This Memory Area Need Not be Continuous.
+	   iv)Method area shows runtime constant pool.
+	   v)Total Class Level Binary Information including Static Variables Stored in Method Area.
+	2.Heap Area
+		i)Programmer Point of View Heap Area is Consider as Important Memory Area.
+		ii)Heap Area will be Created at the Time of JVM Start- Up.
+		iii)Heap can be accessed by All Threads (Global OR Sharable Memory).
+		iv)Heap Area Nee Not be Continuous.
+		v)All Objects and corresponding Instance Variables will be stored in the Heap Area.
+		vi)Every Array in Java is an Object and Hence Arrays Also will be stored in Heap Memory Only.
+	3.Stack Memory
+	    i)For Every Thread JVM will Create a Separate Runtime Stack.
+		ii)Runtime Stack will be Created Automatically at the Time of Thread Creation.
+		iii)All Method Calls and corresponding Local Variables, Intermediate Results will be stored in the Stack.
+		iv)For Every Method Call a Separate Entry will be Added to the Stack and that Entry is Called Stack Frame OR Activation Record.
+		v)After completing that Method Call the corresponding Entry from the Stack will  be Removed.
+		vi)After completing All Method Calls, Just Before terminating the Thread,the Runtime Stack will be destroyed by the JVM.
+		vii)The Data stored in the Stack can be accessed by Only the corresponding Thread and it is Not Available to Other Threads.
+		
+	4.PC Registers Area
+	   i)For Every Thread a Separate PC Register will be Created at the Time of Thread Creation.
+	   ii)PC Registers contains Address of Current executing Instruction.
+	   iii)Once Instruction Execution Completes Automatically PC Register will be incremented to Hold Address of Next Instruction.
+	   
+	5.Native Method Stacks Area
+	    i)For Every Thread JVM will Create a Separate Native Method Stack.
+		ii)All Native Method Calls invoked by the Thread will be stored in the corresponding Native Method Stack. 
+Q)Difference between Runnable and calable ?
+  1) The Runnable interface is older than Callable which is there from JDK 1.0, while Callable is added on Java 5.0.
+  2) Runnable interface has run() method to define task while Callable interface uses call() method for task definition.
+  3) run() method does not return any value, its return type is void while the call method returns a value.
+ 
+  
+Q)Class Loaders in java ?
+     1.Boot Strap ClassLoader(jdk/jre/lib)
+	 2.Extension ClassLoader(jdk/jre/lib/ext)
+	 3.Application ClassLoader (current working directory)
+	  flow ( 3 -> 2 -> 1 -> 2->3)
+	  *) ClassLoader follows Delegation Hierarchy Principle 
+	  *)Whenever JVM Come Across a Particular Class, first it will Check whether the corresponding Class is Already Loaded OR Not.
+	  *)If it is Not Already Loaded then JVM Requests ClassLoaderSub System to Load that Particular Class.
+	  *)Then ClassLoaderSub System Handovers the Request to ApplicationClassLoader.
+	  *)ApplicationClassLoader Delegates that Request to ExtensionClassLoader and ExtenstionClassLoader in-turn Delegates 
+	     that Request to BootstrapClassLoader.
+	  *) BootstrapClassLoader Searches in Bootstrap Class Path for the required .class File (jdk/jre/lib)
+	  *)If the required .class is Available, then it will be Loaded. Otherwise BootstrapClassLoader Delegates that 
+	    Request to ExtensionClassLoader.
+	  *) ExtensionClassLoader will Search in Extension Class Path (jdk/jre/lib/ext). If the required .class File is Available then
+     	  it will be Loaded, Otherwise it Delegates that  Request to ApplicationClassLoader.
+	  *)ApplicationClassLoader will Search in Application Class Path (Current Working Directory). If the specified .class is
+     	  Already Available, then it will be Loaded.  Otherwise we will get Runtime Exception Saying ClassNotFoundException OR NoClassDefFoundError.
+Q)Difference between  ClassNotFoundException vs NoCLassDefFoundError ?
+
+    ClassNotFoundException is an exception that occurs when you try to load a class at run time using Class.forName() or loadClass() methods and mentioned classes are not found in the classpath.
+	
+	NoClassDefFoundError is an error that occurs when a particular class is present at compile time, but was missing at run time.
+	
+Q)Daemon Threads?
+	The Threads which are executing in the background are called daemon Threads. The main objective of daemon Threads is to provide support for non-daemon Threads like main Thread.
+	
+Q)Executor FrameWork?
+  *)Creating a New Thread for Every Job May Create Performance and Memory Problems.
+  *)Passing a Callable to the submit method is possible to get a Future object and use it to retrieve the result of the asynchronous computation
+  How to Create an Executor: 
+    // Creates a single thread ExecutorService
+	ExecutorService singleExecutorService = Executors.newSingleThreadExecutor();
+		
+	// Creates a single thread ScheduledExecutorService
+	ScheduledExecutorService singleScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+	
+	// Creates an ExecutorService that use a pool of 10 threads
+	ExecutorService fixedExecutorService = Executors.newFixedThreadPool(10);
+	
+	// Creates an ExecutorService that use a pool that creates threads on demand
+	// And that kill them after 60 seconds if they are not used
+	ExecutorService onDemandExecutorService = Executors.newCachedThreadPool();
+	
+	// Creates a ScheduledExecutorService that use a pool of 5 threads
+	ScheduledExecutorService fixedScheduledExecutorService = Executors.newScheduledThreadPool(5);
+	
+Q) execute and submit in Executor framework?
+      1.The execute() method is declared in Executor interface while submit() method is declared in ExecutorService interface.
+	  2.The submit() method can accept both Runnable as well as Callable tasks, but execute() method can only accept a Runnable Task.
+	
+	  3.There is a difference when looking at exception handling. If your tasks throws an exception and if it was submitted with execute this exception will go to the uncaught exception handler (when you don’t have provided one explicitly, the default one will just print the stack trace to System.err). If you submitted the task with submit any thrown exception, checked exception or not, is then part of the task’s return status. For a task that was submitted with submit and that terminates with an exception, the Future.get will re-throw this exception, wrapped in an ExecutionException.
+	  execute() method returns void while submit() method returns Future object. Using future you can cancel the execution or retrieve the results of computation done by runnable/callable task.
+	 4.  There is a difference when looking at exception handling. If your tasks throws an exception and if it was submitted with execute this exception will go to the uncaught exception handler (when you don’t have provided one explicitly, the default one will just print the stack trace to System.err). If you submitted the task with submit any thrown exception, checked exception or not, is then part of the task’s return status. For a task that was submitted with submit and that terminates with an exception, the Future.get will re-throw this exception, wrapped in an ExecutionException.
+	  
+   
+Q)count down latch?
+
+Q)try with resources ?
+    1.The main advantage of "try with resources" is finally block will become dummy because we are not required to close resources of explicitly.
+		
+Q)Process based multitasking ?
+	Executing several tasks simultaneously where each task is a separate independent process such type of multitasking is called process based multitasking.
+Q)Thread based multitasking ?
+	Executing several tasks simultaneously where each task is a separate independent part of the same program, is called Thread based multitasking.
+	
+Q)Comparable vs Comparator ?
+         comparable                   											      Comparator
+         ----------			         											       ----------
+  1. Present in java.lang Package                                      1.Present in java.util Package.
+  2.It is Meant for Default Natural Sorting                            2.It is Meant for Customized Sorting Order.
+  3. Defines Only One Method compareTo().                              3.Defines 2 Methods compare() and equals().
+  4. All Wrapper Classes and String Class                     		   4.The Only implemented Classes of Comparator are Collator.
+																		 and RuleBaseCollator.
+Q) Log Levels:  ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF.																	 
+																		 
+Q)Composition vs Aggregation ?
+	Composition:
+		Without existing container object if there is no chance of existing contained objects then
+		the relationship between container object and contained object is called composition
+		which is a strong association.
+    Aggregation :
+		Without existing container object if there is a chance of existing contained objects such
+		type of relationship is called aggregation. In aggregation objects have weak association.
+	
+Q) Why string class is immutable ?
+
+		In the case of String as several references pointing to the same object, by using one reference if we are allowed perform the change the remaining references will be impacted. To prevent this once we created a String object we can't perform any change in the existing object that is immutability is only due to SCP.
+		But in the case of StringBuffer for every requirement we are creating a separate object will be created by using one reference if we are performing any change in
+		the object the remaining references won't be impacted hence immutability concept is not require for the StringBuffer.	
+Q) Atomic number in multithreading ?
+
+	Java supports atomic classes that support lock free, thread safe programming on single variables. These classes are defined in java.util.concurrent.atomic package. Some of the key classes include AtomicBoolean, AtomicInteger, AtomicLong, AtomicIntegerArray, AtomicLongArray and AtomicReference.
+	Some of methods in AtomicInteger : addAndGet(),compareAndSet(),	decrementAndGet(),	doubleValue(),	get(),	getAndDecrement(),
+										getAndIncrement(),getAndSet(),	incrementAndGet(),	updateAndGet().
+Q)Time slicing in threads?
+   
+   Time slice is introduced in operating system for scheduling processes. With the help of Time slice factor short time running process will get a chance to execute. A task executes for a predefined slice of time and then re-enter the pool of ready tasks
+   
+Q)what is thread scheduler in java ?
+
+	Thread scheduler in java is the part of the JVM that decides which thread should run. 
+	Only one thread at a time can run in a single process. 
+	The thread scheduler mainly uses preemptive or time slicing scheduling to schedule the threads.
+	
+Q) What is Volatile modifier in java?
+
+	1.Volatile is the modifier applicable only for variables but not for classes and methods.
+	2.If the value of variable keeps on changing such type of variables we have to declare with volatile modifier.
+	3.If a variable declared as volatile then for every thread a separate local copy will be created by the jvm, all intermediate modifications 
+	 performed by the thread will takes place in the local copy instead of master copy.
+	4. Once the value got finalized before terminating the thread that final value will be udated in master copy.
+	5. The main advantage of volatile modifier is we can resolve data inconsistency problems, but creating and maintaining a separate copy for every thread increases complexity of the Programming and effects performance of the system.
+	6.Hence if there is no specific requirement never recommended to use volatile modifier and it's almost outdated.
+	6.Volatile means the value keep on changing where as final means the value never changes hence final volatile combination is illegal for variables.
+	
+Q)Thread Life cycle ?
+
+                                                 Yield()
+                                            <------------------------
+                start()                      TS allocate CPU                          run() completes
+   new/born   -----------> Ready/Runnable ----------------------------->Running-------------------------------->Dead
+							|											   |
+							|											   |  sleep()
+                            |                                              |
+							|		1.sleep time expire					Sleep state 
+						|	|		2.sleep thread got inturrepted		   |
+						|	 ----------------------------------------------|
+						|	                                                   |
+                        |                                                      |
+						|	   						      				       |  wait()
+                        |                                                      |
+						|		1.if wait thread got notification            Waitng state 
+						|		2.Wait time expires          	     	       |
+						-------------------------------------------------------|							 
+							        3.if waiting thread got interrupted.
+									
+|	                                                   |
+                        |                                                      |
+						|	   						      				       |  Suspend()
+                        |                                                      |
+						|		                                        Suspended state 
+						|		     resume()                  	     	       |
+						-------------------------------------------------------|							 
+							       							
+															
+Q) Why use JDK/JRE/JVM ?
+  JDK:
+  ---
+	JDK contains tools required to write Java programs, and JRE to execute them.
+	It includes a compiler, Java application launcher, Appletviewer, etc.
+	Compiler converts code written in Java into byte code.
+ JRE:
+ ----
+	JRE contains class libraries, JVM, and other supporting files. It does not contain any tool for Java development like a debugger, compiler, etc.
+	It uses important package classes like math, swingetc, util, lang, awt, and runtime libraries.
+	If you have to run Java applets, then JRE must be installed in your system.
+ JVM:
+ ---
+	JVM provides a platform-independent way of executing Java source code.
+	It has numerous libraries, tools, and frameworks.
+	Once you run Java program, you can run on any platform and save lots of time.
+	Java Virtual Machine converts byte code to the machine-specific code.
+    It can execute the java program line by line hence it is also called as interpreter.
+
+Q)RACE condition:
+	Executing multiple Threads simultaneously and causing data inconsistency problems is nothing but Race condition
+	we can resolve race condition by using synchronized keyword.
+Q)Daemon Threads:
+   The Threads which are executing in the background are called daemon Threads.
+   The main objective of daemon Threads is to provide support for non-daemon Threads like main Thread.
+Q)Dead lock ?
+   1.If 2 Threads are waiting for each other forever(without end) such type of situation(infinite waiting) is called dead lock.
+   2. There are no resolution techniques for dead lock but several prevention(avoidance) techniques are possible.
+   3.Synchronized keyword is the cause for deadlock hence whenever we are using synchronized keyword we have to take special care.
+Q)Webserver vs ApplicationServer ?
+   Web Server provides environment to run web applications, webserver provides support only for web related technologies like Servlets, jsp. 
+    Ex: Tomcat server 
+    An Application Server provides environment to run enterprise applications. Application  Server provides support for any technology 
+	from J2EE like Servlet, Jsp, EJB, JMS components etc., 
+    Ex: weblogic, web sphere , J Boss etc., 
+	
+Q)
+	
+JIT Compiler:
+--------------
+   1.The Main Purpose of JIT Compiler is to Improve Performance.
+   2.Internally JIT Compiler Maintains a Separate Count for Every Method whenever JVM Come Across any Method Call.
+   3.First that Method will be interpreted normally by the Interpreter and JIT Compiler  Increments the corresponding Count Variable.
+   4.This Process will be continued for Every Method.
+   5.Once if any Method Count Reaches Threshold (The Starting Point for a New State) Value, then JIT Compiler Identifies that Method Repeatedly used   Method (HOT SPOT). 
+       Immediately JIT Compiler Compiles that Method and Generates the corresponding Native Code. Next Time JVM Come Across that Method Call then JVM Directly Use Native Code and Executes it Instead of interpreting Once Again. So that Performance of the System will be Improved.
+	   The Threshold Count Value varied from JVM to JVM.
+	   Some Advanced JIT Compilers will Re-compile generated Native Code if Count Reaches Threshold Value Second Time, 
+	   So that More optimized Machine Code will be generated.
+      Profiler which is the Part of JIT Compiler is Responsible to IdentifY HOT SPOTS.
+	  
+Q)Thread dump vs Heap DUmp.
+
+Thread Dump is used to check whether you're stuck in a deadlock condition. Heap Dump is used to detect memory leaks.
+
+Annotations:
+-----------
+COre java Annotations
+1.@Override
+2.@suppressedWarning
+3.@Deprecated
+4.@FunctionalInterface
+

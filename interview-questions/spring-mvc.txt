@@ -1,0 +1,155 @@
+DispatcherServlet configuration in web.xml:
+----------------------------------------
+	<servlet>
+		<servlet-name>spring</servlet-name>
+		<servlet-class>o.s.w.s.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/applicationcontext.xml</param-value>
+		</init-param>
+	<servlet>
+	<servlet-mapping>
+		<servlet-name>spring</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+
+	
+<servlet-name>-servlet.xml  -> inside WEB-INF
+
+HanderMapping(i):
+----------------
+	map the request to appropriate controller bean
+	1. BeanNameUrlHandlerMapping
+	2. SimpleURLHandlerMapping
+	3. DefaultAnnotationHandlerMapping
+
+Controller Bean:
+---------------
+	it is request handler component
+	Ex: @Controller
+
+ModelAndView:
+------------
+	store model data and view name.
+
+ViewResolver:
+------------
+it Helper to the DS to identify appropriate view
+	1.InternalresourceViewResolver
+	2.ResourceBundleViewResolver
+	3.XmlViewResolver
+	4.TilesViewResolver
+	5.BeanNameViewResolver
+
+	<bean id="viewResolver" class="org.s.w.s.v.InterresourceViewResolver">
+		<property name="prefix" value="/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+
+Spring MVC Flow:
+----------------
+
+	browser  --- request ---- DS ------> HanderMapping
+										ControllerBean
+										public MAV abc(){
+										   
+										}
+										
+										ViewResolver
+										
+			----response -----------	view
+			dispatcherservlet  - is a front controller,
+	1.the dispatcherservlet first receives the request.
+	2.dispatcherservlet consults the handlermapping and invokes the controller associated with the request.
+	3.controller processes the request by calling the appropriate service methods and returns a modelandview object to the dispatcherservlet . the modelandview object contains the model data and the view name.
+	4.the dispatcherservlet sends the view name to a viewresolver to find the actual view to invoke.
+	5.the dispatcherservlet will pass the model object to the view to render the result.
+	6.the view , with the help of the model data, will render the result back to the user.
+===================================================================================================================================================================
+validations:
+-----------
+
+
+
+messages.properties
+--------------------
+annotationname.commandname.fieldname
+NotBlank.l.username=user name should not be blank
+Size.l.password=password should be contain atleast 8 characters
+
+
+
+<bean id="messagesource" class="ResourceBundleMesageSource">
+	<property name="baseName" value="messages"/>
+</bean>
+
+
+FileUploading:
+-------------
+1.input type=file
+2.form type should be post
+3.disable the file encryption 
+	<form action="******" method="post" encype="multipart/form-data">
+	    Browse file:  <input type="file" name="f1"/>
+	   <input type="submit">
+	 </form>
+	 
+4.CommonMultipartResolver -> read file name ,content type,size,file data from request and set to multipartFile
+5.MutipartFile
+ 
+Interceptors in spring:
+----------------------
+1.similar to filter.
+2. can define pre and post processing logics.
+	HandlerInterceptor (I)      
+	HandlerInterceptorAdaptor(c)
+	
+	methods:
+	------
+	preHandle(req,res,object handler)
+	postHandle(req,res,object handler ,MAV)
+	afterCompletion()
+===========================================================================================================================================================
+PDF & Excel format:
+------------------
+	pdf:  AbstractPdfView(c)
+	excel:AbstractXLView(c)
+	
+	
+============================================================================================================================================================
+Q)Difference between @PathParam and @pathVariable? 
+    @PathVariable           				  @PathParam
+	-------------            			      ----------
+  1.@PathVariable is from spring	   1.@PathParam is from JAX-RS.
+  2.@PathVariable used in Spring        2.@PathParam can use with REST only
+  so it works in MVC and REST								  
+  
+Q)Difference between @Controller and  @RestController ?
+
+  1.The @Controller is a common annotation which is used to mark a class as Spring MVC Controller while the @RestController is a special controller used in RESTFul web services and the equivalent of @Controller + @ResponseBody
+  2.The @RestController is relatively new, added only on Spring 4.0 but @Controller is an old annotation, exists since Spring started supporting annotation, and officially it was added on Spring 2.5 version.
+  
+Q)How @Transactional annotation works ?
+	when a class declares @Transactional on itself or its members, Spring creates a proxy that implements the same interface(s) as the class you’re annotating. In other words, Spring wraps the bean in the proxy and the bean itself has no knowledge of it. A proxy provides a way for Spring to inject behaviors before, after, or around method calls into the object being proxied.
+
+	Internally, its the same as using a transaction advice (using AOP), where a proxy is created first and is invoked before/after the target bean’s method.
+
+	The generated proxy object is supplied with a TransactionInterceptor, which is created by Spring. So when the @Transactional method is called from client code, the TransactionInterceptor gets invoked first from the proxy object, which begins the transaction and eventually invokes the method on the target bean. When the invocation finishes, the TransactionInterceptor commits/rolls back the transaction accordingly.
+
+Q)What is @Lazy annotation.
+@Lazy annotation indicates whether a bean is to be lazily initialized. It can be used on @Component and @Bean definitions. A @Lazy bean is not initialized until referenced by another bean or explicitly retrieved from BeanFactory . Beans that are not annotated with @Lazy are initialized eagerly.
+ 
+ 
+Q)
+
+SPRING Distributed transaction:
+--------------------------
+
+
+
+Filter vs Interceptor:
+----------------------
+Filter: - A filter as the name suggests is a Java class executed by the servlet container for each incoming HTTP request and for each HTTP response. This way is possible to manage HTTP incoming requests before they reach the resource, such as a JSP page, a servlet or a simple static page; in the same way, is possible to manage HTTP outbound response after resource execution.
+
+Interceptor: - Spring Interceptors are similar to Servlet Filters but they act in Spring Context so are powerful to manage HTTP Request and Response but they can implement more sophisticated behaviour because can access all Spring context.

@@ -1,0 +1,179 @@
+Docker Trainig edureka: 
+----------------------
+When ever we install docker the default file system is created in Host medchine.
+ in Linux :   /var/lib/docker
+ in Windows : C:\Program Files\Docker
+ 
+ Don't change any thing in this files or file structres.
+ 
+ All imges and containers will store in this directory structre.
+ 
+
+==============================================================================CLASS 2 :================================================================
+ We can create container in three modes.
+    1. Fore ground mode
+	2. Detach mode   /Interactive terminal detached  (ITD)
+	3. Interactive termial mode (IT)
+	
+	1.Fore Ground mode:
+	----------------
+	In this mode ,the container will create in shell 
+	1.'docker run' command and 'docker container' run command both are same.
+	2. docker run image check the image existance in locally,if it not found then get it from docker hub.
+	  docker ps -a   ->  to check the running containers
+    3. in fore ground mode container create and keeps waiting for reponse.we cannot use the shell for any other purpose.
+	4. docker run command first time only download image from docker hub.
+	5.by default docker assign two properties for container (container id,container name)
+	6. no two containers have same id and same name.
+	7. if we dont assingn name then docker assign name to container.
+	8. if we want to give custom name.
+	    docker run --name chenchu  nginix
+	9.we cannot change container id but we can change container name.
+	    docker rename <continer id>  <target_name>
+		docker rename ae3wdwe chenchu_the_star
+		
+		19:32
+		
+	2.Detach mode / Interactive termial detached (ITD) :
+	 ------------------------------------------------
+	 
+	 1.if we create container in ITD  mode ,it will start container then shell entered/login into container.
+	   docker run -itd --name ubunutu_contaner  ubuntu 
+	  in the case of some servers we using in contaner we have give some bash to command to enter into shell.
+	    docker run -itd --name chenchu_container  nginix  bash
+	 2.if we come out of container by exitor ctrl+c then container will stopped then shell come out of container .
+	 3.if we want to come out of shell without stopping container , press  ctrl+p+q.
+	 
+	   
+	   
+Q) Difference between 'docker ps'  and 'docker ps -a' ?
+     docker ps -> it shows containers which are running.
+	 docker ps -a -> it shows all containers irrespective of state
+	 
+Q)what the information provide 'Docker ps' command ?
+     COTAINER ID :  container unique id
+	 IMAGE :        Image name used to create contaner 
+	 COMMAND :      entrypoint command 
+	 CREATED :      container creatd date
+	 STATUS :       current status of container
+	 PORTS :        port running in image
+	 NAMES:         container name
+Q)What is docker inspect command ?
+     it shows the all the information about  container.
+	 docker inspect <container id>
+
+ ***  if we wantto go inside a contaner which is already running .
+       docker exec -it <conatiner_id>  /bin/sh
+	   docker exec -it 23456sdf  /bin/sh
+	  
+  *** if we want to execute the command without entering  into contaner
+         docker exec 34sdf345 touch  /tmp/amit
+		 
+  *** if we want to stop/start/restart container
+       
+	     docker stop/start/restart <container_id>
+		 
+  ** if we want kill the docker container 
+       
+	   docker kill 2345asdf3
+	   
+	    if we stop container with kill command the STATUS of that container is 'Exited (137) ....'
+		Killing a container means just stopping the container forcefully.
+ *****  if we want to get only contaner ids 
+         docker ps -a -q
+		 
+ **** if we want to delete the container we can use delete command.
+       docker stop <containerId>
+	   first we should container because running container we cannot stop
+	   docker rm <container_id>
+ **** if we want stop all containers at once
+          docker stop  $(docker p -a -q)
+ *** if we want delelte all containers
+	   docker delete  $(docker p -a -q)
+	   
+ *** if we restart docker engine then all continer will not delete.
+     those just in stopped state.
+	 
+ *** delete a container without stoppping.
+    docker 	rm  <container_id> -f 
+	
+ **** if any application/service running in container that application/service by default cannot access from outside contaner.
+      if we want access from out side there are two ways.
+	  1.port forwardng         2.port binding
+	  
+	 PORT FORWARDING: in this docker assign random port to container/service.which this random port we can access application from outside.
+	                  the port range 32768-65535.
+					  docker run -itd  -P --name sridhar nginx 
+					   here -P means we asking docker assign random port.
+	 BINDING PORT :  we can tell docker on whcih port has to export.
+	               docker run -itd  -p <outside_port:cotainer_inside_port> --name <containername> <image_name>
+				   docker run -itd -p 81:80 --name mycontainer nginx
+  
+      if we want to know the container exposes which port after creation of container ,then we can see in three ways
+        1.docker ps
+        2.docker inspect <container_id> 
+        3.docker port <contaner_id>		
+				   
+	 
+	 only expose port during only run time.
+	 If container already  started then we cannot Bind port .
+	  
+	  
+	  
+	  
+ 
+ *******copy fie fom local system to container.
+ 
+	  docker cp localfile  <container_id>::/<container_loc>
+	  docker cp localfile.txt  46g478vb:/tmp
+	  
+ ****  copy file from container to local system
+    docker cp  <container_id>::/<container_loc>   <localfile>
+		  docker cp 46g478vb:/tmp  localfile.txt
+
+  ****  if we want to see logs of container
+        docker logs <container_id>
+		
+		docker logs fgtht4w245
+		
+        docker logs -f 345gn   ->  -f is for continous logs monitoring
+		
+ **** docker info   -> it provide some info docker in local.
+ 
+ ***  docker stats -> it show statistics of each container like memory usage
+                      docker by default use the what ever free memory is ther in system.
+  ****  if we want to tell to docker to use max amount of memory.
+           docker run -itd -P --memory 500MB nginx
+		  this is not reserve the memory what we mentioned with --memory ,this property is only for specify max memory can utilize
+  *** with in container if we want to see top process using more resources.
+       docker top <container id>
+	   
+ *** to delete all container which are in stopped state or in running.
+     docker container prune
+	 
+ReStart Policy :
+---------------
+this policy tells what action auto perform if container fails/goes down.
+ THere are three restart policy are avaiable.
+   1.No
+   2.on-failure   : if exit code is other than 0 ,then container restart.
+   3.Always  : it always start the 
+   4.unless-stopped: other than stop manually ,in any case container will start container.
+   
+   docker run -itd -P --restart always tomcat
+   
+Q)Where exactly containers information store in local file system ?
+   /var/lib/docker/containers/
+  
+ 
+***by default docker run command download the image and start container .
+   if we want to only download the docker image then use docker pull.
+     docker pull tomcat
+	 
+*** if we want to see all properties related to image then we can user inspect command
+     docker inspect <imagename>
+
+*** if we want to check history of image 
+      docker history <imagename>
+	
+	

@@ -1,0 +1,326 @@
+Q) what are design pattrens are know?
+    Creational design pateren : singleton, factory mehtod,abstract factory,Prototype,builder
+	 Structural Design Pattern: Adapter,Bridge,composite,decorator,Facade,flyweight,Proxy
+	 Behavioural: ChainOf resposibility,command,interpretor,iterator,mediator,memento,Observer,state,Strategy,Template.
+	 
+	 J2EE design patteren : MVC
+	 
+	 Template Design pattren
+	 Adaptor Design pattren
+	 Proxy design pattern
+	 
+	 Microservcices Design Pattern :API GateWay,Saga,Database per service,Distributed Tracing ,Circut Breaker,Service Discovery.
+	 
+Q)BUILDER Design pattern ?
+ 
+  Builder pattern was introduced to solve some of the problems with Factory and Abstract Factory design patterns when the Object contains a lot of attributes
+  1.Too Many arguments to pass from client program to the Factory class that can be error prone because most of the time, the type of arguments are same and from client side its hard to maintain the order of the argument.
+  2.Some of the parameters might be optional but in Factory pattern, we are forced to send all the parameters and optional parameters need to send as NULL.
+  3.If the object is heavy and its creation is complex, then all that complexity will be part of Factory classes that is confusing.
+  
+Let’s see how we can implement builder design pattern in java.
+
+   1. First of all you need to create a static nested class and then copy all the arguments from the outer class to the Builder class. We should follow the naming convention and if the class name is Computer then builder class should be named as ComputerBuilder.
+   2.Java Builder class should have a public constructor with all the required attributes as parameters.
+   3.Java Builder class should have methods to set the optional parameters and it should return the same Builder object after setting the optional attribute.
+   4.The final step is to provide a build() method in the builder class that will return the Object needed by client program. For this we need to have a private constructor in the Class with Builder class as argument.
+   
+   Ex: StringBUffer and StringBuilder classes follows Builder design patterns .
+   https://www.digitalocean.com/community/tutorials/builder-design-pattern-in-java
+
+Q.Observer DesignPattern ?
+    observer pattern defines a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically. It is also referred to as the publish-subscribe pattern.
+	
+ observer pattern defines a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically. It is also referred to as the publish-subscribe pattern.
+ A observer object can register or unregister from subject at any point of time. It helps is making the objects objects loosely coupled.
+	
+	
+Q)Singleton Design patteren ? 
+	1.singleton pattern restricts the instantiation of a class and ensures that only one instance of the class exists in the java virtual machine
+	2.Singleton pattern is used for logging, drivers objects, caching and thread pool.
+	Rules:
+		1.Private constructor to restrict instantiation of the class from other classes.
+		2.Private static variable of the same class that is the only instance of the class.
+		3.Public static method that returns the instance of the class, this is the global access point for outer world to get the instance of the singleton class.
+		
+		public class ThreadSafeSingleton {
+
+			private static ThreadSafeSingleton instance;
+		
+			private ThreadSafeSingleton(){}
+		
+				public static ThreadSafeSingleton getInstanceUsingDoubleLocking(){
+					if(instance == null){
+						synchronized (ThreadSafeSingleton.class) {
+								if(instance == null){
+								instance = new ThreadSafeSingleton();
+								}
+						}
+					}
+					return instance;
+				}
+}
+Predifined Singleton Java Classes:
+--------------------------------
+1.java.lang.Runtime class
+Q) How many ways We can break singleton design pattern ?
+    1.With Deserialization
+	    Singleton obj1 = Singleton.getInstance();
+        System.out.println("Singleton.getInstance().hashCode: " + obj1.hashCode());
+
+        Field field = Singleton.class.getDeclaredField("singletonObject");
+        field.setAccessible(true);
+        field.set(field, null);
+        
+        Constructor constructor = Singleton.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Singleton obj2 = (Singleton) constructor.newInstance();
+        System.out.println("Reflection.newInstance().hashCode: " + obj2.hashCode());
+		
+		Overcome reflection issue: To overcome issue raised by reflection, enums are used because java ensures internally that enum value is instantiated only once. Since java Enums are globally accessible, they can be used for singletons. Its only drawback is that it is not flexible i.e it does not allow lazy initialization.
+		public enum Singleton 
+        {
+        INSTANCE;
+        }
+		
+		As enums don’t have any constructor so it is not possible for Reflection to utilize it. Enums have their by-default constructor, we can’t invoke them by ourself. JVM handles the creation and invocation of enum constructors internally. As enums don’t give their constructor definition to the program, it is not possible for us to access them by Reflection also. Hence, reflection can’t break singleton property in case of enums.
+		
+     2.Serialization:
+	      // Serialize the object to file
+        ObjectOutput objectOutput = new ObjectOutputStream(new FileOutputStream("file.txt"));
+        objectOutput.writeObject(obj);
+        objectOutput.close();
+
+        // DeSerailize the object from file
+        ObjectInput objectInput = new ObjectInputStream(new FileInputStream("file.txt"));
+        Singleton obj2 = (Singleton) objectInput.readObject();
+        in.close();
+		Overcome serialization issue:-
+        		To overcome this issue, we have to implement method readResolve() method.
+				 // implement readResolve method
+                  protected Object readResolve()
+                  {
+                   return instance;
+                  }
+Q)Factory design patteren ?
+ When object creation for a class is complex then we can seperate creation process into a method and  we can return the  final object from that method. 
+    1.static factory  method 
+	2.instace factory method.
+	  ex: DriverManager.getConncetion(url,username,pasword)
+	       
+Q) Abstract factory design patteren ?
+   1.it is super factory for factories
+   2.Abstact factory is a factory of factories,ie one level above to the factory methd design patteren.
+   
+Q)Prototype Design pattrn?
+    Create multiple objects of such clases then , we need to apply prototype design patteren.
+     this design paterensays that first create a object byinitializing through contructor and create remaining object thought cloning of first object ,
+	 by this way object created fastly.
+	 
+Q)builder design patter ?
+
+
+
+Q)SOLID Principles?
+  S: Single Responsibilty principles(SRP)
+  O:open close principles(OSP)
+  L: Liskov Substitution principle(LSP)
+  I:Interface Segregation Principle(ISP)
+  D:Dependency Inversion Principle(DIP)
+  
+Solid Priciples:
+---------------
+  -> in Java,SOLID principles are an Object oriented Approach that are applied to software structire design.
+  -> IT is conceptalized by Rober C.Martin.
+  -> THese % principles have changed the world of Object Oriented Programing,also changed why or Writing Software.
+  -> It aslo Ensure that the software is modular,easy to understand ,debug and refactor.
+  
+SOLID Acronym::
+  S : Single Resposnible Principle - (SRP)
+  O : Open closed Principle - (OCP) 
+  L : Lisko Substritution Principle(LSP)
+  I : Interface Segregration Principle - (ISP)
+  D : Dependency Inversion Principles - (DIP)
+  
+  1)S:Single Resposnible Principle - (SRP)
+  ----------------------------------------
+   This priciples state that
+      a. Any class should have only one reason to change.
+	  b. A class should have single responsiblity or single Job or single Purpose
+  
+  
+        Ex: In single class We cannot take all logic like(Dao,Service,COntroller)
+		We have to devide the logic into multiple claases.
+		
+		If we are implementing SRP there would more classes present in your project as each class will have only one responsiblity.
+	
+  2.Open Closed Priciple - (OCP)
+    -----------------------------
+	-> THis principle states that software entities (classes,Modules,function ...) should be open for extension but closed for modification.
+	i.e We should able to exxtend classes behaviour without modification.
+	
+	Problem Statement:
+	 current logic  will send notifications via email ,sms but in future if we want send notification via whatsapp also then we need to modify source code in NotificationService class.
+	 
+	 To overcome this problem,OCP says that "open for extenstion but close for Modification"
+	 
+	 i.e  It is not recommended to modify the notificationService for each OTP feature,it will voilate OCP.
+	 SOlution:
+	 -------
+	 TO overcome this we need to design our code in such a way that everyone can reuse your feature by just extending it and if the need any Customization then can extend it and add their feature on top of it.
+	 
+	 We should design as below.
+	 
+	 3.Lisko Substritution Principle(LSP)
+	 --------------------------------------
+	 THis priciple State that "Derived or Chaild classes Must be Substitutable for their base or parent classes."
+	 i.e If class A if Chaild class B , Then we  should able replace B with A withOut interrupting the behaviour of program.
+	 
+	 
+	 Benfits of LSP:
+	   1.Code ReUsability
+	   2.Easier Maintance.
+	   3.Reduced Coupling
+	   
+	   
+	 4.Interface Segragation Principle(ISP):
+	 --------------------------------------
+	 
+ -> No client Should be forced to depend on method that it does not use.
+ The I  in SOLID stands for interface segregation, and it simply means that larger interfaces should be split into smaller ones. By doing so, we can ensure that implementing classes only need to be concerned about the methods that are of interest to them.
+ 
+ 
+ 5.Dependency Inversion Principle: (DIP)
+ --------------------------------------------
+ This principle State that we must use abstract classes and interface instread of concreate implementation.
+ 
+ 
+ Summary:
+  1.SRP : a class should only one responsiblity and one reason to change/modify that class.
+  2.OCP : Open for extenstion and close for Modification .
+           ie not recommnended to modify the logic for every feature,try to write new  class for each feature 
+  3.LSP : A derived or chaild classes should be substituable for their base or parent class.
+  4.ISP : Don't group unrelated behaviour in one interface,we should break/split interface into smaller or more specific one .i e ask to create different interfaces for different resposibilities.
+  5.DIP: use interface or abstract classes instread of concreate classes to supply the dependent Objects.
+      ie Object shpuld be loosely coupled using interface,abstract classes,
+	  Dont tightly coupled  with concreate classes.
+  
+  
+Q)What is difference between Architecture and DesignPatteren ?
+ 
+ MVC is best architectire to develop layred APP .
+ => Architecture speaks about involving multiple comps and making them participating in communication to develop the application.
+  Ex: MVC Architecture.
+ => Design Pattern Speaks About problems in each component development and applying solutions for solving those problems.
+    ex: in each layer development of MVC Architecutre we use multiple pattern like singleton java class,view helper,frontcontrikker and etc...
+ 
+ 
+ 
+SEGA design pattern:
+--------------------
+SEGA design pattern is way to manage data consistancy across microservices in distributed transaction scenario.
+ we have two approaches of sega design pattern
+  1.Cherography based
+  2.Orchestration based.
+ 
+ 
+ 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	   
+	   
+	 
+	 
+	 
+	 
+	 
+	 
+	  
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,123 @@
+
+java-17
+-------
+1.Text blocks
+2.Improved Switch statements.
+3.Record classes
+4.Sealed classes.
+5.Pattern matching with swicth.
+6.Pseudorandom number generators are upgraded
+
+
+1.Text blocks
+-------------
+java 13 or later introduces a new features called Text Blocks,which allows you to create multi-line String literal in more readable and convienient way,
+Text block  are a new way to create String literals in java that can span multiple lines , they are  enclosed  in triple quotes  """" and can contains  any character 
+,including new lines tabs and spaces.
+
+     String textBlock = """
+	                       This is sample text block
+						   example in java 17 featues""";
+	Text block features:
+	    *Multi Lines Strings: Text blocks can span multiple lines , making it easier to create long String that need to be formatted.
+		**No Escaping: You  don't need to escape new line character (\n) or other escape character with in text block.
+		** preserves Whitespace: Text blocks preserve the whitespace and formatting of the original string,making it easier to create formatting strings.
+		** no concatinations:you don't see concatinate multiple string using + operator or concat or format methods.
+		
+Text blocks are best for definning html,json,sql,xml code as String.
+	
+3.Record classes
+----------------
+In java,the record keyword is introduced in	 Java 14 version as preview feature and became a standard  feature in java 16.
+Records provide a consice way to create  immutable  classes , automatically handling common boiler plate code like constructor,equals(),hashcode(), and toString() methods.
+
+A Record class is special kind of classes in java that is primarly used to model plain data.The syntax is defining a record is much more concise than tredetional classes.
+
+     public record Person(String name,int age){}
+	 
+	 
+	here Person record class automatically provides 
+	A Constrcutor with name and age parameters
+	name() and age as Accesssor methods,implmentation of equals(),hashcode()toString() methods.
+
+Note:
+we cannot define the non-static fields 	in side record class.
+Record class cannot extend any other class because by default every record class parennt class is Record.	
+By default all record classes implicitly define as final hence creating subclasses is not possible.
+Record classes can implement any noof interfaces.
+
+
+5.Pattern matching with swicth.
+-------------------------------
+Pattern matching for switch in java 17 is introduced as perview feature under JEP 406.
+Pattern matching is nothing but allowing you pass java object to switch statment.
+it enhances the treditional  switch statement by  integrating pattern matching ,allows for more expressive and conside code.
+This significant evalutions in how switch statements can be used , particularly when dealing with different types or complex conditions.
+before java 17 switch statements are allowd only Numerics,String,Enums .
+in java 17 a switch can return value by using arrow (-> ) operators
+
+
+ int num=10;
+  String result = switch(num) {
+   
+   case 10 -> "ten";
+   case 20 -> "twenty";
+   case 30 -> "thirty";
+   default -> "unknown"
+   };
+
+
+Based on input object type match case lable can match.
+
+  String s  =  switch(obj){
+              case Integer i ->  "Integer value";
+			  case String s ->  "String value";
+			  case Character  ->  "Charatcer value";
+			   case null  ->  "null value";
+			  default -> "unknown type";
+            };
+
+before java 17 if switch input is null then it throw NullPointerException
+but from java 17 null as input for switch is allowd.
+
+
+guarded pattern are allowed in swith, with this we can write some conditions in switch case.
+We can add gaurd clause to case labels using the  -> symbol , followed by boolean expression, if the expression evalution to true the associated case code will  be executed.
+
+Gaurded pattern  can be used with varibale type of patterns
+            1.Type patterns: case String s when s.length() >5
+			2.Record pattern : case Person p when p.age > 18
+			3.Array pattern :  case int[] arr when arr.length > 3 
+       String str= switch(number){
+	    
+	     case Integer i ->  i%2==0? "even number":"odd number";
+		 case Double  d ->  d>0? "Positive number":"negative number";
+		 default -> unknow type";
+	   };
+	   
+implement fall throw in swith.
+  
+
+	    int num=2;
+		switch(num){
+			case 1 -> System.out.println("one");
+			case 2,3,4 -> System.out.println("two or three ,four");
+			default -> System.out.println("unkown");		
+		};
+		
+4.Sealed classes:
+----------------
+     *.Sealed classes, introduced in java 17 under JEP 409 ,provide a way to control which classes or interfaces can extend on implement a particular class or interface.
+	 *.This feature allows developers to define a restricted class hierarchy , making it easier to manage and reason about inheritance in large or complex  codebases.
+	 *. TO make a class or interface sealed , you use the  sealed modifer followed by apermit clause that lists the classes allow to extend  it.
+	 
+	 
+	 public sealed class Shape  permits Circle, Reactangle,Traingle{
+	 
+	 
+	 }
+	 
+	 *.only the classes or interfaces listed in the permit clause can extend or implement the sealed class or interface.
+	 these subclasses can themselves be either final,non-sealed, or sealed
+
+

@@ -1,0 +1,29 @@
+What is Generics ?
+
+The main objective of Generics is to provide Type-Safety and to resolve Type-Casting problems.
+introduced generics concept in 1.5v hence the main objectives of generics .
+	1. To provide type safety to the collections.
+	2. To resolve type casting problems.
+Bounded types:
+We can bound the type parameter for a particular range by using extends keyword such types are called bounded types.
+class Test<T extends X>
+{}
+ 1.If x is a class then as the type parameter we can pass either x or its child classes.
+ 2.If x is an interface then as the type parameter we can pass either x or its implementation classes.
+
+ EX: class Test <T extends Number&Runnable> {}(valid)
+As the type parameter we can pass any type which extends Number class and implements Runnable interface. 
+
+*)We can't define bounded types by using implements and super keyword.
+
+methodOne(ArrayList<? Extends x> l):
+-----------------------------------	
+1.If x is a class then this method is applicable for ArrayList of either x type or its child classes.
+2.If x is an interface then this method is applicable for ArrayList of either x type or its implementation classes.
+3.In this case also within the method we can't add anything to the List except null.
+
+methodOne(ArrayList<? super x> l):
+--------------------------------
+1.If x is a class then this method is applicable for ArrayList of either x type or its super classes.
+2.If x is an interface then this method is applicable for ArrayList of either x type or super classes of implementation class of x.
+3.But within the method we can add x type objects and null to the List.

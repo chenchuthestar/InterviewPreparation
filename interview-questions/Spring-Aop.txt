@@ -1,0 +1,60 @@
+Spring-Aop Modules:
+-------------------
+->while Creating Business logic of application,we may come with some common services for multiple business logic.
+->if the services are implemented as part of the busines logics then finally we endup with application with duplicate of services.
+-> in Spring AOP terminalogy,the services that are requred for multiple business logis are called "Cross-cutting concerns".
+-> AOP is a new style of programming that seperate the cross-cutting concerns from the business logicsWith this seperation an application can get the following
+   three benfits.
+   1.Avoid Duplication of code.
+   2.Reusability
+   3.Easy maintanance of service.
+   
+ -> Spring AOP will combine the services with business logics at runtime.
+-> AOP is not an alternative for OOPs. AOP runs on top of oops.
+
+ASPECT: 
+  an Aspect is a class used to modularise a concern that cuts across multiple classes.
+  Aspect is a class which one or ore cross cutting concerns defines.
+JoinPoint:
+---------
+ it is a Specific Poit in a application,where the concenrs are combined with business methods.
+ in Spring AOP we have method execution joinpoints.it means the Aspects are combined when business methods are executing st runtime.
+ADVICE:
+------
+it is a functionality added by an Aspect at a JoinPoint.
+
+PointCut:
+--------
+it is a collection of joinpoint . A pointcut Identifies join point based on some conditions.
+A Pointcut verifies weather a particular method of a particular method of a class is matching with condition or not.
+If yes then that method execution is idenfied as Joinpoint.
+
+Target:
+-------
+it is an object Which is going to be advised by ine or more Aspect.
+in other words  a target is business class object  before aspect are added to it.
+
+Proxy:
+-----
+it is an object Created by AOP framework after combining aspect with target.
+
+Weavig :
+It is a linking process of aspect with Target to create a proxy ,weaving can be done at compile time or at class load or at runtime.SPring Supports onlt runtime Viewing.
+
+Type of Advices:
+----------------
+  1.Before Advice: Before Advice executes,before a matching business method executed.
+  2.After Returning Advice: This executes  After a matching business method execution completed normally.
+  3.After-throwing/throws Advice:After throwing advice executed,when a matching business method has thrown an exception.
+  4.After Advice /FInally Advice: This Executes,After matching business method is  execution is completed either normally or exceptionally.
+  5.Around Advice: This advice executes,Before a matching business method execution starts and After completion of a busniness method normally.
+  
+
+-> In a Spring AOP application,in a aspect classes the cross cutting concerns are implememted in one or multiple methods,Those methods we called Advisors.
+-> cross cutting services can access business method name and its arguments.
+-> Spring AOP takes support of AspectJ Language.AspectJ provided JoinPoint interface to acceess the business method it's arguments.
+
+  
+
+  
+

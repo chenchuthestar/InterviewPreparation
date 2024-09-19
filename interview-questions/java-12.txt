@@ -1,0 +1,50 @@
+java 12 features:
+----------------
+1.switch expression
+2.File mismatch() method
+3.Compact number format.
+4.Teeing Collectors in stream api.
+5.Java String class new methods.
+   indent()
+   transform()
+   describeConstable()
+   resolveConstableDesc()
+6.pattern matching for insteadof  operator.
+7.Raw String literals  are removed from  JDK12.
+
+
+
+1.switch expression:
+-------------------
+upto java 11 version,swtich is statement, it will not return any value by default.
+in JAVA 12 version, we can utilize switch as an expression.
+
+as an expression,switch is able to return value.
+
+
+var name = switch(value){
+----
+---
+}
+
+In switch expression we are  able to return  the values  in the following two ways.
+  1. by using break statement  
+        var i=10;
+		var res=switch(i){
+		   case 5,10:
+		    break "five or ten";
+		   case 15,20:
+		    break "fifteen or twenty";
+			default:
+			break: "number not in 5,10,15,20";
+		};
+		Sop(result);
+  2.by using lambda style syntax
+      var i=20;
+	  var result=switch(i){
+	     case 5,10 -> "five or ten";
+		 case 15 -> "fifteen"
+		 case 20 -> "twenty";
+		 default -> "not not in 5,10,15,20"; 
+	  };
+     Sop(result);

@@ -1,0 +1,394 @@
+Sql :
+-----
+  DDL:Drop,Rename,Create,Alter(Modify,Add,rename,drop),Truncate ,Recycle bin ,falshback ,purge 
+  DML:Update,Delete,Insert,Insert all,merge
+  TCL:Commit,RollBack,SavePoint
+  DCL:Grant,Revoke
+  DQL/DRL: Select
+  
+Q)Add column in table?
+Q)Composite key ?
+Q)unique and  primary ?
+A composite key is a combination of two or more columns in a table that can be used to uniquely identify each row in the table when the columns are combined uniqueness is guaranteed, but when it taken individually it does not guarantee uniqueness.
+Q) Difference between truncate and Delete ?  
+	Truncate                     		Delete
+	-------								-------
+	1.It is DDL. 					1.It is DML command.
+	2.Perminant deletion.           2.Temparary deletion. 
+	3.cannot delete specifice. 		3.can delete specific.
+COnstraints:
+-----------
+NOT NULL - Ensures that a column cannot have a NULL value  
+              LastName varchar(255) NOT NULL
+			  
+UNIQUE - Ensures that all values in a column are different
+               UNIQUE (ID)
+			   
+PRIMARY KEY - A combination of a NOT NULL and UNIQUE. Uniquely identifies each row in a table
+				FOREIGN KEY - Prevents actions that would destroy links between tables
+				CREATE TABLE Orders (
+					OrderID int NOT NULL,
+					OrderNumber int NOT NULL,
+					PersonID int,
+					PRIMARY KEY (OrderID),
+					FOREIGN KEY (PersonID) REFERENCES Persons(PersonID)
+				);				
+Co
+CHECK - Ensures that the values in a column satisfies a specific condition
+DEFAULT - Sets a default value for a column if no value is specified
+CREATE INDEX - Used to create and retrieve data from the database very quickly
+
+	
+Q)Difference between Primary key and Unique Key.
+      Primary Key                                                  Unique Key
+  1.one primary key per table.                        1.There can be multiple unique keys in the table	 
+  2.It does not allow null columns.	                  2.It allows null columns.
+  3.Default Index is clustered	                      3.Default Index is no-clustered
+
+Q) Difference between synonyms and views ?
+			synonyms      											 views
+		    -------									    			 -----
+	1.cannot to create a synonym based on partial table.      1.can create a view based on partial table
+	2.we cannot create synonym based one table.				  2. we can create view based on more than one table.
+	3.it becomes invalid in  two cases.						  3.view become invalid in three cases.
+	4.can create synonym based on another synonum.            4.we can create view on another view upto maximum 32.
+
+	Union: This operator returns all the values from the tables excluding duplicate values
+	UnionAll: This operator returns all the values from the tables include duplicate values
+	Intersection: This return common values from both tables.
+	Minus:the rows which are present in first table but not available in second table.
+	
+Q) Constriant in SQL ?	
+
+Q)SubQueries ?
+	
+2nd higest salary:
+------------------
+SELECT MAX(Salary) From Employee WHERE Salary < ( SELECT Max(Salary) FROM Employee);
+
+Q)  find the average salary of employees department wise along with other details?
+	select department_id,avg(sal) from employees group by department_id;
+	Select avg(sal) over (partition by department_id) as avg_dept, a.* from employees a order by employee_id;
+
+Q) Find the details of most recent joinee from all departments?
+	select lead(hire_date) over (partition by department_id  order by hire_date ) as recent_joinee,.a.* from employee a order by recent_joiners;
+Q) Second higest salry in each department?
+	select * from (select sal,dense_rank() over (partitionby deptno order by sal desc) rnk from emp) where rnk=2;
+
+Analytic Functions:
+-------------------
+	To assign  rank numbers to each row or else group of rows wise.
+
+	ROW_NUMBER() : To assign Different rank numbers to same value.
+	RANK() : To assign same rank number to same value.but is skipping the next sequence rank number in the order.
+	DENSE_RANK() : To assign same rank number to same value but is not skipping the next sequence rank number in the order.
+
+	Syntax : ANALYTICAL_FUNCTION_NAME() OVER ([PARTITION BY <COLUMN NAME>] ORDER BY <COLUMN NAME>)
+	SET PAGESIZE 100
+	SET LINES 100
+	SELECT ENAME,SAL,ROW_NUMBER() OVER(ORDER BY SAL DESC) RANK FROM EMP;
+	Select * From (SELECT ENAME,SAL,ROW_NUMBER() OVER(ORDER BY SAL DESC) RNK FROM EMP) where rnk=3;
+	
+	SELECT ENAME,SAL,RANK() OVER(ORDER BY SAL DESC) RANK FROM EMP:
+	SELECT ENAME,SAL,DENSE_RANK() OVER(ORDER BY SAL DESC) RANK FROM EMP;
+	SELECT ENAME,SAL,DEPTNO,DENSE_RANK() OVER(PARTITION BY DEPTNO ORDER BY SAL DESC) RANK FROM EMP;
+
+2nd hgiest salary:
+-----------------
+      	  
+      select * from (Select ENAME,SAL , dense_rank() over(order by SAL desc) rnk from EMP) a where rnk <=3;
+
+      select * from (Select ENAME,SAL , dense_rank() over(order by SAL desc) rnk from EMP) a where rnk=3;
+        
+      Select name,occupation,dense_rank() over( partition by occupation order by sal desc) rnk from emp;
+ 
+      select * from Employye where effecdate in (select  max(effectdate) from employee);
+	
+2nd higest salary in each department:	
+------------------------------------
+SELECT * from ( SELECT ENAME,SAL,DEPTNO,DENSE_RANK() OVER(PARTITION BY DEPTNO ORDER BY SAL DESC) RANK1 FROM EMP ) as a where RANK1=2;
+
+NTH higest salary in MYSQL:
+--------------------------
+ WITHOUT SUB-QUERY:
+         SELECT salary FROM Employee ORDER BY salary DESC LIMIT N-1, 1 --nth higest
+		SELECT salary FROM Employee ORDER BY salary DESC LIMIT 1,1 salary --2nd higest
+		SELECT salary FROM Employee ORDER BY salary DESC LIMIT 2,1  --- 3rd higest
+		
+==========================================================================================================================================================
+LAG: TO access previous subsequence row 																																									
+	syntax:
+		LAG(next_col_name,[offset,defult_value) over ([partition by columnname] order by columnname [asc/desc])
+		offset default value 1
+		default value for if subsequence row not exist
+		partition by for to do partiton the data
+		Ex: select ename,sal,lag(sal,1) over (order by sal desc) as prev_row from emp;
+LEAD: To access next subsequence row
+	LEAD(next_col_name,[offset,defult_value) over ([partition by columnname] order by columnname [asc/desc])
+		offset default value 1
+		default value for if subsequence row not exist
+		Ex: select ename,sal,lead(sal,1) over (order by sal desc) as prev_row from emp;
+		
+First_value() : to get first value from results 
+		Syntax : first_value(column_name) over(partition by columnname order bycolumnname [asc/desc])
+		Ex1: select ename,sal,first_value(ename) over (order by sal ) as lowsalname from emp;
+		Ex2 :Select deptno,ename,sal,first_value(ename) over (partition bydeptno order by sal rows between unbounded preceding and unbounded follwing) from Emp) from emp;
+		
+
+Last_value():   to get last_value from results
+            syntax: last_value(column_name) over (partition by colname order by columnname [asc/desc])
+			by default last_value use one clause i.e "rows between unbounded preceding and current row "
+			this clause give un expected results.
+			so in last_value function we have to specify the class i.e "rows between unbounded preceding and unbounded follwing"
+			
+			Ex1: Select ename,sal,last_value(ename) over(order by sal rowsbetween unbounded preceding and unbounded follwing) from emp;
+			Ex2: Selectdeptno,ename,sal,last-value(ename) over (partition bydeptno order by sal rows between unbounded preceding and unbounded follwing) from Emp) from emp;
+			
+First keep & Last keep: 
+		Ex: select empno,ename,deptno,sal,min(sal) keep (dense_rank first order by sal) over (partition by deptno) as lowest 
+		max(sal) keep(dense_rank last order  by sal) over (partition by deptno ) as higest from EMP order by dept,sal;
+			
+			
+Q) display max salary with employee name and min salary and employee name ?
+   select min(ename) keep(dense_rank first order by sal) as min_ename,min(sal) as min_sal,max(ename) keep(dense_rank last order by sal) as max_ename ,max(sal) as max sal from emp;
+ 
+  Emp
+  ename esal dept
+  
+  Selct dept ,sum(dept) From Emp e1 Join Emp e2 join e1.dept=e2.dept group by e1.dept;
+  
+ Select * from ( Select ename,sal,deptno,dense_rank() over(order by sal) as rnk from Emp) where rnk=1; 
+  
+ JOINS:
+ -----
+      
+	 (INNER) JOIN: Returns records that have matching values in both tables
+	  LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table
+	  EX: SELECT Customers.CustomerName, Orders.OrderID FROM Customers LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID;
+	  RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table.
+	  FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table.
+	  INNER JOIN :SELECT A.CustomerName B.CustomerName FROM Customers A, Customers B WHERE A.CustomerID = B.Customerid;
+      
+Q)Joins on two or multiple tables?
+	SELECT student.first_name, student.last_name, course.name FROM student
+					JOIN student_course
+					  ON student.id = student_course.student_id
+					JOIN course
+					  ON course.id = student_course.course_id;
+
+Q)Identify the employees below avg sal and above avg sal of their dept (new col, which says above or below)
+	SELECT * FROM employees  WHERE salary > ALL(SELECT avg(salary)FROM employees GROUP BY department_id);
+	
+Q) what are pseudo columns ?
+	1.these  columns behave like a table column,but is not actual stored in table.
+	2.on psuedo columns only select queries can be permited,but not INSERT ,UPDATE,DELETE
+	3.Ex: CURVAL,NEXTVAl,lEVEL,ROWID,ROWNUM
+Q)What are Indexes ?
+	1.index is schema object ,which pointer locates the physical address.
+	2.this is used by oracle server to speed up the retrival,manupulate rows.
+	3.index can be create explicity/automatially.
+	4.index is activated when index column is used in where condition.
+	5.index is necessary of disk i/o by using an indexed path to locate data quckyly.
+	6.when table drop ,corresonding indexes also dropped.
+	Automatic Index : creates automatially when you define PRIMARY/UNIQUE constrint in a table definition.
+	Manual index: user can create non unique indexes or columns to speed up the acess rows  eg: create index indexname;
+	CREATE UNIQUE INDEX college_index ON Colleges(college_code);
+     
+Q) select duplicate records from table?
+ 1st approach :
+   SELECT day, COUNT(day), month, COUNT(month), year, COUNT(year) FROM dates GROUP BY day,month,year HAVING COUNT(day) > 1 AND COUNT(month) > 1 AND COUNT(year) > 1;
+ 2nd approach :
+    DELETE t1 FROM dates t1 
+	INNER  JOIN dates t2 
+	WHERE  t1.id < t2.id AND
+	t1.day = t2.day AND
+	t1.month = t2.month AND
+	t1.year = t2.year;
+  
+  3rd approach : CREATE TABLE TempTable SELECT DISTINCT id, day, month, year FROM dates;
+	
+Q) difference between rowid and rownum ?
+	Rowid 															ROWNUM
+  1.rowid is a permanent unique identifier for that row       1.the rownum is temporary
+  2.the rowid won't change if we change query				  2.if you change your query, the rownum number will refer to another row
+  3.which is a unique ID for a row.	   					      3.ROWNUM is a consecutive number which applicable 		 
+																for a specific SQL statement only
+
+Q)Difference between procedure and functions?
+			Prodecure											function
+           -------------   	 						 -----------------------------
+	1)procedure may/may not return value         	 1)function must return value     
+	2)procedure call is plsql stmt itself     	  	 2)function call is part of an expression
+	3)procedure will do action                     	 3)fuction will do the calculations.
+	4)procedue cannot not use with select stmt    	 4)function can use with select stmt.
+	
+Q)Isoation levels ?
+
+Q) Char and varchar ?
+    
+Q) 
+   
+Q)Merge 
+     MERGE TargetProducts AS Target
+		USING SourceProducts	AS Source
+			ON Source.ProductID = Target.ProductID
+		
+			-- For Inserts
+				WHEN NOT MATCHED BY Target THEN
+				INSERT (ProductID,ProductName, Price) 
+				VALUES (Source.ProductID,Source.ProductName, Source.Price)
+    
+			-- For Updates
+				WHEN MATCHED THEN UPDATE SET
+				Target.ProductName	= Source.ProductName,
+				Target.Price		= Source.Price
+    
+		   -- For Deletes
+				WHEN NOT MATCHED BY Source THEN
+				DELETE;
+     
+Q)Views 
+     ->it is database object 
+	 ->it contains logical copy of data from table.
+	 -> provide safety and increase db performance.
+	 -> View maintain data dynamically.
+	 
+	Five types of Views:
+		1.Simple View /Updatable View
+		2.composite view /read only view 
+		3.force view 
+		4.materialize view 
+		5.InLine view
+		
+	Simple View/Updatable view: a view created by using single table . 
+			EX:CREATE view sales_man as  select * from EMP where dep=10;
+			Simple view accept DML operations, Data will change in underlaying table.
+	Composite View:
+	        a view is created based on multiple tables by using joins.
+			Update/Delete/Select is possible but not insert data.
+	Materialized View:
+	       it is database object,that stores query output and pre-computed results.
+		   CREATE materialized view viewname as Select STMT.
+			
+Q)unique and primary key ?
+    
+Q)Datbase vs Schema ?
+
+    Database is collection of schema.
+	Schema is nothing user.
+Q)Normalization and De-Normalization 
+Q)ACID properties?
+  Transaction:The transaction is a set of operations. The set of the read/write operation on the 
+                database is called the database transaction.
+  ATOMICITY:   it means ALL or NOTHING , no partial trasactions should happen.
+  CONSISTENCY:  Every attribute in the database has some rules to ensure the stability of the database. 
+                The constraint puts on the data value should be constant before and after the execution of the transaction.
+  ISOLATION: If you are performing multiple transactions on the single database, operation from any transaction should not interfere
+               with  operation in other transactions. the execution of all transactions should be isolated from other transactions.
+  DURABILITY:Sometimes it may happen as all the operation in the transaction completed but the system fails immediately.
+			  In that case, changes made while transactions should persist.
+    
+Q)Triggers ?
+  A trigger is defined to activate when a statement inserts, updates, or deletes rows in the associated table. These row operations are trigger events. For example, rows can be inserted by INSERT or LOAD DATA statements, and an insert trigger activates for each inserted row.
+ 
+ Row-Level Trigger: It is a trigger, which is activated for each row by a triggering statement such as insert, update, or delete. For example, if a table has inserted, updated, or deleted multiple rows, the row trigger is fired automatically for each row affected by the insert, update, or delete statement.
+ 
+ Statement-Level Trigger: It is a trigger, which is fired once for each event that occurs on a table regardless of how many rows are inserted, updated, or deleted.
+ 
+ CREATE TRIGGER trigger_name    
+    (AFTER | BEFORE) (INSERT | UPDATE | DELETE)  
+         ON table_name FOR EACH ROW    
+         BEGIN    
+        --variable declarations    
+        --trigger code    
+        END; 
+Q)Cursors ?
+    MySQL cursor is a kind of loop facility given to traverse in the result of SQL one by one. We can operate on every result by using the cursor in MySQL. Cursors are supported in stored procedures, functions, and triggers only.
+	
+Q) Foreign key example.
+CREATE TABLE Orders (
+    OrderID int NOT NULL,
+    OrderNumber int NOT NULL,
+    PersonID int,
+    PRIMARY KEY (OrderID),
+    FOREIGN KEY (PersonID) REFERENCES Persons(PersonID)
+);
+	
+A)how to show table created table ?
+DESCRIBE table_name; 
+
+Q)Alter:
+  to change structure of table 
+  Alter modify:
+  ------------
+  to change the data type or size of data type for particular column.
+  
+  Alter table <tableName> Modify <columnName> <newDatatype>;
+  
+  Alter-Add:
+  ----------
+  Alter table <table-name> add <new column name> <datatype>
+  Alter-Rename
+  -----------
+  to change column name in table
+  alter table <tablename> rename column <columnname> to <newcolumnName>
+  
+  Alter-Drop:
+  ----------
+  Alter table <tablename> drop column <columnName>;
+  
+Rename:
+to change table name.
+ Rename <old table name> to <new table name>.
+ 
+Truncate: 
+==========
+delete all rows from table but not table structure .
+We cannot delete specific rows.
+it is perminant deeltion.
+
+
+Grant Unlimited tablespace to user1;
+
+
+Drop:
+---
+to delete a rows with table structure.
+it is temparary deletion.
+
+CTAS:
+------
+
+create table tb as select * from EMp;
+
+Create table tablename as select * from Emp ehere 1=2;
+
+INSERTALL:
+---------
+Insert rows into multiple tables  at a time but rows must be existing table rows only.
+
+INSERT ALL 
+INTO TAB1 VALUES(DEPTNO,DNAME,LOC)
+INTO TAB2 VALUES (DEPTNO,DNAME,LOC)
+INTO TAB2 VALUES (DEPTNO,DNAME,LOC)
+SELECT * FROM EMP;
+
+BETWEEN;
+--------
+it returns all  the values including source to destination.
+it always work with low to high but not high to low.
+it works with AND operator only.
+
+Select * from emp where sal between 100 and 200;
+
+ROLLUP and CUBE:
+--------------
+ i.TO find the subtotal and grand total based on columns.
+   ROLLUP: find the sub and grand total  based on single column.
+   CUBE:finding the sub and grand total based on multiple columns.
+  
+  THese two will use along with groupby.
+  
+  SELECT DEPTNO,COUNT(*) FROM EMP GROUP BY ROLLUP(DEPTNO);
+  
+  

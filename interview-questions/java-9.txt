@@ -1,0 +1,81 @@
+Java 9 Features
+---------------
+1.private methods inside interface
+2.try-with-resource enhancements.
+3.Diamong Operator Enhancements
+4.@SafeVarargs Annotations enhancements
+5.Factory methods to create unmodifiable collections.
+6.
+
+
+
+G1GC Garbage collectors:
+-------------------------
+from java 9 onwards G1GC is defuault garbage collector.
+We have total 4 garbage collector in java
+   1.Serial GC
+   2.Parralel GC (degault till java 8)
+   3.CMS GC(Concerrent Mark and Sweep Garbage Collecttor)
+   4.G1GC
+
+This G1Gc will devide total Heap memory into multiple parts , it choose one part which have more object to clean.
+PErformance wise G1GC is better because with in  less time more objects will be clear fro memory.
+
+Private methods inside interface
+-------------------------------
+if several default methods having same common functionality then there may be a chance of duplicate code .
+we can seperate that commin code into a private method and we can call that private method from every default method.
+
+try-with-resource enhancements.
+------------------------------------
+Java 9 onwards we can use the resource reference variables which are created outside of try block resource.
+Resource reference variable need not be local variable to try blovk.
+
+Resoure r1=....;
+Resoure r1=....;
+Resoure r1=....;
+
+try(r1;r2;r3){
+   
+}
+
+
+Diamond Operator Enhancements
+-----------------------------
+the diamomd operator we also can use at anonymous class also from java 9.
+
+ArrayList<String> al = new ArrayList<>(){
+
+};
+
+@SafeVarargs Annotations enhancements
+-------------------------------------
+this annotation we can apply for instancemethods,static methods ,constructor till java 8.
+ from java 9 we also can apply for private methods.
+ 
+Factory methods to create unmodifiable collections.
+--------------------------------------------------
+if we want to create Unmodifiable collection ,in java 9 direct approach is provided.
+  
+  List.of(10,20,30);
+   1.if any elements is null ,it will throw NPE.
+   2.After creating List object if we are trying to change the content it will throw UnsupportedOperarion Exception.
+ 
+ Set<Integer> set= Set.of(10,24,55,784);
+   1.if we provide duplicate element it will throw IlligalArgumentException.
+   2.If we provide any null value it will throw NPE.
+   3.After creating Set object if we are trying to change the set values it will throw UnsupportedOperarion Exception.
+
+ Map<String,Integer>  map = Map.of(k1,v1,k2,v2);
+ 
+   1.if we add duplicate Key then will get IlligalArgumentException .
+   2.if any key or value is null ,then it will throw NPE.
+   3.After creating map object if we are trying to change the map values it will throw UnsupportedOperarion Exception.
+
+immutable collection objects are serializable if and only if all elements inside collection are serializable object.
+After deserialization aslo we cannot modify the content ,other wise we wil get UnsupportedOperarion exception.
+
+ 
+ 
+
+

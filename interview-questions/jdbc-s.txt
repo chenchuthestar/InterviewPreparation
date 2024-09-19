@@ -1,0 +1,397 @@
+JDBC:
+----
+JDBC Features:
+1) JDBC API is Standard API. We can communicate with any Database without rewriting our Application i.e. it is Database Independent API.
+2) JDBC Drivers are developed in Java and hence JDBC Concept is applicable for any Platform. i.e.JDBC Is Platform Independent Technology.
+3) By using JDBC API, we can perform basic CRUD Operations very easily
+4)JDBC API supported by Large Number of Vendors and they developed multiple Products based on JDBC API.
+
+
+Differences Between JDBC and ODBC:
+--------------------------------------------------
+ODBC                                                   					 JDBC
+---------------------------------------------------   			-------------------------------------
+1) ODBC Stands for Open Database Connectivity                 1) JDBC Stands for Java Database Connectivity
+2) Introduced by Microsoft. 								  2) Introduced by Sun Micro Systems.
+3) We can Use ODBC for any Languages like C, C++, Java, Etc   3) We can Use JDBC only for Java Language
+4)We can use ODBC only for Windows Platforms.                 4)We can use JDBC for any Platform.
+5) Mostly ODBC Drivers are developed in Native Languages      5) Mostly JDBC Drivers are developed in Java.
+   like C OR C++.
+6)For Java Applications, it is not recommended to use ODBC    6)For Java Applications, it is highly recommended
+ because Performance will be Down due to Internal                to use JDBC because there is no Performance 
+ Conversions and Application will become Platform Dependent.       Problems and Platform Dependency Problems.
+ 
+ Q)executeQuery() Vs executeUpdate() Vs execute()?
+   1.Select Query then we should use "executeQuery() Method".
+   2.Non-Select Query then we should use executeUpdate() Method.
+   3.Query dynamically at  Runtime then we should go for execute() Method
+		ex:boolean b = st.execute(sqlQuery);  
+		ResultSet rs =st.getResultSet(); 
+		int rowCount=st.getUpdateCount();
+   
+ Q)Steps to implement JDBC Connection?
+			import java.sql.*;
+			public class Type1DriverDemo
+			{
+				public static void main(String[] args) throws Exception
+				{
+					Class.forName("oracle.jdbc.driver.OracleDriver");
+					Connection con= DriverManager.getConnection(""jdbc:oracle:thin:@localhost:1521:XE","scott","tiger");
+					Statement st = con.createStatement();
+					ResultSet rs = st.executeQuery("select * from movies");
+					while(rs.next())
+					{
+						System.out.println(rs.getInt(1)+"\t"+rs.getString(2)+"\t"+rs.getString(3)+"\t"+rs.getString(4));
+					}
+					con.close();
+				}
+			}
+Q)Differences between Statement And PreparedStatement ?
+ 
+		Statement										 PreparedStatement
+		---------										-------------------
+	1.At the time of creating Statement Object,      	    1.At the time of creating PreparedStatement,we have to provide SQL Query compulsory
+		we are not required to provide any Query.		      and will send to the Database and will be compiled.
+	2.Whenever we are using execute Method,                 2. Whenever we are using execute Method, Query won't be compiled just will be executed.
+	  every time Query will be compiled and
+	  executed.
+		 
+	3.Statement Object can work only for Static Queries.   3. PS Object can work for both Static and Dynamic Queries.
+
+	4) Relatively Performance is Low                       4. Relatively Performance is High.
+		 
+	5) Best choice if we want to work with                 5.Best choice if we want to work with only one Query but required to execute multiple times.
+	   multiple Queries.
+	6)There may be a chance of SQL Injection               6.There is no chance of SQL Injection Attack.
+	   Attack
+	7)Inserting Date and Large Objects (CLOB and           7) Inserting Date and Large Objects (CLOB and BLOB) is easy.
+		BLOB) is difficult. 
+	
+Q)What is CallableStatement ?
+	If we want to call stored procedure from java application, then we should go for CallableStatement.
+	CallableStatement is an interface present in java.sql package and it is the child interface of PreparedStatement.
+	EX:CallableStatement cst = con.prepareCall("{call addProc(?,?,?)}");// procedure call
+			cst.setInt(1, 100);  //IN-PARAM
+			cst.registerOutParameter(3,Types.INTEGER); //OUT PARAM
+			cst.execute();//Execute
+			int result=cst.getInt(3);//get results
+			
+			CallableStatement cst=con.prepareCall("{?=call getAllEmpInfo4(?,?)}");
+							cst.setInt(2,1000);
+							cst.setInt(3,2000);
+							cst.registerOutParameter(1,OracleTypes.CURSOR);
+
+
+Q)SQL Injection Attack ?
+	Every time the query will be compiled and executed. Some times end user may provide special
+	characters as the part user input,which may change behaviour of sql query.This is nothing but SQL
+	Injection Attack,which causes security problems.
+	
+	But in the case of PreparedStatement query will be compiled at the beginning only without
+	considering end user's input. User provided data will be considered at the time of execution only.
+	Hence as the part of user input,if he provides any special characters as the part of input,query
+	behaviour wont be changed. Hence there is no chance of SQL Injection Attack in
+	PreparedStatement.
+	
+	Ex:select * from users where uid=101 OR 1=1;
+
+Q)Statement vs PreparedStatement vs CallableStatement:
+	1. We can use normal Statement to execute multiple queries.
+			st.executeQuery(query1)
+			st.executeQuery(query2)
+			st.executeUpdate(query2)
+		i.e if we want to work with multiple queries then we should go for Statement object.
+	2. If we want to work with only one query,but should be executed multiple times then we should go for PreparedStatement.
+	3. If we want to work with stored procedures and functions then we should go for CallableStatement.
+	
+Q)Differences Between ResultSet and RowSet ?
+
+				ResultSet      											RowSet
+	-----------------------------     						 --------------------------------------
+	
+	1) ResultSet present in java.sql Package             1)RowSet present in javax.sql Package.
+	2)By Default ResultSet is Non Scrollable and         2) By Default RowSet is Scrollable and Updatable Non Updatable (Forward only and Read only).
+	3)ResultSet Objects are Non Serializable and         3)) RowSet Objects are Serializable and hence we can send over Network
+		we can't send over Network
+	4) ResultSet Objects are Connection oriented         4)RowSet Objects are Connection Less Objects i.e. we can access RowSet Data without having Connection to DB (except JdbcRowSet)
+		i.e. we can access ResultSet Data as long as
+		Connection is available once Connection closed
+		we can't access ResultSet Data.
+		
+	5)ResultSet Object is not having Event Notification  5)RowSet Object is having Event Notification Model.
+	  Model.
+
+=================================================================Servlets========================================================================
+Q)What is servlet ?
+  Servet is a server side java class it extends the functionality of server.
+  
+Q)Different ways of creating a Servet class? 
+   Servlet api given three ways 
+		1.By implementing Servlet intterface.
+		2.By Extending GenericServlet abstract class.
+		3.By extending HttpServlet.
+		  
+			Servlet (i)
+			   |
+			   |
+		 GenericServlet (AC)
+		       |
+			   |
+			   |
+			HttpSerlvet(AC)
+			   |
+			   |
+	       CustomServlet(C)
+ i)GenericServletis abstact class because it has ne abstract method called service()
+ ii)HttpServlet is also an abstract class but it does not have any abstract methods.
+Q)What are different methods in Servlet interface ?
+    1.public void init() throws ServletException
+	2.service(ServletRequest req,ServletResponse res)
+	3.public void destroy();
+	4.public ServletConfig getServletConfig();
+	5.public String getServletInfo();
+Q) What is servlet Lifecycle ?
+     1.Does not exist state
+	 2.Instatiated     (1st request or when deployed)
+	 3.Initialized     (by calling init() method)
+	 4.service         (container calls)
+	 5.Destroy         (if servlet object no more required then container distroy the object by calling ddstroy method)
+	  
+	   As the part of lifecycle ,webcontainer calls three lifecycle methods ,Below are syntax of three lifecycle methods.
+	     1.public void init( ServletConfig config) throws ServletException     --> called only once at initialze time
+		 2.public void service(ServletRequest req,ServletResponse res) throws ServletException,IOException  -> called multiple time per request once 
+		 3.public void destroy()  -------> called once at destroy time.
+	 
+Q)How to configure Welcome?
+   <welcome-file-list>
+		<welcome-file>login.html</welcome.html>
+	</Welcome-file-list>
+	If application contains Index.html and index.jsp pages then index.html is act as welcome page.
+Q)What happens ig we don't override do get method for get request or dopost method for post request ?
+	Htp status 405 error  well send to browser
+Q)Why  HttpServlet class is given as an abstract class without abstract method ?
+   In order to dis-allow or restrict programmer directly instatiate HttpServlet.
+Q)Why HttpServlet class object Restricted ?
+   If allowed then multiple objects can be created by programmer.then there will be no difference between CGI and Servlet technology.
+Q)How to configure Servlet in web.xml ?
+     <web-app>
+	    <servlet>
+		    <servlet-name>aliasname</servlet-name>
+			<servlet-class>FullyQualifiedName</servlet-name>
+		</servlet>
+		<servlet-mapping>
+		   <servlet-name>aliasname</servlet-name>
+		   <url-pattern>UrlPattern</url-pattern>
+		</servlet-mapping>
+	 </web-app>
+Q)What is InitParam and how to configure in web.xml?
+
+Q)What is WEB application directory Structure ?
+  |--------------
+  | ProjectName |
+  |--------------    |----------
+         |-----------|  *.java |
+		 |           |-----------
+		 |
+		 |          |----------
+   	     |----------| WEB-INF |
+   		 |			|----------
+		 |				|
+		 |				|	 |---------
+		 |				|----| classes |
+		 |				|	 |----------
+		 |				|		   |
+		 |				|		   |--------*.class
+		 |				|		   
+		 |				|
+		 |				|		|------
+		 |				|-------| lib |
+		 |				|		|------
+		 |				|		    |
+		 |				|			|------*.jar
+		 |              |
+		 |              |
+		 |				|
+		 |				|
+		 |				|------------> web.xml
+		 |
+		 |---------------------*.html
+		                        *.jsp
+								
+Q) How to Get Serlvetconfig Object into Service method?
+    1st way:
+	-------
+	   we override lifecycle init method in a servlet class then we neeed to store local servlet then we need store local ServletConfig to global servlet.
+	   pulic class Myservlet extends GenericServlet 
+	   {
+	     private ServletConfig config;
+		  public void init(ServletConfig config){
+		      this.config=config;
+		  }
+	   }
+	   
+	   
+	Approach 2:
+	---------
+	    call getServletConfig() method of super class.
+		puvlic class Myservlet exteds GenericServlet{
+		  public void service(req,res) throws Se,IOE
+		  {
+		   ServletConfig config=getServletConfig();
+		  }
+		}
+		
+Q)What are methods are in ServletConfig ?
+   1.getServletName : to read alias name
+   2.getInitParameter(key)-> to read value of init parameter based on its key.
+   3.getInitParamerNames() ->it is to read allthe keys of inint oarameters at a time.the keys of init parameters are stored in Enumaratio  object.
+        Enumeration e=config.getInitParametenames();
+   4.it is to read context object from configure object
+          Servlet ctx=config.getServletContext();
+Q)Servlet Lifecycle ?
+   1.Does not exist    2.Instatiated   3.Initilized   4.Service     5.Destroy.
+   
+     As the part of life cycle,webcontainer or servlet container calls threelife cycle methods.
+	 As the part of lifecycle,Web contaner or servlet container cals three different lifecycle methods.
+	     
+		 1.public void init(ServletConfig config) throws ServletException
+		 2.public void service(ServletRequest req,SevletResponse res) throw ServletException
+		 3.public void destroy
+Q)Lazy Loading and EalyLoading ?
+   A servlet container will load a servlet when a servlet object when first request arraived by default ,It is called LAZY loading.
+   In order to inform a servlet container about early loading we need to add <load-on-startup> tag under parent tag. the default value for <load-on-startup> tag is -1.
+   if the value is negative integer then it will be lazyly loaded.
+   if value is positive integet then it will be early loaded.
+      <servlet>
+	     <servlet-name>demo</servlet-name>
+		 <servlet-class>DemoServlet</servlet-clas>
+		 <load-on-startup>1</load-on-startup>
+	  </servlet>	 
+Q)Can we write a parameterized constructor  in a servlet class? 
+  By without writing a default Constructor ,we cannt write only parameter constructor in a Servlet class.
+  A servlet Container create an object of a servlet class at a server side callling newInstace() method.
+  This newInstace() check default constructor to create obejct.
+Q)What happens ,if you don't override doGet() for get request or doPost methods  for post request ?
+   Http status 405 error will be sent tobrowser.
+   
+Q) Types of URL patterns ?
+    1.Exact match : 
+		in web application ,if we created one servlet to handle  request coming from html page then we configure that servlet URL pattern in exact match.
+		 <url-pattern>/srv1</url-pattern>
+		 
+	2.Directory match:
+	      In a web application if we want to handle request which are coming from a group of html pages in one servlet then we need configure that servlet url pattern in directory match.
+		  
+		  <url-pattern>/a/b/*</url-pattern>
+		  
+	 3.Extension match 
+	   If one servlet define to handle the request that are coming from all html pages of the web application then we configure that servet url-pattern in extension match.
+	   <url-pattern>x.do</url-pattern>
+Q)Whatis difference between init-parameter and context parameter ?
+   a.init parameter are local to one servlet ,but context parameter are global to servlet.
+   b.Init parameters arestored in servlet config  object ,context parameters are stored in context object.
+Q) Life cycle and non-life cycle init() methods?
+   1.GenericServlet  we have two inot methods,called lifecycle and non-life cycle.
+   2.Life cycle init() method is inherited from Servlet interface and non-lifecycle init() method is added by generic Servlet.
+     public void init(ServletCOnfig config)   -- life cycle init methods
+	 public void init() throws ServletException -- non life cycle
+
+Q)How many types of parameters are there in servlet technology?
+
+   1.Init parameter
+   2.Context parameters 
+   3.request parameters
+Q)What is difference between a parameter and attribute of a servlet context object ?
+   a servlet can modify the values if attribute in servletcontext object but it cannot modify the valuesof thr parameter .so attribute values are not safe but paramters are safe.
+
+Q)What is difference between ServletContext and ServletConfig ?   
+ -----------------------------------------------------------------------------------------------------------------------
+				ServletConfig                  			|                 ServletContext                     
+ ----------------------------------------------------------------------------------------------------------------------
+ 1.ServletConfig is local to servlet                    | 1.ServletContext is global to all servlet
+ 2.it does not exists without a servlet					| 2.A servletContext is exist without servlet.
+ 3.A servlet config object can only store parameters    | 3.A servletContext Object can store both parameters
+														|	and attributes.
+----------------------------------------------------------------------------------------------------------------------------
+
+Q) Excepton handling in Serlvet ?
+    1.Programatic approach 
+         include in try catch block
+    2.Declarative approach 
+         a.Configure <error-page> in web.xml	
+		    <web-app>
+			   <error-page>
+			      <exception-type>java.lang.Exception</exception-type>
+				  <location>/error.html</location>
+			   </error-page>
+			   <error-page>
+			      <error-code>404</error>
+				  <location>/error.html</location>
+			   </error-pagge>
+			 </web-app>
+		b.We can configure error-page as html,jsp,servlet
+		
+Q)Difference between Webserver and ApplicationServer? 
+   
+  --------------------------------------------------------------------------------------------------------------------------------
+  |      	WEB	SERVER											|       APPLICATION SERVER                                        |
+----------------------------------------------------------------------------------------------------------------------------------			 
+  |  1. cannot contains domains .it means if we deploy the      | 1.An application server contains domains we can deploy two      |
+  |     projects in one webserver and we want to do server      |    projects in two differentdomains and do different server     |
+  |     settingd for proj1 and proj2 seperately then it is      |    settingd for eachh proj for seperately.                      |
+  |      not possible. 		 									|                                                                 |
+  |														        |                                                                 |
+  |	2.A web servercan have only servlet container so it can     |  2.an application server contains servlet container and Ejb     |
+  |		manage lifecycle of a servlet and jsp but nit ejb.      |     containers aslo ,it can manage the life cycle of servlet,   |
+  |														        |      jsp,EJB also.                                              |
+  |																|                                                                 |
+  |	3.In webserver ,we can deploy only a war file               |   3.in applicationserver we can deploy war,jar,ear files        |
+  |																|                                                                 |
+  |	4.Webserver will accept only http protocol request			|	4.application server accept any protocol request.             |
+  | 5. Webserver does not contain managed servers internally    |   5.a domain in application server will internally contain      |
+  |																|        managed servers ,because of managed servers we           |
+  |																|	will get feature called high availability.                    |
+  ---------------------------------------------------------------------------------------------------------------------------------
+  
+  
+Q)Difference between forwarding and re-direction mechanishm?
+  ---------------------------------------------------------------------------------------------------------------------------- 
+  |          Forwarding                                         |              Re-direction                                    |
+  -----------------------------------------------------------------------------------------------------------------------------|
+  |  1.in forwanding a request will be forwarded at server    | 1.In redirection a request is redirected form servlet 1 to     |
+  |   side from one servlet another and there will be no      |     servlet 2  and intimation is given to the client by       | 
+  |  intimation given to the clients                          |    changing the URL in addeess bar.                            |
+  | 2.In forwanding one pair of request and response objects  | 2.In redirection two spenate eairy at request                  |
+  |     are shared by  servlet2                               |  and response objects are created for servelt1 and servelt 2   |
+  |	3.The input values sent from browser are forwarded        |	3.The input values sent form browser with not be autumatically |
+  |	  autumatically from one servlet to another               |   redirected from one servlet to another.                     | 
+  |4.Forwarding is possible only with in a server.            | 4.Re-direction is possible with a server and across server also|
+  |5.While forwarding a destination must be a servlet or jsp  |  5.While redirecting a destination can be either java type of|
+  | or html                                                   | resource or non-java type resource .                           |
+  -----------------------------------------------------------------------------------------------------------------------------
+  
+ Q)When servlet object will be destroyed ?
+  a Servlet object Will be destroy by  ServletCOntainerin the following three cases.
+     1.When server shutdown .
+	 2.When application un-deploy
+	 3.When servlet object us waiting for reques from long time.
+	 4.When we stop application execution
+	 5.When we reload application execution.
+
+Q)Session management techniques in servlets ?
+   1.cookies
+   2.Hidden fields
+   3.HttpSession
+   4.URL rewriting
+Q) Difference between Servelet and jsp ?
+  
+   ---------------------------------------------------------------------------------------------------------------------------------------------------
+  |	     	Servlet													         	|     Jsp                                                            |
+  |--------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ 
+ 
+Q)Difference between GenericServlet and HttpServlet ?
+
+
+ 

@@ -1,0 +1,75 @@
+class-3:
+-------
+WE cannot  delete kubernate contaners ,we can delete the pods.in Kubernate everything will be managed in the form if pod.
+
+kubectl get pods -o wide
+ it get the data of all pods with each pod running in which node.
+ THe decision which pod running in which pod is decided by 'SCHEDULAR' .
+ 
+ SCHEDULAR:
+ ---------
+ this schdular follows different algorithms to run/launch the pod in  particular node.
+ To convience to schedular there are different type ways avaialble.
+ below is example in declarative approch of creation of pod.
+  1. 'nodeName' is attribute to specify the which node to create pod.
+   worker-pod2.yaml
+   ---------------
+      apiVersion: v1
+	  kind: Pod
+      meta-data:
+        name: worker2-pod
+	  spec:
+	    containers:
+		  -image: nginx
+		   name:web-pod
+		nodeName:worker2
+		
+		if the specified node os not avaible then schedular will not launch pod . it will be in pending stage
+		
+  2.nodeSelector atrribute we can use to provide multiple workers. any worker is down schedular give chance to another node.
+      apiVersion: v1
+	  kind: Pod
+      meta-data:
+        name: worker2-pod
+	  spec:
+	    containers:
+		  -image: nginx
+		   name:web-pod
+		nodeSelector:
+		  type:gpu
+     
+	   limitation of node selectors 
+           i. We cannot specify  more than one lable.
+           ii. we cannot specify different conditions.
+        solution for above problem is  Affinity.we have multiple Affinity like nodeAffinity.
+		
+	apiVersion: v1
+	  kind: Pod
+      meta-data:
+        name: worker2-pod
+	  spec:
+	    containers:
+		  -image: nginx
+		   name:web
+	  affinity:
+	    nodeAffinity:
+		  requiredDuratingSchedulingIgnoreDurationExecution:
+		    nodeSelectorTerms:
+			  - matchExpressions:
+			       -key:type
+				   operator: In
+				   values:
+				      - gpu
+					  - HPC
+		   
+		
+               or 
+		  preferredDuringSchedulingIgnoredDuringExecution:
+		   - weight: 1 
+		    - preference:
+			   matchExpressions:
+			   - key:type
+			     operator : In
+				 values: 
+				 - HPC
+				

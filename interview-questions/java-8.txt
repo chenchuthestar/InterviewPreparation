@@ -1,0 +1,151 @@
+java 8 new features:
+-------------------
+Q)Java 8 new features?
+	1)lambda expressions.
+	2)functional interfaces. 
+	       a.Predicate<T>   test()                   |  BiPredicate<T1,T2>
+		   b.Function <T,R> apply()                  | BiFunction<T,U,R)
+		   c.Consumer<T>   public void accept()      | BiConsumer<T1,T2>   | IntConsumer,LongConsumer,DoubleConsumer,. ObjIntConsumer<T>
+		   d.Supplier<R>     get() 	
+  		   e.PremitiveFunctional Interfaces : IntPredicate,LongPredicate,DoublePredicate, IntFunction,LongFunction,DoubleFunction, ToIntFunction,ToLongFunction...
+	3)default methods.
+	5)functions ,consumer ,supplier. 
+	6)Double colon operators.
+	7)stream api.            
+	8)date and time api.
+	9)Optional.
+	10)files feature.
+	11)splitIterator.
+
+Q)Java 8 OPtional  ?
+	 optional class deal with the Nullpointerexception,it provides methods which are used to check the presence of value of the particular variable,
+	  methods:
+	  -------   
+	  
+	  
+	   1.of(value)  -> if the value is null then throw NPE. 
+       2.ofNullable -> if the value is null then return Optional Empty.
+       3.isPresent() -> check wheather value is present or not.
+	   4.orElse()  -> give default value if no value in optional.
+	  
+	   
+Q)CompletableFuture ?
+ USing Asynchronous programming you can write non blocking code where concurrently we can run Many threads without blocking main thread.
+  When the task is completes, it notify the main thread whether task was failed or success.
+  there are different ways to implement asynchronous programming in multiple ways Futures,ExecutorService,CallBack Interfaces,THreadPools
+  Problem with ABove async ways 
+ 1.It cannot manually completed
+  2.Multiple Futures cannot be chained together.
+ 3.We cannot combine mutliple futures together
+4.No proper exception handling mechanish.
+
+runAsync() vs supplyAsync()
+---------------------------
+if we want to run some background task asynchronously and do not want to return anything from that task,then use completableFuture.runAsync() method.it takes arunnable object and returns completableFuture<void>.
+
+1.CompletableFuture,runAsync(Runnable)
+2.CompletableFuture.runAsync(Runnable, Executor)
+
+if we want to run some background task asynchronously and want to return anything from that task,we should use CompletableFuture.supplyAsync().it takes a supplier<t>and returns completableFuture<T> where T is the type of the value obtained by calling the given supplier.
+
+1.CompletableFuture.supplyAsync(supplier<T>)
+2.CompletableFuture.supplyAsync(Supplier<T>,Executor)
+
+thenApply vs thenAccept 
+
+Q)Future vs CompletableFuture ?
+   `
+
+Q) What is SplitIterator ?
+    Spliterator has been introduced in Java 8.
+    It provides support for parallel processing of stream of elements for any collection.
+    It provides tryAdvance() method to iterate elements individually in different threads. It helps in parallel processing.
+    To iterate elements sequentially in a single Thread, use forEachRemaining() method.
+    The trySplit() method is used partition the spliterator, if it is possible.
+    It helps in combining the hasNext() and next() operations into one method.
+Q)java 8 files example?
+     Stream<String> lines = Files.lines(Path.of("bookIndex.txt"));
+     lines.forEach(System.out::println);
+ 
+     BufferedReader br = Files.newBufferedReader(Paths.get("bookIndex.txt"));
+     Stream<String> lines = br.lines();
+     lines.forEach(System.out::println);
+Q) How to avoid diamond problem java 8 default methods  w r t intetface?
+
+Q)What is method reference ?
+  functionalInterface method can be mapped to our specified method by using :: (double colon)operator. This is called method reference.
+  Our specified method can be either static method or instance method.
+  
+   FunctionalInterface method and our specified method should have same argument types ,except this the remaining things like returntype,methodname,modifiersetc are not required to match.
+   
+Q)What Is Functional Programming
+
+	Basically, functional programming is a style of writing computer programs that treat computations as evaluating mathematical functions.	
+	A function is an expression that relates an input set to an output set.
+
+Q) what is functional interface ?
+
+	A functional interface in Java is an interface that contains only a single abstract (unimplemented) method. A functional interface can contain default and static methods which do have an implementation, in addition to the single unimplemented method.
+	
+Q) Java 8 Stream Intermediate And Terminal Operations ?
+
+     Intermediate operations return a stream,can be pipelined to another stream ,These are lazy and executed when terminal operation called.
+	    Ex: map(), filter(), distinct(), sorted(), limit(), skip()
+	 Terminal operations return end results not  stream.
+	    forEach(), toArray(), reduce(), collect(), min(), max(), count(), anyMatch(), allMatch(), noneMatch(), findFirst(), findAny()
+	 	 
+	
+Q) What is lambda expression?
+
+	Lambda expression is anonymous function which have set of parameters and a lambda (->) and a function body .You can call it function without name.
+	
+Q) What are functional interfaces?
+
+	Functional interfaces are those interfaces which can have only one abstract method.It can have static method, default methods or can override Object’s class methods.
+	There are many functional interfaces already present in java such as Comparable, Runnable.
+	
+Q) What is Optional? Why and how can you use it?
+
+	Java 8 has introduced new class Called Optional. This class is basically introduced to avoid NullPointerException in java.
+	Optional class encapsulates optional value which is either present or not.
+	It is a wrapper around object and can be use to avoid NullPointerExceptions.
+
+Q)What is the difference between Predicate and Function?
+	Both are functional interfaces.
+	Predicate<T> is single argument function and either it returns true or false. This can be used as the assignment target for a lambda expression or method reference.
+	Function<T,R> is also single argument function but it returns an Object. Here T denotes type of input to the function and R denotes type of Result.
+	
+Q) Are you aware of Date and Time API introduced in Java 8? What the issues with Old Date and time API?
+	Issues with old Date and TIme API:
+	Thread Safety: You might be already aware that java.util.Date is mutable and not thread safe. 
+				   Even java.text.SimpleDateFormat is also not Thread-Safe. 
+				   New Java 8 date and time APIs are thread safe.
+	Performance: Java 8 ‘s new APIs are better in performance than old Java APIs.
+	More Readable: Old APIs such Calendar and Date are poorly designed and hard to understand. 
+				   Java 8 Date and Time APIs are easy to understand and comply with ISO standards.
+				   LocalDate, LocalTime, and LocalDateTime are the Core API classes for Java 8.
+	
+Q) Do we have PermGen in Java 8?
+
+	Until Java 7, JVM used an area called PermGen to store classes. It got removed in Java 8 and replaced by MetaSpace.
+	Major advantage of MetaSpace over permgen:
+	PermGen was fixed in term of maximum size and can not grow dynamically but Metaspace can grow dynamically and do not have any size constraint.
+	
+Q) Why string class is immutable ?
+
+		In the case of String as several references pointing to the same object, by using one reference if we are allowed perform the change the remaining references will be impacted. To prevent this once we created a String object we can't perform any change in the existing object that is immutability is only due to SCP.
+		But in the case of StringBuffer for every requirement we are creating a separate object will be created by using one reference if we are performing any change in
+		the object the remaining references won't be impacted hence immutability concept is not require for the StringBuffer.
+Q) how to get next Day?
+
+	d.with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
+	
+Q) HashMap updates in java8 ? 
+
+	1.Before Java 8, the performance of the HashMap was poor due to the hash collision.
+	2.The retrieval time of elements from HashMap increases from O(1) to O(n).
+	3.Java 8 hash elements use balanced tree instead of linked lists after a certain threshold is reached.
+	4.HashMap starts with storing Entry objects in a LinkedList but after the number of items in a hash becomes larger than a certain threshold.
+	5.The hash will change from using a linked list to a balanced tree.
+    6.ConcurrentModification Exception handlled.
+Q)Optional of and ofNullable ?

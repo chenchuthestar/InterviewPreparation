@@ -1,0 +1,55 @@
+java-10 features:
+----------------
+1.local variable type inheritance
+2.Consolidated the JDK Forest into a single repository
+3.Garabse-COllector interface
+4.Parralel Full GC for G1.
+5.Application CLass Data Sharing
+6.Thread local Handshake
+7.Remove the native Header Generation Tool(javah).
+8.Additional Unicode Language-Tag Extentions
+9.Heap Allocation an alternative Memory Devices
+10.Experimental java based JIT compiler.
+11.ROOT certificates
+12.Time  base release versioning
+13.Java 10 API changes
+
+
+
+1.local variable type inheritance
+-------------------------------------
+var keyword not allowed for lambda expression syntax
+var keyword not allowed as global variable
+we cannot assign null for var.
+var keyword not allowed in method/constructor parameters...
+diamond operator with collection with Local Variable Type Inference not applicable,jvm allows any object to collection.
+Local Variable Type Inference not allowed in arrays with literal approach.with new operator approach allowed. 
+
+
+2.Java 10 API changes
+--------------------
+ copyOf():  this method added in list,set,Map in order to create  UnModifiable List,Set and Map.
+              var newunModifiableList=List.copyOf(oldList);
+			  
+ 
+ Collectors class has toList(),toSet(),toMap() static methods to get list or set or MAP OF elements from streams.
+ 
+         JAVA 10  Has provided the following methods to Collectors class to provide UnModifiable/immutable List,Set and Map.
+		   1.punlic static List unmodifiableList()
+		   2.public static Srt unmodifiableSet()
+		   3.public static Map unmodifiableMap()
+	
+	
+Consolidated the JDK forest into a Single Respository:
+-----------------------------------------------------
+upto java 9 version, the complete java has devided into repositories like root corba,hotspot,jdk,langtools,jaxp,jaxw,nashorn but,java 10 version all these 
+repositories are provided into single Repository under src inorder to simplify and streamline Development.
+
+Garbage-COllector interface:
+----------------------------
+upto java 9 version,DIfferent Garbage Collectors are existed in java likeG1,CMS....
+Which are available in different modules in java,they are not providing cleaner implementation,but JAVA 10 version has introduced 
+GC interface for cleaner implementation of Garbage collectors.
+
+
+

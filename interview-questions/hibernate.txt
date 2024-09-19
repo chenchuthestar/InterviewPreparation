@@ -1,0 +1,560 @@
+drawback of jdbc:
+-----------------
+	1.sql queries wrt database.if database changes then modify queries also.
+	2.all exceptions are checked and should handle with try-catch.
+	3.table structre modified then modify the query in all places.
+	4.Resultset is not serializable cannot trasfer data over n/w.
+	5.rowset not suported by all drivers.
+	6.connection,stmt closing in compulsary ,otherwise memeory leaks issue will occurs. 
+  
+Hibernate features:
+------------------
+	1.HQL  
+		a.Perform curd operation.
+		b.database independent.
+		c.hql look like sql.
+		d.hql contains variable names and class names.
+	2.un checked exceptions
+		a.all are unchecked in hibernate.
+	3.Caching
+		a.two levels of cache.
+	4.Criteria Api
+		a.it prepare tuned queries 
+	5.Lazy loading
+		loads objects lazily from database.
+	6.Locking
+		a.Optimistic locking
+		b.pessimistic locking 
+	7.Connection poling
+====================================================================================================================================================================
+q) can we define more than one class mapping in single hbm file?
+	yes .repeat<class> tag
+		<hibernate-mapping>
+			<class name="student" table"student">
+			 <id name="sid"  column"sid"/>
+			</class>
+			<class name="Employee" table"emp">
+			 <id name="eid" column="eid"/>
+			</class>
+		</hibernate-mapping>
+
+Q) How many mapping files can be created in project?
+   no fixed number .generally one hbm file for classes for one module which needs db support.
+   
+Q) how many configuration files are created in project?
+   it depends on no.of databases used in a project
+   
+============================================================================================================================================
+Configuration file:
+-----------------
+ we have to define below details in configuration file:
+		a.Connection properties
+		b.hiberate properties
+		c.mapping properties
+	
+	ex: hibernate.cfg.xml
+		<hibernate-configuration>
+			<session-factory>
+				
+				<property name="connection.driver_class">********</property>
+				<property name="connection.url"> ***************</property>
+				<property name="connection.username">***********</property>
+				<property name="connection.password">***********</property>
+				
+				<property name="dialect">*************</property>
+				<property name="show_sql">true</property>
+				
+				<mapping resources="product.hbm.xml"/>
+			</session-factory>
+		</hibernate-configuration>
+		
+======================================================================================================================================================
+Q)Dialect in hiberbate ?
+ Dialect is a class and a bridge between Java JDBC types and SQL types, which contains mapping between java language data type and database datatype.
+ Dialect allows Hibernate to generate SQL optimized for a particular relational database. Hibernate generates queries for the specific database based
+ on the Dialect class.
+==================================================================================================================================
+hbm2ddl_auto property:
+---------------------
+   a.validate (default)
+   b.created ( drop if existing any and create)
+   c.update ( create if not exist and use same if exist)
+   d.create-drop (first create and drop after work completes)
+   
+Q) difference between load and get methods ?
+	1.load() -> load the object lazily ,if not found throw ObjectNotFound exception
+	2.get() -> load the early , if not found return null.
+	
+Q) difference beween update and merge ?
+	trasfer object from detached state to persistance states
+	update() -> session cache contains same object then throws NONUNIQUEObjetException
+	merge() ->  session cache contains same object then changes copy and save in db but not throw exception.
+
+Q)what is difference between save() and persist() ?
+	both are used to save the object in db.
+	save () -> save the object in db and return id in seriable format. suitable for generator other than assigned.
+	persist() -> store object in db but not return id if obj.
+   
+	
+Q) Differentiate between findById() and getOne()?
+ The findById() is available in CrudRepository while getOne() is available in JpaRepository. The findById() returns null if record does not exist while the getOne() will throw an exception called EntityNotFoundException. 
+ 
+Q)Difference between save() vs saveOrUpdate() ?
+
+  save() : insert the data to databse,if primary key already exist the it will throw th execption.
+            Return serializable generated id.
+			Transientstate state  to persistence state.
+  saveOrUpdate() : Insert the data is object is not present in database else will update.
+                    Returns void after saving object.
+					Transientstate or ditached state to persistence state.
+============================================================================================================================================
+Object states in hibernate:
+--------------------------
+1. transient state
+2. persistance state
+3. detached state
+
+			Transient state 
+					|
+	save()			|  
+	persist()		|
+	saveOrUpdate()	|
+					|
+			persistance state
+					|     
+	close()			|    update()
+	evict()			|    merge()
+	clear() 		|    saveOrUpdate()
+					|
+			Detached state		
+			
+Generator clasess:
+-----------------
+	1.Assigned (default)
+	2.increment (maxid +1)
+	3.sequence (hibernate_sequence)
+	4.hilo  (max_lo+next_hi+next_hi)
+	6.identity  ( folow auto increment algarithm of db)
+	7.native (sequence,identity,hilo)
+	8.foreign
+	9.UUID(Ip,start of jvm,s/m time,counter value of jvm)
+	10.custom generator (IdentifierGenerator (i) )
+   
+Q) when LazyInitializeException occurs?
+	when we are accesing non id property of proxy object after session closed.
+
+Q)  What is the Java Persistence API?
+	The Java Persistence API (JPA) is the specification of Java that is used to persist data between Java object and relational database. 
+	JPA acts as a bridge between object-oriented domain models and relational database systems.
+	As JPA is just a specification, it doesn't perform any operation by itself. 
+	It requires an implementation. Therefore, ORM tools like Hibernate, TopLink, and iBatis implements JPA specifications for data persistence.
+	The first version of the Java Persistence API, JPA 1.0 was released in 2006 as a part of EJB 3.0 specification.
+	
+	JPA is only a specification. The ORM tools like Hibernate, iBatis, and TopLink implements the JPA specification .
+	 
+Q)What is the object-relational mapping?
+	The object-relational mapping is a mechanism which is used to develop and maintain a relationship between an object and the relational database by mapping an object state into the database column. It converts attributes of programming code into columns of the table. It is capable of handling various database operations easily such as insertion, updation, deletion, etc.
+	
+Q)What is the JPQL?
+	JPQL is the Java Persistence query language defined in JPA specification. It is used to construct the queries.
+Q)What is an orphan removal in mappings?
+	If a target entity in one-to-one or one-to-many mapping is removed from the mapping, then remove operation can be cascaded to the target entity. Such target entities are known as orphans, and the orphanRemoval attribute can be used to specify that orphaned entities should be removed.
+
+Q)What type of collections can be used in JPA?
+	To store multivalued entity associations and a collection of objects, following types of Java collections is used: -
+
+	List
+	Set
+	Map
+	
+Q)What is the purpose of cascading operations in JPA?
+	If we apply any task to one entity then using cascading operations, we make it applicable to its related entities also.
+
+Q)What are the types of cascade supported by JPA?
+
+	In JPA, if any operation is applied on an entity then it will perform on that particular entity only. These operations will not be applicable to the other entities that are related to it.
+	To establish a dependency between related entities, JPA provides javax.persistence.CascadeType enumerated types that define the cascade operations.
+	
+	Following is the list of cascade type: -
+
+	PERSIST: In this cascade operation, if the parent entity is persisted then all its related entity will also be persisted.
+	MERGE: In this cascade operation, if the parent entity is merged, then all its related entity will also be merged.
+	DETACH: In this cascade operation, if the parent entity is detached, then all its related entity will also be detached.
+	REFRESH: In this cascade operation, if the parent entity is refreshed, then all its related entity will also be refreshed.
+	REMOVE: In this cascade operation, if the parent entity is removed, then all its related entity will also be removed.
+			ALL In this case, all the above cascade operations can be applied to the entities related to the parent entity.
+	
+Q)What is JPQL?
+
+	The Java Persistence Query language (JPQL) is a part of JPA specification that defines searches against persistence entities. It is an object-oriented query language which is used to perform database operations on persistent entities. Instead of the database table, JPQL uses entity object model to operate the SQL queries. Here, the role of JPA is to transform JPQL into SQL. Thus, it provides an easy platform for developers to handle SQL tasks. JPQL is an extension of Entity JavaBeans Query Language (EJBQL).
+
+Q)What are the features of JPQL?
+	Some of the essential features of JPQL are: -
+
+	It is simple and robust.
+	It is a platform-independent query language.
+	JPQL queries can be declared statically into metadata or can also be dynamically built in code.
+	It can be used with any database such as MySQL, Oracle.
+	
+Q)What is PagingAndSortingRepository?
+	PagingAndSortingRepository provides methods that are used to retrieve entities using pagination and sorting. It extends the CrudRepository interface.
+	
+Q)What is @Query used for?
+  Spring Data API provides many ways to define SQL query which can be executed and Query annotations one of them. The @Query is an annotation that is used to execute both JPQL and native SQL queries.
+  
+Q)Give an example of using @Query annotation with JPQL.
+  
+  Here is an example of @Query annotation from Spring Data Application which returns all active orders from the database:
+	@Query("SELECT order FROM Orders o WHERE o.Disabled= 0")
+	Collection<User> findAllActiveOrders();
+
+	@Query("select e from Employee e where se.name = ?1") 
+	List<Employee> getEmployees(String name);
+
+
+Q)spring boot jpa respositiry hierarichy:
+----------------------------------------
+	Repository      -> no methods  
+	CurdRepository  ->	count(),delete(),deleteAll(),deleteById(ID id),existsById(ID id),findAll(),	findById(ID id),save(S entity),saveAll(Iterable<S> entities)
+	PagingAndSortingRepository  -> findAll(Sort sort), findAll(Pageable pageable),
+	JpaReposotiry               -> findAll(),deleteAllByIdInBatch(Iterable<ID> ids),deleteAllInBatch(),
+	                               deleteAllInBatch(Iterable<T> entities),findAll(),flush().saveAndFlush(S entity)
+	OurOwnRepository       ->    
+	
+Q) Why setters and getters are compulsary in a POJO  class of hibernate? 
+   1. when we are savig or updting or deleting on object ,internally hibernate calls getters methods to read the data from object.
+   2.when selecting object from the database  then internally hibernate calls setter to set the data to POJO class object .
+   3.So in POJO class both setters and getter for each propertly is compulsary. 
+ 
+Q) Why  default constructor is mandotory in a POJO class of hibernate ?
+ 
+	When we are selecting on object,internally hibernate creates a POJO class object by calling default constructor is must in pojo class.
+	if there is no default constructr whhen we ca save an object of class but we cannot load.
+	
+Q) What is inheritance mapping ?
+	if there are common properties then in order to get re-usablity  ,we create a super class for the common properties and we extend sub classes from that class.
+	
+	1.Table per clas 2.table per concreatec lass  3. Table per sub class
+	
+	1.Table per class:
+	------------------
+	  i.when we want save all classes datainto single tabe.
+	  ii.extra column is required ie discriminator column 
+	  iii.discriminator tag musst be added immediately after closing <id> tag.
+	       <h-m>
+				<class name="Payement" table="paymemt">
+					<id name="paymentid" column="payid"/>
+						<discriminator column="pmode" type="string" length="6"/>
+					<property name="pdate" column="pdate"/>
+				  <subclass name="card" discriminator-value="cp">
+				  
+				  </subclass>
+				  <subclass name="Check" discriminator-value="chp">
+				  
+				  </subclass>
+			 <class>
+     	</h-m>			 
+	
+	2.table for Concreate class:
+	---------------------------
+		 i.To store each concreate class object of inheritance in seperate table of database.
+		 ii.define <union-subclass> under <class>.
+     3.Table per sub-class:
+	 -----------------------
+	     1.if we want to map  super class and its sub classes to its own tables of database.
+		 2.sub class table has a primary key and it is also a foriegn key to get the relation with super class table.
+		 3.configure <joined-subclass> tag under <class>
+		 4.each sub class table has foriegn key column.so to tell the  hibernate about foreign key column we need to use <key>
+		    <key colmn="pid"/>
+	 
+	 
+BULK OPerations:
+---------------
+	1.HQL    2.CriteriaAPI    	3.NativeSQL
+	
+	HQL:
+	---
+	1.It is database independent query language.it is same like sql
+	2.To read complete enity use 'from' keyword , to read partial entity 'select' .
+	  Query q = session.createQuery("from Employee e where e.deptno=?");
+    CRITERIA-API:
+	------------
+	i.Criteria interface,methods and coresponding methods combinely we can called as Criteria-api.
+	ii.We can perform SELECT operation.
+	iii.Hibernate only prepare tuned queries for selecting the data and improve the performance.
+
+	NativeSQL:
+	----------
+	  i.To execute sql queries directly from hibernate application.
+	     SQLQuery query=session.createSQLQuery("select * from emp");
+		 
+		 
+		 
+-----------------------------------------------------------------------------
+Q)Relationships in hibernate ?
+   Hibernate provides 4 typesof relationships can be applied between two pojo classes.
+    1.One-to-Many  2.Many-to-One 3.Many-to-Many 4.One-to-One
+	
+	One-To-Many:
+	-----------
+	1.In parent class we need to take a reference variable of type collection.
+	2.in parent class mapping ,we need to map the collection.
+	3.in client code ,we need to add objects of chailds class to collection object and then we need to set collection object to parent object.
+	
+	 public class customer{
+        private int customerId;
+        private string customername;
+        private Set<Item> items;
+      } 
+ 
+   In one-to-many relationship,hibernate-decides  weather a parent operation should be executed on it's chaild objects on not,based on
+   caseade attribute configure with collection mapping 
+	
+	** possible values for cascase is attribute is  : none ,all,save-update,delete,all-delete-orphan 
+	
+		Lazy Attribute:
+		--------------	
+		1.This attribute tells to hibernate to load a collection along with parent from database or not .
+			the default valueis true.it means  collection of parent lazyy loaded.
+		   setting lazyattribute to false it is called early loading.
+		
+		2.lazy loading a collection means,hibernate does n't read chaild records,when selecting parent record.
+
+		3.if we set lazy attribute value to false them hibernate selects chaild records also along with the parent record this is 
+			called early loading
+			
+			in case of lazy loading,chaild record areloaded,when interator is started on the collection objects
+			
+	Many-to-One:
+	-----------
+	1. in a application if we want to perform operation from chaild class object then we need to apply many-to-one relationship.
+	2.in Many-to-one relationship ,we need a reference variable of type parent class in chaild class.
+	3.In hibernate if relation is to-many then we need a reference variable of collection in parent class.If relation is to-One then we
+	need a  reference varibale of type parent type in chaild classes.
+	4.if we want to apply many-to-one relation from item to customer then in item class we need reference variable of customer in item class.
+	    public class Customer {             public class Item {
+		 private int cusid;                      private int itemId;
+		 private String custName;                private Strng itemName;
+		                                         private int price;
+		 }                                       private Customer cust;
+											 }
+     Lazy Attribute in Many-to-Many :
+	 --------------------------------
+	 1.the Default value of lazy attribute is proxy in <many-to-many> tag
+	 2.if lazy="proxy" then with chaild object it,s parent object is not seleted .this is called lazy loading 
+	 3.if lazy="false" then with chaild object with parent object aslo selected it is called early loading.
+	 4.in Many-to-one relation ship when lazy ="proxy" then hibernate creates aproxy object of parent and then it will set proxy object to chaild.
+   
+	Many-to-Many :
+	------------
+	1.Many-to-Many is combination of one-to-many and reverse aslo one-to-many.
+	2.for Example if you take book and author then from book_to_auther relation ship is ONE-TO-MANY and from author to book ,relationship is many-to-many.
+	3.in hibernate if the relationship is TO-MANY then we need to reference variable varibale of type colection in parent class but in 
+	   MANY-TO-MANY both  classes are parent classes and aslo chaild classes.so we need a reference variable of tye collection in both classes.
+	   
+	   public class Book{                       public class Author{	   
+	     private int bookId;                         private int authorId;
+		 private String book_name;                   private String authName;
+		 private Set<Author> author;                 private Set<Book>  books;
+		 
+	   }                                           }
+   4. in many-to-many relationship in database we need 3 tables .because database does not support MANY-TO-MANY relationship.
+   5.in order to get MANY-TO-MANY relation between two table ,we need a third table which is called JOIN table.
+   6.We need to apply one-to-many relationship from table1 to join table and one-to-many relaionship from  table3 to join table.then we will
+     get MANY-TO-MANY relationship between table1 and table2.
+
+      BOOK                 Author     	 
+	bid    bname         authId    authName
+	
+					BOOK_AUTHOR
+				bid_fk    auth_fk
+				
+				
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "BOOK_AUTHOR",
+            joinColumns = {
+                    @JoinColumn(name = "author_id", referencedColumnName = "id",
+                            nullable = false, updatable = false)},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "book_id", referencedColumnName = "id",
+                            nullable = false, updatable = false)})
+    private Set<Course> courses = new HashSet<>();
+	
+	
+	
+	 @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+    private Set<Student> students = new HashSet<>();
+
+
+  ONE-TO-MANY:
+  ------------
+      1.one-to-one with foreign key
+	  2.one-to-one primary key
+	  
+	One-one-One with foreign key :
+	------------------------------
+	1.it is like many-to-one relationship oly but foreign key column should not allow duplicate and null values.
+	2.to get one-to-one relationship in hbm filewe need to add two attributes unique-true and  not-null=true to <many-to-one> tag.
+	3.In order to get one-to-one relationship between two objects in chails POJO  class ,we need a reference varibale of patent class.
+	  public class Person                    public void PassPort{
+	  {                                       private int passPortNumber;
+	    private int personId;                 private Date expireDate;
+		private String personName;            private Person person;
+	  }                                      }
+	  
+	 one-to-one With Primarykey :
+	 ---------------------------
+	 1.this relationship is applicable,if primary key of the chaild record both are same.
+	 2.in this relationship, a  single column of chaild table acts as primary key and aslo as foriegn key.
+	 3.to copy primary key of parent record to primary key of chaild record, foreign  generator class is used
+	 5.foreign generator is only applicable in one-to-one with primary key relationship.
+	 6.foreign is generator class ,which copies primary key of parent record to primary key of chaild record.
+	 
+	
+	  
+
+Q) what is 1+n select problem?
+ When we want to read N Parent Object then hibernate selects the N parent bjects in one select operation and execute n selects for reading chaild records of n customer.
+ 1+N Selects the performance of application will be decreases.
+  We can use fecthing stratagies to solve 1+N problem.
+  Hibernate given three fetching strategies 
+    1.SELECT ( Default 1+N )
+	2.Join  ( execute single select for selecting all parent records on chaild records) .it does not work in HQL
+	3.Sub-select ( execute one select for all parent records and one select for all chaild records. '1+1'.)
+	
+
+
+Q)When LazyInitializeException occurs in relationships?
+  Suppose relationships is one to many and we are reading the collection of parents object after closing then session
+  in lazy loading then LazyInitializeException thrown.
+  
+Hibernate JOINs;
+---------------
+Hibernate support four types of joins 
+    1.left join    2. right join   3. inner join  4.full join
+	
+Component Mapping:
+-----------------
+Component mapping is used to store object of one class along with object id another class in a single table.
+ Ex:  if we want to store object of address class along with Employee Object.
+ 
+ 
+Hibernate Connection pooling:
+----------------------------
+ 1.Built in connection poolng
+ 2.Third party connection pooling  (C3P0,PROXOOL)
+ 3.server side connection pool    
+      
+	  
+	  Built in connection pooling:
+	  ----------------------------
+	     1.By default ,hibernate comes with built in connection pool also called jdbc conection pool
+		 2.when SessionFactory Object created then builtin connection pool also created and when factory is close then automatically conection
+		   pool also connection closed.
+		 3.By default the pool size is 20,if we want  we can increase or decrease size by adding following property to hibernate.cfg.xml
+		    <property name="connection.pool_size">10</property>
+	     4.Hibernate provided built-in connection pool is not intended fir using in realtimeprojects.because it does not have 
+		   all connection pool cababilities.
+		  
+		  
+	 Third party connection pool:
+	 --------------------------- 
+	     1.Along with hibernate two third party connection pool are disributed for standalone applications with hibernate.
+		     1.c3p0  2.Proxool
+		 2.these two connection pools are recommended to se in only standalone java projects ,not for server side projects.
+		 3.if we want use c3p0 connection pool in hiberanate application then we need ti do two changes.
+		    1.add c3p0 properties in hibernate.cfg.xml
+			2.add c3p0 related jars in buildpath.
+			
+			<property name="c3p0.min_size">3</property>
+			<property name="c3p0.max_size"></property>
+			<property name="connection.provider_class">org.hibernate.connection.c3poConnectionProvider</property>
+		When you add c3p0 properties to hibernate.cfg.xml file the at run time hibernate disables built-in connection pool and initialize c3p0 connection pool.
+		
+		
+		in the case proxool ,we need the following changes to application.
+		   1.create a seperate xml file for connection properties
+		   2.config xml file name and its alias name in hibernate.cfg.xml
+		   3.add proxool jars to the class path.
+		   proxool-config.xml
+		      <something> 
+			     <proxool>
+				   <alias>pool1</alias>
+				   <driver-class>org.jdbc.driver.OracleDriver</driver-class>
+				   <driver-url>jdbc:oracle:thin:@localhost:1521:xe</driver-url>
+				   <driver-properties>
+				     <property name="user" value="system"/>
+				     <property name="password" value="tiger"/>
+		          </driver-properties>
+				  <max-connection-count>8</max-connection-count>
+				</proxool>
+			 </something>
+		   
+      in hibernate.cgf.xml ,disable connection properties and add proxool properties.
+	  
+	  <propert name="proxool.xml"> proxool_config.xml</property>
+	  <property name="proxool.pool_alias"> pool1</property>
+	  <property name="connection.provider_class"> org.hibernate.connection.provider</property>
+	  
+	  ServerSide Connection pool:
+	  -------------------------
+	  1. in real time application a connecton pool and datasource object to read the connection from the pool are created by administrator.
+	  2.thedatasource object will be stored in JNDI registry of the server
+	  3.if hibernate or any java applications want to get a connection from pool then first it needs to get the datasource objectfrom JNDI registry.
+	  4.After obtaining Datasource object,an applicaton can get the connection from pool using data source object as mediator.
+	  5.In hibernate ,it gets datasource object from registry with the help of JNDI properties.
+	  6.In hibernate.cfg.xml we need to configure the following JNDI related propertiss instead od connection properties.
+	  
+	   <prperty name="">fullly qualifies jndi cass name</property>
+	   <property name="jndi.url">url to connect jdi registry server</property>
+	   <property name="conecton.datasource>key(also called jndi name)</property>
+	  
+ 
+HibernateLocking:
+-----------------
+ if two transactions are parallely working on same data and if oen transaction is overriding the modification done by another transaction then first tranactions lost its change.
+ 
+	1.Optimitic locking  ( version/TimeStamp)  
+			if version mismatch then throws staleObjectStateException
+	2.pessimistic locking
+	        Txn require a lock of record at the time of selecting only for updating record but another txs can read cannot perform update until release the lock.
+
+COMPOSITE ID:
+-------------
+1.If more than one column is used in a  primary key then it is called composite primarykey.
+2.Some times a single column value cannnot be possible for identifying one record  among multiple records of table.in this situaltion we can use combination of columns as primary key.
+
+A Composite Primary Key is a combination of one or more columns that forms a primary key. When a database table contains more than one primary key column, it is known as a composite primary key or a composite key.
+
+         @Embeddable
+         public class Ck_accId implements Serializable{
+             private int user_id;
+             private int acc_id;
+			 // setter & getter
+			 // equals and hashcode method
+         } 
+
+Q) If we write annotation inpojo classes and also hbm file then which is consider ?
+    1.in cfg file if we write <mapping resource="hbmfile"/> then hbm file is loaded.
+	2.if we write <mapping  class="classname"/> then annotations are loaded.
+	3.if we writw both then exception will raised.
+	
+
+
+Q)dirty check in hibernate  ?
+			  	
+			 
+			 
+			 
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	

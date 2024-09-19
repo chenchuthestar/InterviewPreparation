@@ -1,0 +1,262 @@
+Q)What is REST ?
+	REST is the acronym for REpresentational State Transfer. REST is an architectural style for developing applications that can be accessed over the network.
+	REST is a stateless client-server architecture where web services are resources and can be identified by their URIs. Client applications can use HTTP GET/POST methods to invoke Restful web services. REST doesn’t specify any specific protocol to use, but in almost all cases it’s used over HTTP/HTTPS.
+		
+Q) What is RESTful?
+	Representational State Transfer (REST)/RESTful web services is an architectural style that helps computer systems to communicate over the internet. 
+	These web services make microservices easier to understand and implement.
+Q) What are advantages of REST web services?
+	1.Learning curve is easy since it works on HTTP protocol.
+	2.Supports multiple technologies for data transfer such as text, xml, json, image etc.
+	3.No contract defined between server and client, so loosely coupled implementation.
+	4.REST is a lightweight protocol.
+	5.REST methods can be tested easily over browser.
+	
+Q)Stateful and stateless.
+
+
+Q)What is @RestController  ?
+	
+Response Http Status code:
+-------------------------
+	1** information  : 100 Continue ,101 Switching Protocol
+	2** success      : 200 OK,201 Created,202 Accepted,204 No Content 
+	3** redirect : 300 Multiple Choice,301 Moved perminantly,302 Found,304 
+	4** client side error :400 Bad Request,401 - Authoriazed,403 Forbidden,404 Not Found,405 Method Not Allowed,408 Request Timeout
+	5** server side error :500 Internal Server Error,501 Not Implemented,502 Bad Gateway,504 Gateway Timeout
+
+Q)HTTP Status code are standard codes and refers to predefined status of task done at server. For example, HTTP Status 404 states that requested resource 
+		is not present on server.
+
+	Consider following status codes:
+
+	200 - OK, shows success.
+	201 - CREATED, when a resource is successful created using POST or PUT request. Return link to newly created resource using location header.
+	304 - NOT MODIFIED, used to reduce network bandwidth usage in case of conditional GET requests. Response body should be empty. Headers should have date, location etc.
+	400 - BAD REQUEST, states that invalid input is provided e.g. validation error, missing data.
+	401 - Authoriazed, states that user is not having access to method being used for example, delete access without admin rights.
+	404 - NOT FOUND, states that method is not available.
+	409 - CONFLICT, states conflict situation while executing the method for example, adding duplicate entry.
+	500 - INTERNAL SERVER ERROR, states that server has thrown some exception while executing the method.
+
+Q) Different annotations in Spring rest?
+		@RestController , @RequestMapping ,  @GetMapping  ,@note,@PutMapping,@DeleteMapping,@PathVariable,@RequestParam,@defaultValue
+		@RequestBody
+
+Q)What is purpose of a URI in REST based webservices?
+	URI stands for Uniform Resource Identifier. Each resource in REST architecture is identified by its URI. Purpose of an URI is to locate a resource(s) on the server hosting the web service.
+		<protocol>://<service-name>/<ResourceType>/<ResourceID>
+Q)How does Microservice Architecture work ?
+	Clients – Different users from various devices send requests.
+	Identity Providers – Authenticates user or clients identities and issues security tokens.
+	API Gateway – Handles client requests.
+	Static Content – Houses all the content of the system.
+	Management –  Balances services on nodes and identifies failures.
+	Service Discovery – A guide to find the route of communication between microservices.
+	Content Delivery Networks – Distributed network of proxy servers and their data centers.
+	Remote Service – Enables the remote access information that resides on a network of IT devices.
+	
+Q)Mention what are the HTTP methods supported by REST?
+
+	HTTP methods supported by REST are:
+
+	GET: used for fetch resource from server to client.
+	
+	POST: create new resource at server side
+	PUT: Modify/update the existing resource in server side
+	DELETE: At the request URL it removes the resource
+	OPTIONS: it indicates that execute multiple blocks or multiple taks or multi threadinf
+	HEAD: do some work at server side and return nothing to client
+	
+Q)Mention what is the difference between PUT and POST?
+	PUT puts a file or resource at a particular URI and exactly at that URI. If there is already a file or resource at that URI, PUT changes that file or resource. If there is no resource or file there, PUT makes one
+
+	POST sends data to a particular URI and expects the resource at that URI to deal with the request. The web server at this point can decide what to do with the data in the context of specified resource
+
+	PUT is idempotent meaning, invoking it any number of times will not have an impact on resources.
+
+	However, POST is not idempotent, meaning if you invoke POST multiple times it keeps creating more resources
+	
+Q)What are disadvantages of REST web services?
+	1.Since there is no contract defined between service and client, it has to be communicated through other means such as documentation or emails.
+	2.Since it works on HTTP, there can’t be asynchronous calls.
+	3.Sessions can’t be maintained.
+
+Q)What are the disadvantages of statelessness in RESTful Webservices?
+	Web services need to get extra information in each request and then interpret to get the client's state in case client interactions are to be taken care of.
+Q)What is the difference between Monolithic, SOA and Microservices Architecture?
+
+	Monolithic Architecture is similar to a big container wherein all the software components of an application are assembled together and tightly packaged.
+	A Service-Oriented Architecture is a collection of services which communicate with each other. The communication can involve either simple data passing or it could involve two or more services coordinating some activity.
+	Microservice Architecture is an architectural style that structures an application as a collection of small autonomous services, modeled around a business domain.
+	
+Q)What is the use of Accept and Content-Type Headers in HTTP Request?
+	Accept headers tells web service what kind of response client is accepting, so if a web service is capable of sending response in XML and JSON format and client sends Accept header as application/xml then XML response will be sent. For Accept header application/json, server will send the JSON response.
+
+	Content-Type header is used to tell server what is the format of data being sent in the request. If Content-Type header is application/xml then server will try to parse it as XML data. This header is useful in HTTP Post and Put requests.
+	
+Q)Mention what is JAX-WS and JAX-RS?
+
+	Both JAX-WS and JAX-RS are libraries (APIs) for doing communication in various ways in Java. JAX-WS is a library that can be used to do SOAP communication in JAVA, and JAX-RS lets you do the REST communication in JAVA.
+	
+Q)List out the tools or API for developing or testing web api?
+
+	Testing tools for web services for REST APIs includes
+
+		1.Spring REST web service using MVC
+		2.Jersey API
+		3.CXF
+		4.Axis
+		5.Restlet
+		
+Q)Mention what is the difference between SOAP and REST?
+
+					SOAP                  			        REST
+	 1.a xml based message protocol						1. an architectural style  protocol
+	 2.uses a WSDL for communication between            2. uses xml or JSON to send and receive data
+	 3.invoke services by calling RPC method.			3.simply call services via URL path
+	 4.don't return human readable results.				4.Results is readable which is just is just plain XML.
+	 5.transfer is over http . also use other protocol  5 transfer is over HTTP.
+	  such as SMTP ,FTP etc....
+	 6.javascript on call soap ,						6.Easy to call from javascript
+		but it is difficulty to implement
+	 7.performance is not great compared to REST.       7.performance is much betterr compared to soap less CPU insentive learner code etc.
+	 8.SOAP stands for simple object Access protocol.	8.rest uses URI to  expose bussiness logic
+	 9.JAX-WS is the java api for SOAP webservices.      9.JAX-RS is the api for Restful webservices
+	 10.SOAP define its own security		             10.restful webservces inherit security measures from the undeploying transport
+ 
+
+Q) What is Endpoint?
+
+	It is set of details of provider application .details like URL,Method type,input & output of one service provider.
+	these details are used by consumer application to make request and response.
+ 
+ Q) Different types of parameters supported by RESTAPI ?
+	   1.Query parameter  (? &)   @QueryParam
+	   2.Matrix Parameter (;)	  
+	   3.path Parameter (/ { })
+	   4.Form parameter ( html form / form class)  @Formparam
+	   5.Header paramer(k = v)  : used for security details like un/pwd/token/otp...  @HeaderParam
+	   
+Q) Content Negotiation in REST ?
+   it is processing returning data using mediatype based on client request in multiple type.
+   Request should contain header "Accept" with one value.
+   it provides supports  that mediatype type then data is given back to client else Http - 406
+   it provider not supporting json then we it return HTTP-406 not acceptable.
+   @RequestMapping(value = "/employee", method = RequestMethod.GET,
+			produces = { "application/json", "application/xml" })
+   
+Q) what is dynamic  path ?
+
+	To send a value along url without any key dynamic path is used .it can be specified using symbols { }
+	if a request is made then higest priority shoud be given to specific path .if no matching found then go to dynamic.
+
+Q)what is @BeanParam ?
+      it will read input parameters entered in request and converts them into one class object 
+	  We can apply this over any type  of param in Rest.
+	  
+Q) what is WADL ?
+   Web application description language .it is a xml file which provides details of end point of service.
+   API : Application programming interface, it is a document which provides information of java code  (class/enum/annotation/interface) ,basic api typeis html.
+   
+   http://localhost:port/app/application.wadl
+	  
+Q) RestTemplate examples ? 
+	Rest Template is used to create applications that consume RESTful Web Services. You can use the exchange() method to consume the web services for all HTTP methods. The code given below shows how to create Bean for Rest Template to auto wiring the Rest Template object.
+	
+	String result = restTemplate.getForObject(uri, String.class);
+	ResponseEntity<EmployeeListVO> response = restTemplate.getForEntity(uri, EmployeeListVO.class);
+	
+	HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+    headers.set("X-COM-PERSIST", "NO");
+    headers.set("X-COM-LOCATION", "USA");
+ 
+    HttpEntity<String> entity = new HttpEntity<String>(headers);
+
+
+    ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);     
+	 EmployeeVO result = restTemplate.getForObject(uri, EmployeeVO.class, params);
+	
+   
+Q)Difference between POST and PUT And PATCH ?
+
+POST  : 1.You use POST to create a resource and instruct the server to make a Uniform Resource Identifier (URI) for it. For example, when you want to 
+		create a new article you would POST to /articles to make the file and get the URI, so you end up with /articles/1234/.
+		2.it is always for creating a resource ( does not matter if it was duplicated )
+PUT:  1.PUT also creates resources, but it does so for a known URI. So, you can PUT to /articles/1234/. If the article doesn't exist, PUT creates it. 
+		If it does exist, this HTTP verb updates it. While PUT seems nearly identical to POST, the difference between the two comes down to idempotence. 
+      2.it is for checking if resource is exists then update , else create new resource.
+	 
+	Idempotence is a property that creates identical side effects whether you have one or many results. PUT has this characteristic, while POST creates new resources infinitely. In general, POST works best for resource creation, while PUT handles updates.  
+	
+PATCH : 1.So, where does PATCH come into the picture? This HTTP verb partially updates resources without sending the complete representation of it. 
+	    When you're working with complicated objects and resources, it's a big deal to update more than you need to. 
+		2.it is always for update a resource.
+
+Q)What are different parts of HTTP request  HTTP Response  ?
+   HTTP Header:             Http Response:
+	   1.Request line           1.Status line
+	   2.Header                 2.Header
+	   3.Body                   3.Body, optional
+Q) How to specof fields while sending response in restapi?
+   1st way : spring.jackson.default-property-inclusion: NON_NULL
+   2nd way :  @JsonFilter("userFilter")
+   @GetMapping("/user")
+	public MappingJacksonValue getUser() {
+		User u = new User(10,"chenchu",10.23);
+		SimpleBeanPropertyFilter simpleBeanPropertyFilter =
+                SimpleBeanPropertyFilter.serializeAllExcept("name");
+		FilterProvider filterProvider = new SimpleFilterProvider()
+                .addFilter("userFilter", simpleBeanPropertyFilter);
+		MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(new User(10,"chenchu",10.23));
+        mappingJacksonValue.setFilters(filterProvider);
+		return mappingJacksonValue;
+	}
+	
+Q)CORS (Cross-origin resource sharing)  
+allows a webpage to request additional resources into browser from other domains e.g. fonts, CSS or static images from CDNs. CORS is a W3C specification which provides 
+options for the CORS request. Spring 4.2+ provides build in support to for the Cross-origin resource sharing. In this post we will take a closer at the Spring Boot CORS support 
+and how to enable it for your application.
+
+CORS isa protocol that enables scripts running on a browser client to interact with resources from different origin.for Example,if a UI app wishes to make an api call running on a different domain, It would blocjed frin doing so by default due ti CORS,
+it is a specific from WsC implementated by most browsers.
+so CORS is not a security issue/attack but the default protection provided by browsers to stop sharing the data/communication between different origins.
+  OTHER ORIGIN MEANS THE url BEING accessed differe from the location that the javascript is running from, by having
+    1.a different scheme (HTTs or HTTPS)
+	2.a different domain
+	3.a diffferent port
+	
+ @CrossOrigin(origis="http://localhost:4200")   
+ @CrossOrigin(origins="*")
+ 
+   These annotation we have place all rest controller classes
+   if we want to do globally 
+   SecurityFilterChain
+
+
+Q)CSRF
+
+to defeat a CSRF  attact, applications need a way to determine if the HTTP request is legitimately generated via the application's user interface.the best way 
+to achive this through a csrf token.A CSRF token is a secure random token that is used ti prevent CSRF attackts.The token need to be unique per user session 
+and should be of large random value to make it difficult to guess.
+
+THe CSRF token will used by the application server to verify the legitimacy of the end user request if it is comming from the same app ui or not.
+The application server reject if the csrf token fails to match the test.
+
+
+
+
+Q)Versioning in RestAPi ?
+
+Q)What is Difference between post and put ?
+POST:
+----
+POST is NOT idempotent. So if we retry the request N times, we will end up having N resources with N different URIs created on the server.
+Always use POST for CREATE operations.
+
+PUT:
+---
+PUT method is idempotent. So if we retry a request multiple times, that should be equivalent to a single request invocation.
+
+Use PUT when we want to modify a singular resource that is already a part of resources collection.

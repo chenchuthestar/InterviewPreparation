@@ -1,0 +1,71 @@
+How Spring Distrubuted Transaction Works:
+-----------------------------------------
+1.in distributed transaction multiple ResourceManager are involved in order to coordinate  the ResourceManager to TransactionManager.
+2.In Distrubuted Transaction an application will ask a transaction and to commit or roll back Transaction.
+3.a TransactionManager will follow two phase commit process to commit a distributed transaction.
+4.in this two phase commit first a transactionmanager will ask all ResourceManager are you ready to commit and gets there response.
+5.if all are responded positively then transactionManager will issue commit ,if any one responsed negatively then TransactionManager will issue rollback.
+
+
+Trasaction Attributes:
+--------------------
+1.in realtime  pplications a transaction defined in a method can be called by clients.
+2.Trasanction attributes are used to set the behavior of transaction.
+3.There are three trypes of Attributes.
+        1.propagation
+		2.Isoloation
+		3.Timeout.
+Propagation:
+-----------
+A Propagation value tells a transaction manager weather it should a run a transation method in a exiting transaction or a new transaction or without transacton.
+   i)Required: a Txs check for existing transaction if exist then runs tx method in a existing transaction.
+                if no existing transaction then runs in methods in new transaction.
+				
+   ii)RequireNew: A transaction checks for existing transaction,if yes the suspend it and runs tx method in a new Transaction and  then resumes it.
+                  if no existing then begin new transaction fpr transaction method.
+   iii)Supports : in Transaction check fpr existing transaction,if yes then tx method in existing.
+                  if No existing then runs a transaction method without begining a new transaction.
+   iv)NotSupported:   A transaction check for existing transaction,if yes then suspend it,runs a transaction method without a transaction and resumes existing
+                      transaction .
+					  if no existing then runs a transaction method without transaction.
+					   
+   v)Mandatory: a Transaction check for existing transaction.if yes then runs transaction method in that existing transaction.if  NO Transaction then
+                  throws exception.
+  vi)never: a Transaction check for an existing transaction if yes then throws an exception if no then run transaction method without transaction.
+  vii) Nested: a TransactionManager  check for existing transaction ,if yes then runs a transaction method in a nested transaction.
+                 If NO existing transaction then begin a new transaction for a transaction method.
+			
+			
+			
+			
+ISOLATION:
+-----------
+When multiple trasaction are working on same data parallely then concurrency problems occurs.to solve  this probels isoloation values used.
+
+    DirtRead problem: 1.This problem occures when a first transaction is reading the data  updated by second trasanction beofre the 2nd one commit the changes.
+	            fc2       2.if second transaction roll back the chanegs then the 1st transaction has got dirty data.
+	
+	Non-Repeatable Read:
+	            1.This problem occurs,when a transactio  is executing same query twice and if there are some changes in data in second time read than first time.
+				2.This changes occured because in the middle of two reads another parallel transaction has updated the data.
+				
+	Fantam Read: 1.this problem occurs when a transactio is executing a query with a range for twice and it has observed some more or less rows at second time 
+	               than first time.
+				 2. This proble  is occured because another parallel transaction has inserted or deleted a row matching the range used by first transaction.
+				 
+				 
+	THere are four isolation levels defined for transaction to prevent transaction concurrency.
+	1.Read Uncommited: It is default,it does not prevent any problem.
+	2.Read Commited:  It prevent dirty read problem.
+	3.Repeatable Read:  It prevents dirty read and non-repeatable read problem.
+	4.Serializable: it prevents dirty read ,non-repetable read,fantom read problems.
+				 
+	
+	
+	
+	
+	
+					   
+		
+   
+   

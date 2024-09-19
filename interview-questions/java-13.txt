@@ -1,0 +1,22 @@
+java 13:
+--------
+1.Text Blocks.
+2.New Methods in String class for Text Blocks.
+3.Switch Expression Enhancements.
+4.Reimplementation of legacy Socket Api.
+5.Dynamic Class Data  Sharing Archive.
+6.ZGC: uncommit saved memory.
+7.FileSystem.newFileSystem() method? 
+
+
+
+
+
+
+2.New Methods in String class for Text Blocks.
+-----------------------------------------------
+   public String formatted(Object... values);
+   
+   public String stripIndent()
+   
+   public String Translate

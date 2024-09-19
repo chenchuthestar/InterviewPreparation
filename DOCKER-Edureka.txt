@@ -1,0 +1,473 @@
+DOCKER INSTALL:
+---------------
+upto mar2020 - DOcker INC software is managing docker
+After march 2020 - Maranties software managing docker
+
+before win 10 we cannot directly install docker ,We have to take support of DockerDesktop.
+In linux default docker installation location /var/lib/docker/
+
+
+
+Docker Versions
+----------------
+DOcker available in two Editions
+ 1.COmmunity Editions
+ 2.Enterprise Editions
+
+ Community: No GUI SUPPORT,NO DOCKER TEAM support,NO DOcker private Repo of docker hub.
+
+DOcker Engine is core component of docker.
+ The docker engine have below parts.
+ DAEMON , Container ,Run C
+
+DOCKER Deamon is frontend component of docker engine.
+
+DOcker clinet send req the  daemon recive  the req
+Depending in what type of request docker deamon forawrd that req to container or Run C .
+If request type is create new COntainer the it forward to RUN C.
+Other that the req create then it will go ti Container.
+
+
+TO run a docker container 
+ $docker run nginx or docker run nginx
+if ngnix image not avaible in local then it download from docker hub and start a container.
+If image not found docker hub aslo command throw error.
+
+  DOcker run command will run as interactive mode.Once close terminal then container stop.
+ to run docker container foreground mode use below command.
+docker run -itd --name mycontainer nginx 
+
+using single image we can launch multiple containers.
+
+docker run --name  naresh  --> to create container with custom container name.
+
+COntainer name ,container id by default will assigh by docker run
+we can change container name but we cannnot change container id.
+We also can rename of container name.
+   
+
+docker ps -a --> to get container details (running and shutdown containers)
+docker ps --> to get container details (running container only )
+
+TO Describe image details
+ $Docker inspect
+
+Enter  into already staretd container 
+$docker exec -it containerit /bin/sh
+to start docker container which is stopped.
+ docker start containerid.
+
+to stop/restart  running container 
+$ docker stop/restart contanerid
+for stop command status exist code is 0.
+some time container may not stop  with docker stop cotainer then we have to stop by forcely by kill
+
+forcely stop container
+docker kill contanerid;
+for kill command status exist code is 137.
+
+TO delete running container first we have to stop a container.
+docker stop containerid
+docker rm containerid
+
+to delete all containers at a time.
+docker stop $(dokcer ps -a -q)  -- to stop all containers
+docker  rm $(docker ps -a - q)  -- to remove all containers
+
+to stop all stopped containers  
+docker start $(docker ps -a -q)
+
+to expose docker container Application port to outside container we have two options
+1.port forwarding
+  by default docker engine assign random port to access outside in the range betweeb
+  32768 - 65535
+
+ docker run -itd -P  --name mycontainername ngingx
+
+ -P port forwarding
+
+2.bindig port 
+ to expose to own port we can use this approach.
+there is no port range limit in binding port approach
+ docker run -its -p externalip:applicationinternalport --name containername
+ docker run -its -p 81:80  --name containername
+We can expose a port while starting container,after starting container we cannot expose.
+
+
+to check which port container exposed after startign container
+docker port containerid
+
+COPY File from LOCal to DOCKER container:
+
+docker cp conf.txt containerid:/tmp
+
+to check is the faile copied or not 
+docker exec containerid ls -lrt /tmp
+
+Create nee file inside container
+dcoker exec containerid touch /tmp/container.txt
+
+COPY File from docker to local:
+docker cp containerid:/tmp/container.txt .
+
+
+TO check logs:
+-------------
+docker logs -f containerid
+docker logs containerid
+
+TO check docker info:
+-------------------
+docker info
+
+to show Docker stats
+-----------
+show  stats
+docker run -itd -P --memory 500MB nginx  ---> limit max memory container can use
+
+docker top  containerid -> to check top consuming running containers.
+
+docker container prune --> to delete all stopped containers.
+
+Restart policy:
+----------------
+if docker container stopped then what is policy 
+NO:By default restart policy is NO.
+ON-FAILIRE: if container stopped state with non-zero status then docker ENGINE trying to start the container again.
+
+docker run -itd -P --restart always tomcat
+
+ALWAYS : Irrespective of status code if container goes to stop state then DOcker engine will start the container again.
+Unless-stopped :If docker conatiner stopped normally then docker engine will not start again , but DOcker container stop abnormally then docker engine will will start the container again.
+
+We can convert Docker container to docker image with docker commit commad.
+docker commit  containername newimagename
+docker commit -m "modified my image" -c 'CMD /usr/sbin/nginx -g "daemon off;"'  -c 'EXPOSE 80'  containername newimagename1
+docker run newimagename1
+
+Docker Images(class - 3):
+------------------------
+docker images --> show local images
+dcoker inspect imagename
+
+docker image combination of one or more layers working together.
+we can delete specific layer but after image not useful.
+Image layers are readonly.
+every layer name is encrypted.
+
+overlat2 is the default storage driver in docker.
+ we have many storage drivers available in market.
+aufs,overlay2,devicemapper,btrfs,windowsfilter
+windows os - docker use windowsfilter storage driver
+linux Os - docker use overlay2 storage driver
+
+Once we create a image we cannot edit.
+Once we start container we edit after login into contaner.
+
+Q)why containers are editable but not images.?
+In the container there  is storage device layer called thin writable layer,so container are editable.
+
+How to create Images our own?
+ there are two approaches
+  1.Manual
+  2.Automated Way(dockerfile)
+
+  Docker file is basic building block of docker architecture.
+it is a plain text file without any extension.
+ in this file we provide instructions/directive to create image.
+ the first word of each line in docker file is a docker directive in uppercase.
+  We can place dockerfile in any place of project.
+to convert dockerfile into image we have to run docker build command
+  dockerfile example -1
+--------------------
+FROM ubuntu
+RUN apt-grt update 
+RUN apt-get install -y yum
+RUN apt-get install -y nginx
+RUN rm /var/www/html/
+WORKDIR /var/www/html/
+RUN echo "<h1>Welcome to HTML</h1>"  index.html
+EXPOSE 80
+CMD /usr/sbin/nginx/ -g "daemon off"
+
+docker build -t chenchuimage:v1 
+
+  dockerfile example -2
+--------------------
+From ashok
+RUN rm /var/www/html/*
+COPY index.html /var/www/html
+
+
+docker build -t chenchuimage1:v1 -f chechu_dockerfile .
+
+
+Diff between ADD vs COPY command in dockerfile?
+----------------------------------------------
+COPY : to copy file from local system to docker image.
+ADD:
+
+
+
+docker system df --> to  check how much space used for images/container/Local Volumes 
+docker image prune --> to remove dangling images.
+images which don't have any identity that type of images we can called as dangling images.
+
+
+HOW to store images into docker hub
+-------------------------------------
+Create account 
+https://hub.docker.com/
+
+create repository
+
+docker login  --> login docker hub credentials in terminal
+
+docker tag tomcat:latest dockerpractice/2023:testtag
+
+docker push dockerpractice/2023:testtag
+
+to covert image to tar file
+----------------------------
+docker save  httpd:latest -o testimage.tar
+
+to convert tar file to image
+---------------------------
+docker load < test.tar
+
+we can store container also to tar.
+docker export container > container.tar
+docker import  container.tar  chenchucontainer
+
+Docker file Directives: (VIDEOS-4)
+--------------------------------
+FROM: it is first docker directive ad it should be first line of docker file.
+ENV : We can set env variables for docker .
+RUN : to execute commands.to create new layer.
+CMD : to run default command when we launch container.we can override CMD value while launching container.so CMD is not secure.
+ENTRYPOINT: more secure than CMD,it makes container executable.we cannot override ENTRYPOINT value while launching container.
+EXPOSE:
+COPY:
+ADD:
+STOPSIGNAL: To Stop container.we have many options
+              1.SIGTERM (default)
+              2.SIGKILL 
+HEALTHCHECK : By default health check is not enable for images .to enable 
+                    HEALTHCHECK CMD wget -q --method=HEAD /tmp/system-status.txt
+              health check will perform after 30 sec of container start and will wait for nexrt 30 sec for response from container.
+              if don't get any response then docker makes container unhealthy.
+           
+CMD vs ENTRYPOINT: 
+    in docker file we cannot define more than one CMD/ENTRYPOINT.
+    even we can specify docker takes last CMD/ENTRYPOINT.
+    We can speficy one time CMD and ENTRYPOINT , at container launching time we can override only CMD value but not ENTRYPOINT.
+    
+    
+VolumeMapping:
+---------------
+Volumes are the preferred mechanism for persisting data generated by and used by Docker containers. While bind mounts are dependent on the directory structure and OS of the host machine, volumes are completely managed by Docker. Volumes have several advantages over bind mounts:
+
+        1.Volumes are easier to back up or migrate than bind mounts.
+        2.You can manage volumes using Docker CLI commands or the Docker API.
+        3.Volumes work on both Linux and Windows containers.
+        4.Volumes can be more safely shared among multiple containers.
+        5.Volume drivers let you store volumes on remote hosts or cloud providers, to encrypt the contents of volumes, or to add other functionality.
+        6.New volumes can have their content pre-populated by a container.
+        7.Volumes on Docker Desktop have much higher performance than bind mounts from Mac and Windows hosts.
+In addition, volumes are often a better choice than persisting data in a container’s writable layer, because a volume doesn’t increase the size of the containers using it, and the volume’s contents exist outside the lifecycle of a given container.
+
+ 
+BindMount:
+--------
+in volumemapping docker engine tells which path need to bind.
+
+bind mount we can specify the volumemapping path manually.
+as per docker documentation bindmount has limited functionality than VolumeMapping.
+
+
+docker update restart=always
+docker update --m 100M containerid;
+docker update --cpu-shares 256 containerid;
+
+How to change Logging Driver:
+----------------------------
+docker run -itd -P --log-driver=none <imgname>
+
+
+Docker COmpose:
+------------
+multi container deployment.
+docker compose will not come with docker default install.
+in docker compose we work with yaml files.
+docker compose allows scaling on same node.
+ how to install docker compose:
+https://docs.docker.com/compose/install/linux/
+
+docker compose script need to save file with name compose.yml,its not mandatory.
+  Example for compose.yaml
+   ---------------------
+version: "3"
+services:
+  webserver:
+    image: nginx
+    ports:
+      - "80"
+    restart: always
+    volumes:
+      - /tmp/vol:/usr/share/nginx/html
+  database:
+    image: mongo
+    ports:
+      - "27017"
+    restart: always
+
+ Scaling up/down instances:
+ ---------------
+docker-compose -f compose.yaml up --scale webserver=2 --scale database=3 -d
+
+docker-compose -f compose.yaml up --scale webserver=1 --scale database=1 -d
+
+docker-compose -f compose.yaml down  -- to delete all containers.
+
+to create single container we can use docker run command
+to create multiple container with auto scaling we can use docker-compose command.
+
+if we scaleup in single host VM we have following issue.
+ 1. SPOF - if host VM is down all containers will not accesible.
+ 2.Saleup is limited upto disk avaibale upto in that host VM. because docker-compose will scale only in host VM but not distributed across multiple hostVMS.
+ 3.load balancing feature is not avaiable in docker-compose.
+
+to solve above problems we need to go for Container archestration tools.
+ with container orchestration we cannot create images.
+ we can do only autoscaling ,load balancing.
+some of container archestration tools are docker swarm ,kubernaties,open shift.
+
+Docker-swarm:
+------------
+docker swarm from docker company ,it works only when we are creatting image with docker.
+if we create images with diiferent technology then docker swarm will not work.
+Orchestration tools work as master-slave model.
+
+Minimun no of nodes in a cluster 3.
+it follows the rule (n+1)/2 to decide no of nodes in cluster.
+ where n is no of nodes.
+ pre-requisites:
+ docker need to install all nodes.
+ all nodes should be communicate with each other.
+ in docker swarm cluser the docker command should be executed in cluster master node.
+ docker swarm is is in built utility of docker .so no need to install seperately.
+ even it is inbuilt by default it is not enabled ,need to enable manually by running below command.
+ docker swarm init  --> initailize docker swarm where this current node as master.
+ to add another node as worker to this  cluser run below comand like.
+ docker swarm join --token <tokenvalue> masterid:port
+
+  to validate nodes added or not run below command
+	docker node ls 
+   		or  
+	docker info
+
+1.docker run -> it create one container at a time.
+2.docker compose ->it creates multiple continers at a time in single mechine.
+3.docker services -> it create multiple containers at a time across multiple nodes(cluster)
+
+docker service create --name svc1 --replicas 4 -p 1234:80  nginx
+docker service ls
+docker service scale svc1=10
+docker service ps svc1
+by default docker container also run in master node.
+what ever port number we are giving this is not specific conatiner ,it is service level port number.
+if we give request that will redirect to container randomly ,like load balander. 
+
+Docker swarm
+1.repicated mode (default)
+  here we have to provide --replicas flag.
+    depends on resources availability on nodes replicas will be placed.
+    if any node is down automatically docker swarm willbe responsible to place
+    that replica in another node.
+  
+2.Grobal model/group by mode.
+  docker service create --name svc2 --mode global -p 2345:80 nginx
+  in global mode ,each node the replica willbe create automatically.
+in in this mode no need to provide --replicas flag.
+   if any node is down the replicas will be lost,docker will not take care about that node replica.
+
+
+
+service docker stop -> only that node is will inactive from docker cluster but not perminant removal. 
+                        we can rejoin with same node id to same cluuster by running 
+                        service docker start.
+docker swarm leave -> that node will leave the cluster,we cannot rejoin to same cluster ,to rejoing we have re-generate token.but this will rejoin with different node id.
+
+docker swarm join-token worker
+copy the output to join another worker.
+
+docker node ls.
+
+to create replicas only on worker but not in master 
+ docker service create --name svc3 --replicas 5 --constraint node.role==worker -p 6789:80 nginx
+ docker service ls
+ docker service ps svc3
+
+to update node details.
+docker node update --label-add app=lablename nodeid
+docker service update --image httd svc5  -> to update image in service
+docker node update --availablity drain nodeid -> put in drain mode ,planned maintance of node
+docker node update --availablity active nodeid
+
+docker swarm join-token manager 
+docker node demote nodeid -> make manager node to worker.
+docker node promote nodeit -> make worker manager as manager.
+
+docker swarm challanges?
+  1.latency issue
+  2.not much capabilities in auto scaling.
+  3.rollup and roll back not cleaned.
+  4.only work with docker as ur container service.
+
+
+Docker-6 video:
+--------------
+Docker networking:
+------------------
+network component for docker in build feature,no need to install seperately.
+
+Default docker network created when we install docker.
+to create own network.
+docker network create  edureka 
+docker run -itd -net edureka  tomcat 
+how to change networking of container?
+docker network connect edureka containerid.
+
+docker network disconnect <containerid>  -> to remove the associated network for container.
+docker run -itd -P --net host httpd -> create a container with network as host container.
+ 
+Docker swarm networking:
+-------------------------
+as the part of swamrm initialization two networks created
+ 1.docker gwbridge : docker swarm cluster nodes will communicate.
+ 2.ingress : allowes communation diffenrent containers  across cluster.
+
+docker service creare --name svc1 --replicas 4 nginx
+docker swarm update --autolock=true  --> to lock docker swarm
+docker swarm unlock <hashkey>
+
+
+----------------------------------------------
+Docker Stack:
+ using this we can create multiple container with multiple images.
+docker stack is the part of docker swarm. if we install docker swarm then docker stack automatically comes.
+
+Ex1: create yml file with any name ( dockerstack.yml) file
+docker stack deploy -f dockerstack.yml  testapp
+
+------------------------------------------------------------
+By default docker comes with journald logging driver
+to change the logging driver,
+docker run -itd --log-driver=none nginx
+Supported driver by docker :none,local,json-file,syslog,journald,gelf,fluentd,aeslogs,splunk,etwlogs,gcplogs,logentries
+------------------------------------------------------------------------------
+DNS in local:
+by default docker comes with host mechine DNS Settings.
+
+Docker-7 videos:
+---------------

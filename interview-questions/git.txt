@@ -1,0 +1,180 @@
+Git commands :
+-------------
+	1.The git checkout command operates upon three different entities which are files, commits, and branches. Sometimes this command can be dangerous because there is
+		no undo option  available on this command.
+	2.We can perform many operations by git checkout command like the switch to a specific branch, create a new branch, checkout a remote branch, and more. The git branch and git checkout commands can be integrated
+	 
+	 $ git branch     ( to get current working branch)
+	 $ git checkout   <branchname>   (To switch between branches)
+	 $ git checkout -b <branchname> (Create and switch to a new branch)
+	 $git fetch --all  ( get all branches from remote git) 
+	 
+	 2.Git Reset :  The git reset command is used to reset the changes. The git reset command has three core forms of invocation. 
+					These forms are as follows.  Soft,  Mixed ,Hard.
+					Git is a tool that resets the current state of HEAD to a specified state.
+					Git reset can operate on whole commits objects or at an individual file level.
+					
+					$git reset --hard  
+					$git reset --mixed    (default)
+					$$ git reset --soft
+	
+	3.Git Rebase :  
+	         i. It maintain linear flow instead of non-linear flow.
+			 ii.new commits should not be created like merge commit.
+			 iii.we should not have any conflicts.
+			 Rebase is alternative for merge
+			 Rebase ==> Re+Base ==> Re arrrage base.
+             Rebasing is two step process
+			 step-1: We have to rebase feature(chaild) branch on top of master branch.
+			          git checkout feature
+					  git rebase master
+			 step-2: we have to merge feature(chaild) branch into master branch.
+			          git checkout feature
+					  git merge master
+Q) GIt pull & Git Fetch  ?
+
+Q)Difference between merge and rebase ?
+   --------------------------------------------------------------------------------------------------------------------------------------------------------
+   |                     MERGE                                           |                     REBASE                                                      |
+   ---------------------------------------------------------------------------------------------------------------------------------------------------------
+   |	1. It is a single step process .								 |  1.it is two step process.                                                      |
+   |			git checkout master 									 |         git checkout feature													   |
+   |			git merge feature										 |         git rebase master                                                       |
+   |																	 |                                                                                 |
+   |																	 |        git checkout master                                                      | 
+   |																	 |        git merge feature                                                        |
+   |																	 |                                                                                 |
+   |																	 |                                                                                 |
+   |	2.Merge preserve the history of all commits.					 |  2. rebase clears history of feature branch									   |
+   |																	 |                                                                                 |
+   |	3.THe commits can have more than one parent and history 		 |  3.Every commit has a single parent .hence history is linear                    |
+   |		 is non-linear												 |                                                                                 |
+   |																	 |                                                                                 |
+   |	4.chance of conflicts.											 |  4.no chance of conflicts.                                                      |
+   |																	 |                                                                                 |
+   |	5.We can aware which changes are coming from feature branch.	 |  5.we Cannot aware  which changes are coming from feature branch .              |
+   |    6.we can use merge on public/private repositories.               |  6.no recomond to use in Public reposritories.                                  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------|	 
+
+
+
+GITHUB:
+
+Code Repository : It a memory that stores all out projet files.
+
+ 1) It can store files like .java , .html , .css , .js , .properties  , .xml ...etc
+    in simple all type of files which are used in project. 
+ 2) different code repository tools are : SVN,GITHUB,BITBUCET ..etc
+ 
+ ADD: We need to write code in workspace (projects) and test ,then movefiles to stage area(verification area)
+ COMMIT : sending files from stage area to local repository.
+ PUSH : after codng and UitTestig ,we can send out local files to github. 
+ PULL : Fetching files from Remote Repostory to out local repository,we can fetch other module files
+		written by other developers.
+ Merge/Rebase: update files from local repostory (.git) to workspace. 
+ 
+ Git Commands:
+ -------------
+  1.git init -> to initialize local repository (.git folder)
+  2.git add <file Name>  ->  to  file from work space to staging area
+  3.git rm *  -> to remove the file from staging area
+  4.git status  -> check files status which are added in stage area and which are not
+  5.git commit -m"<commit msg> -> move stagng file to local repository.
+  6.git config --global user.name "javabyraghu"
+  7.git config --global user.email "abcd@example.com"
+  8.git push ->move file/changes from local repo (.git) to remore repo.
+  9.git remote add orogin https://github.com/javabyraghu/myapp.git
+  10.git pull  ->  fetch files from remote repo to local repo(.git).
+  11.git  restore Test.java  ->  to restore workspace changes
+  
+  
+  
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

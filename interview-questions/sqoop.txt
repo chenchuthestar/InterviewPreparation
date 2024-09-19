@@ -1,0 +1,87 @@
+Sqoop:
+-----
+ it is one of component of hadoop which build on top of hdfs which is exclusively meant for comunicating with RDBMS
+	1.to import the data from RDBMS to hadoop HDFS.
+	2.to Export the data from HDFS to RDBMS table
+Q)Performance improvements in Sqoop?
+	1.specify Number of mappers with -m 
+	2.direct import (--direct ) sqoop use dump comands rather than  queries ex: mysqldump 
+	3.fetchsize ( –fetch-size)  Specifies the number of entries that Sqoop can import at a time
+	4.Inserting Data in Batches (–batch)
+	5. compression (--compress --compression-codec com.hadoop.compression.lzo.LzopCodec)
+	
+Q) Simple Sqoop import command and waht are differnt attributes ?
+	$sqoop import --connect jdbc:mysql.....  --username root  --password root --tale emp  -m 1 --target-dir /hdfsloc
+	
+	--fields-terminated-by  ','  -> to specift the own seperator
+	--columns -> specify the columns  to be imported
+	--where 
+	--list-databases
+	--list-tables
+	--excluse-tables
+	-- boundary query  ( select 106,118 from emp)
+	--as-text-file/--as-sequence-file/--as-avrodatafile  -> privide file format
+	--compression-codec GZIPcodec/bZip2Codec/SnappyCodec  -> provide compression type
+	
+Q) how to work with secure connection details file ?
+	connection-details.txt
+	----------------------
+	--connect jdbc:mysq.......
+	--username root
+	--password root
+	
+	$Sqoop import --option-file /home/chenchu/connection-details.txt --table emp  --target-dir /hdfsloc
+--------------------------------------
+*** if we want import all tbles data to hdfs 
+		1.default path of hdfs 
+		2.hive warehouse location  (--target-dir should not use)
+	sqoop import-all-tables --option-file connectiondetails.txt -m 1
+
+Sqoop EVAL :
+------------
+ 1. no physical import on hdfs
+ 2.Results willbe displayed on console only
+ 3.we can do curd operation on RDBMS from sqoop.
+ 
+	sqoop eval --option-file /home/chenchu/connection-details.txt  --query "select * from emp limit 5"
+
+Use \$CONDITIONS:
+-----------------
+sqoop import --option-file /home/chenchu/connection-details.txt  --query  "select * form emp where eal > 4500 and \$CONDITIONS "  -m1 --target-dir /hdfsloc
+
+Sqoop joins:
+------------
+sqoop import --option-file /home/chenchu/connection-details.txt  --query "select e.empid,e.ename,d,deptid,d,loc from emp e join dept d ON (e.empid=d.emptid) AND  \$CONDITIONS" 
+	-m1  --target-dir  /joinoploc
+	
+Sqoop Job:
+--------
+$sqoop job --create sqjopb1 --import   --option-file /home/chenchu/connection-details.txt  --table emp -m1 1 --target-dir  /joboploc
+$sqoop job --list
+$sqoop job --show -sqjob1
+$sqoop job --exec sqjob1
+
+Imcremental load:
+---------------
+sqoop job --create job1 --import  --option-file /home/chenchu/connection-details.txt --table emp -m 1 --target-dir  /incroploc  
+	--incremental append --check-column empid --las-value 0
+
+sqoop hive integration:
+----------------------
+sqoop import-all-tables --connect jdbc:mysq://....  --username root --password root --hive-import --hive-overwrite --hive-databases sqhivedb
+			--create-hive-table --warehouse-dir=/user/hive/warehouse/sqoopimport114db --compress-codec BZipcodec --num-mappers 1 --outdir java-files
+			
+sqoop export:
+-------------
+ 1.Before export sqoop target table schema should be ready.
+ 2. data which we are exportig from hdfs and the table schema should be in sync wrt 
+		a. sequence of fields
+		b.Datatyes of field.
+		c.number of fileds
+		d.any constraints support
+ 3. if a file consisting of any bad records ,from that record onwards the sqoop export operation will get failed.
+ 
+ $sqoop export --connect jdbc:mysq://....  --username root --password root --table exporttab -m1 --export-dir /dataloction   --fields-terminated-by ","  
+	--update-mode allow insert  --update-key id
+	
+ 

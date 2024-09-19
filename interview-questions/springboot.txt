@@ -1,0 +1,365 @@
+Q)What is spring boot?
+	spring boot makes it easy to create standalone ,production grade spring based applications that you can jut run.
+	Spring Boot is a project that is built on the top of the Spring Framework. It provides an easier and faster way to set up, configure, and run both simple and web-based applications.
+	In Spring Boot, there is no requirement for XML configuration (deployment descriptor).
+	It uses convention over configuration software design paradigm that means it decreases the effort of the developer.
+
+Features:
+--------
+	1.Spring Boot makes it easy to create stand-alone, production-grade Spring based Applications that you can "just run".
+	2.dev tools (spring-boot-devtools).
+	3.Need minimal Spring configuration.
+	4.In build containers Embed Tomcat, Jetty or Undertow directly (no need to deploy WAR files).
+	5.Provide opinionated 'starter' dependencies to simplify your build configuration and dependmanagement.
+	6.Provide production-ready features such as metrics, health checks, and externalized configuration. (spring-boot-starter-actuator).
+	7.no requirement for XML configuration.
+	8.profiling (manage application mode like dev,qa,prod).
+	9.Microservices design support.
+
+Q) WHat is 
+Q) Spring boot 2 new features?
+	1.Removed java 7 support ,min java8. 
+	2.builded on top of Spring framework 5.0. 
+	3.Tomcat minimum supported version is 8.5,jetty 9.4.          
+	4.default connection pool has changed from Tomcat to HikariCP.     
+	5.Hibernate minimum supported version is 5.2.
+	6.Gradle minimum supported version is 3.4.
+	7.Quartz schedular support ( spring-boot-starter-quartz).   
+	8.HTTP/2 Support.
+	9.junit5 support.
+Q)How to deploy spring boot application in External Server?
+    1.<packaging>war</packaging>
+	2.Set all Tomcat Jar files to provided
+	    <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		 or 
+		 <exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+			
+	3.Then, we need to update the maven-war-plugin,not to fail if web.xml is missing.
+	     <plugins>
+            <!--  <plugin>
+              <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            -->
+
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+                <execution>
+                    <id>default-war</id>
+                    <phase>prepare-package</phase>
+                    <configuration>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                    </configuration>
+                </execution>
+             </executions>
+          </plugin>
+        </plugins>
+		
+      4.Update your Main class to extends SpringBootServletInitializer    
+          @SpringBootApplication
+          public class SpringBootWarDeploymentApplication  extends SpringBootServletInitializer {
+            @Override
+			protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+				return application.sources(SpringBootWarDeploymentApplication.class);
+			}
+			public static void main(String[] args) {
+				SpringApplication.run(SpringBootWarDeploymentApplication.class, args);
+			}
+		}	 
+
+Spring boot Actuator:
+--------------------
+	1.monitor and manage your application when you push it to production.
+	2.it is used to access current state of application in prod environment.
+	3.provides rest end points which you can simply use and check vaious metrics.
+	4.To enable the features is to add a dependency on the 'spring-boot-starter-actuator'
+			Endpoints: 
+			1.bean 2.caches 3.health 4.info 5.loggers 6.sessions 7. shutdown 8.threaddump
+	5. To enlabe/disable particular end point  : management.endpoint.shutdown.enabled=true
+	
+Q)How to remove embedded tomcat and add any other sserver ?
+Q) How to disable SPECIFIC CLASS autoconfiguration?
+	1.@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})   -in Configuration class
+	2.spring.autoconfigure.exclude in properties file
+Q) How to check which profile is active ??
+	@Autowired
+    private org.springframework.core.env.Environment environment;
+	 String[] activeProfiles = environment.getActiveProfiles();  
+Q) what is use of @SpringBootApplication anotation ?
+	1.this annotation equalant to @Configuration,@EnableAutoConfiguration ,@ComponentScan
+	
+spring boot jpa respositiry hierarichy:
+--------------------------------------
+	Repository -> no methods  
+	CurdRepository  ->	count(),delete(),deleteAll(),deleteById(ID id),existsById(ID id),findAll(),	findById(ID id),
+						save(S entity),saveAll(Iterable<S> entities)
+	PagingAndSortingRepository  -> findAll(Sort sort), findAll(Pageable pageable)
+	JpaReposotiry               -> findAll(),deleteAllByIdInBatch(Iterable<ID> ids),deleteAllInBatch(),
+	                              deleteAllInBatch(Iterable<T> entities),findAll(),flush() ,saveAndFlush(S entity)
+	OurOwnRepository
+	
+	Paging : Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("email").ascending()); 
+			 Page<EmployeeEntity> pagedResult = repository.findAll(paging); 
+			 
+			 Sort sortOrder = Sort.by("email"); 
+			List<EmployeeEntity> list = repository.findAll(sortOrder);
+			
+Q)Difference between Page and Slice ?
+		Page :
+			The findAll(Pageable pageable) method by default returns a Page object. A Page object provides lots of extra useful information other than just list of employees in current page.
+
+			E.g. A Page object has the number of total pages, number of the current page and well as whether current page is first page or last page.
+			Finding total pages invokes an additional count() query causing an extra overhead cost. Be sure when you are using it.
+
+		Slice:
+			Slice is very much similar to Page, except it does not provide the number of total pages in database. It helps in improving performance when we do not need to display total number pages in UI.
+			Generally, Slice is used in case navigation is consist of Next page and Previous page links.
+			
+			Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("email").descending()); 
+			Slice<EmployeeEntity> slicedResult = repository.findByFirstName("alex", paging); 
+			List<EmployeeEntity> employeeList = slicedResult.getContent();
+
+To use Slice, we have implement our own custom methods.
+
+
+Spring boot annotations: 
+-----------------------
+	@SpringBootApplication   	@EnableAutoConfiguration   	@ConditionalOnClass and @ConditionalOnMissingClass
+	@ConditionalOnBean and @ConditionalOnMissingBean  	@ConditionalOnProperty 	@ConditionalOnResource
+	@ConditionalOnWebApplication and @ConditionalOnNotWebApplication
+	@ConditionalExpression 			@Conditional			@SpringBootConfiguration
+	@ImportAutoConfiguration			@AutoConfigureAfter			@AutoConfigureBefore
+	
+
+Spring annotation:
+-----------------
+	 @Required 		@Autowired 	@Qualifier 		@Component		 @Configuration		 @Bean	 @ComponentScan      @Lazy
+	 @Value 		  @Controller     @Service		@Repository 	 @RequestMapping	@CookieValue	@CrossOrigin
+	 @GetMapping	@PostMapping	@PutMapping			@PatchMapping	@DeleteMapping		 @ExceptionHandler
+	 @InitBinder	@Mappings and @Mapping		@MatrixVariable		@PathVariable	@RequestAttribute  	@SessionAttribute
+	 @RequestBody  	 @RequestHeader  @RequestParam 	 @ResponseBody	 @RequestPart 	@ResponseStatus		 @ControllerAdvice
+	 @RestController   	 @RestControllerAdvice		 @SessionAttributes		
+
+Response Http Status code:
+-------------------------
+	1** information  : 100 Continue ,101 Switching Protocol
+	2** success : 200 OK,201 Created,202 Accepted,204 No Content
+	3** redirect : 300 Multiple Choice,301 Moved perminantly,302 redirect status
+	4** client side error :400 Bad Request,403 Forbidden,404 Not Found,405 Method Not Allowed,408 Request Timeout
+	5** server side error :500 Internal Server Error,501 Not Implemented,502 Bad Gateway,504 Gateway Timeout 
+	
+Q)Spring boot Runners?
+  It is a block of code that executed only once when application is started.
+  
+  Types of runners
+   1.CommandLineRunner(I)  (Boot 1.0v)
+   2.ApplicationRunner (I) (Boot 1.3v)
+   
+   Working process is same. the only difference is input arguments.
+   CommandLineRunner read inut from main() method and store as Array format
+   ApplicationRunnerreads input from main() method and convert into Option(key-value) and
+   non-option(command) args then given to ApplicationRunner.
+	
+Q) What do SpringApplication.run(....) do ?
+   Class that can be used to bootstrap and launch a Spring application from a Java main method. By default class will perform the following steps to bootstrap your application:
+			1.Create an appropriate ApplicationContext instance (depending on your classpath).
+			2.Register a CommandLinePropertySource to expose command line arguments as Spring properties.
+            3.Refresh the application context, loading all singleton beans.
+            4.Trigger any CommandLineRunner beans.
+
+Connecting multiple Datasources:
+--------------------------------
+	spring boot data jpa by default supports  connecting with one daabase,database connection configuration (auto configuration) is given by spring boot only.
+	we need to pass inputs using either propeties or yml like driver class,username ,password,show_sql,ddl_auto..
+
+	if we want connect to multiple databases ,by default there is support in spring boot.
+	we need to do  define below objects(beans) in order using  java configuration style.
+		1.Datasources
+		2.EntityManagerFactory
+		3.TransactionManager
+
+DB#1 - postgressDb
+cmd>psql -U postgressDb
+cmd>create database sample
+cmd>\l  (list all dbs)
+cmd>\dt (all tables)
+
+dependencies: devtools,lombok,datajpa,mysql,postgreSql,web
+
+db1.datasource.driver-cass-name=org.postgresql.Driver
+db1.datasource.jdbc-url=jdbc:postgreSql://localhost:5432/db1
+db1.datasource.username=postgress
+db1.datasource.password=root
+
+db2.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+db2.datasource.jdbc-url=jdbcc:mysql://localhost:3306/db2
+db3.datasource.username=root
+db4.datasource.password=root
+
+package in.narshit.raghu.model;
+@Datasources
+@Entity
+@AllArgConstuctor
+@NoOrgConstructor
+public class Product{
+	@Id
+	private Integer id;
+	private String code;
+	private String name;
+
+}
+
+package in.nareshit.raghu.model;
+	@Data
+	@NoArgsConstructor
+	@AllArgConstuctor
+	@Entity
+	public class customer{
+	private Integer id;
+	private String email;
+	private String name;
+}
+
+package in.nareshit.raghu.repo.product;
+
+public interface ProductRepository extends JpaRepository<Product,Integer>{
+}
+public CustomerRepository extends JpaRepository<Customer,Integer>{
+
+}
+
+ ** > define configuration for each database
+ 
+package in.nareshit.raghu.config.product;
+@Configuration
+@EnableTransactionManagement
+@EnableJpaRepositories(entityManagerRef="db1EntityMangerFactory",transactionManagerRef="db1TrasactionManager",basePackages="in.nareshit.raghu.repo.product")
+public class Db1Config(
+     // datsource
+	 @Bean
+	 @ConfigurationProperties(prifix="db1.datasource")
+	 public Datasource db1DataSoure(){
+	 return DataSourceBuilder.create().build();
+	 }
+	 
+	 //EntityManagerFactory
+	 @Bean
+	 public LocalContainerEntityManagerFactoryBean db1EntityMangerFactory( EntityManagerFactoryBuilder emfb){
+		HashMap<String,Object> propeties = new HashMap<>();
+		propeties.put("hibernate.hbm2ddl.auto","create");
+		propeties.put("hibernate.dialect","org.hibernate.dialect.postgreSQL10");
+		return  emfb.datasource(db1DataSoure()).packages("in.nareshit.raghu.model.product").properties(properties).build();
+	 }
+		 
+	 //TManager
+	 @Bean
+	 public PlatformTransactionManager db1TrasactionManager(@Qualifier("db1EntityMangerFactory") EntityManagerFactory entityManagerFactory){
+		
+	 }
+}
+
+SODI881983027
+SUBB918010041
+
+package in.nareshit.raghu.config.product;
+@Configuration
+@EnableTransactionManagement
+@EnableJpaRepositories(entityManagerRef="db2EntityMangerFactory",transactionManagerRef="db2TrasactionManager",basePackages="in.nareshit.raghu.repo.customer")
+public class Db2Config(
+     // datsource
+	 @Bean
+	 @ConfigurationProperties(prifix="db2.datasource")
+	 public Datasource db2DataSoure(){
+	 return DataSourceBuilder.create().build();
+	 }
+	 
+	 //EntityManagerFactory
+	 @Bean
+	 public LocalContainerEntityManagerFactoryBean db2EntityMangerFactory( EntityManagerFactoryBuilder emfb){
+		HashMap<String,Object> propeties = new HashMap<>();
+		propeties.put("hibernate.hbm2ddl.auto","create");
+		propeties.put("hibernate.dialect","org.hibernate.dialect.postgreSQL10");
+		return  emfb.datasource(db1DataSoure()).packages("in.nareshit.raghu.model.customer").properties(properties).build();
+	 }
+		 
+	 //TManager
+	 @Bean
+	 public PlatformTransactionManager db2TrasactionManager(@Qualifier("db2EntityMangerFactory") EntityManagerFactory entityManagerFactory){
+		
+	 }
+}
+
+=================================================================================================================================================================
+Spring boot MVC exception handling:
+----------------------------------
+work flow (on success): client  -> request -> DispatcherServlet -> doDispatch(req,res) -> HandlerMapping -> Controller -> DS -> ViewResolver ->view -> Model(read) -> DS -> UI
+WorkFlow (in failre) : client  -> request -> DispatcherServlet -> doDispatch(req,res) -> HandlerMapping -> Controller -> DS ->BasicErrorController (error()/errorHtml()) -> Response
+Q) Is Spring/Spring boot handling Errors Internally ? How?
+    Yes . By using ErrorControler(I) which has on impl class BasicErrorController .that provides 2 methods
+	errorHtml() : ModelAndView (call made from browser)
+	error() : ResponeEntity<T> (call made from non browser)
+
+
+DefaultErrorAttributes:-
+BasicErrorController collect all error details as Map<String,Object> 
+Which holds details like 'status,error,path,timestamp...etc'.
+this ErrorMap only called as ErrorAttributes,this is given as final resonse to client
+
+#ErrorController with path /error
+	| - AbstactErrorController
+		| - BasicErrorController
+				errorHtml()
+				error()
+
+#1 . error.html page under /templates folder
+	we can create error.html file under 'templates' folder and design based on requirement .this gets executed on any problem(Http status : 4** and 5**)
+	ie for 400 ,401,403,404 ... 500 ,501,etc .only one page is executed : error.html
+
+#2 .specific Error page  create under 'error'folder with ErrorCode.html format
+	ex: 404.html  <-- 40 ,401,402 ,....
+		500.html
+	with @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+		 Custom Exception
+
+=> if controller is throwing any exception then default HTTP status is 500 IternalServerError.To chage errorcode to any other number use @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)(on top of your custom exception).
+
+Q) How to create Custom ErrorController 
+	we can customize default ErrorController code.Spring boot has provided BasicErrorController(c) then
+	spring boot chooses our class as priority and also error.html ,404.html,5**.html will not work.
+Q) Exception handling in spring boot rest
+	1.Default Error message (Boot ReST) + @ResponseStatus
+	2. ** Customized Error Message -@ControllerAdvice,@ExceptionHandler
+	
+	1.Default Error Message(Boot ReST) + @ResponseStatus
+	 In this case we are using default message given by BasicErrorController #error
+	 (ResponseEntity<T> type --> json ) format
+	 
+	 Here , we can customize only status and message
+	 {
+	   "timestamp":"",
+	    "status":"",
+	    "error":"",
+	    "trace":"",
+		"messge":"",
+		"path":"",
+	 }
+
+	***customized Error message - @ControlerAdvice/@RestControlerAdvice , @ExceptionHandler
+	In this case ,we are defining one new Exception Handler class by using annotations
+	@ControllerAdvice/@RestControlerAdvice -- at handler class level
+	@ExceptionHandler - at method level
+	ResponseEntity<T> -- method return type
+
+
