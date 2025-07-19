@@ -10,25 +10,45 @@ Q)Java 8 new features?
   		   e.PremitiveFunctional Interfaces : IntPredicate,LongPredicate,DoublePredicate, IntFunction,LongFunction,DoubleFunction, ToIntFunction,ToLongFunction...
 	3)default methods.
 	5)functions ,consumer ,supplier. 
-	6)Double colon operators.
+	6)Double colon operators. 
 	7)stream api.            
 	8)date and time api.
 	9)Optional.
 	10)files feature.
 	11)splitIterator.
+	12)MetaSpace
+	13)G1 Garbage Collector as Fully Supported
+	
+Q) Introduction of G1 Garbage Collector as Fully Supported
+   G1 (Garbage First) GC was introduced in Java 7 as an experimental feature.
+   In Java 8, G1 became a fully supported and production-ready garbage collector.
+  It is designed for applications with large heaps (multi-GB) and low pause time requirements.
+  G1 breaks the heap into regions and collects garbage incrementally and concurrently.
+  
+  To use G1 GC:
+
+	-XX:+UseG1GC
+	
+  Parallel GC (Throughput Collector) and CMS (Concurrent Mark-Sweep) received minor performance and stability enhancements.
+
+  New tuning options were introduced for more granular control.
+
 
 Q)Java 8 OPtional  ?
 	 optional class deal with the Nullpointerexception,it provides methods which are used to check the presence of value of the particular variable,
 	  methods:
 	  -------   
-	  
-	  
 	   1.of(value)  -> if the value is null then throw NPE. 
        2.ofNullable -> if the value is null then return Optional Empty.
        3.isPresent() -> check wheather value is present or not.
 	   4.orElse()  -> give default value if no value in optional.
 	  
-	   
+Q) Metaspace . 
+    1.java 8 permgen memory area is removed.
+    	Metaspace and PermGen are both used to store class metadata in the JVM,
+		but PermGen was a fixed-size space in the Java heap while Metaspace is a native memory space that can dynamically expand as needed.
+		PermGen was also garbage collected, while Metaspace is not.
+		
 Q)CompletableFuture ?
  USing Asynchronous programming you can write non blocking code where concurrently we can run Many threads without blocking main thread.
   When the task is completes, it notify the main thread whether task was failed or success.
@@ -41,12 +61,14 @@ Q)CompletableFuture ?
 
 runAsync() vs supplyAsync()
 ---------------------------
-if we want to run some background task asynchronously and do not want to return anything from that task,then use completableFuture.runAsync() method.it takes arunnable object and returns completableFuture<void>.
+if we want to run some background task asynchronously and do not want to return anything from that task,then use completableFuture.runAsync() method.
+it takes arunnable object and returns completableFuture<void>.
 
 1.CompletableFuture,runAsync(Runnable)
 2.CompletableFuture.runAsync(Runnable, Executor)
 
-if we want to run some background task asynchronously and want to return anything from that task,we should use CompletableFuture.supplyAsync().it takes a supplier<t>and returns completableFuture<T> where T is the type of the value obtained by calling the given supplier.
+if we want to run some background task asynchronously and want to return anything from that task,we should use CompletableFuture.supplyAsync().
+it takes a supplier<t>and returns completableFuture<T> where T is the type of the value obtained by calling the given supplier.
 
 1.CompletableFuture.supplyAsync(supplier<T>)
 2.CompletableFuture.supplyAsync(Supplier<T>,Executor)

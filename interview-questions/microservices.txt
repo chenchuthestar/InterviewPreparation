@@ -46,8 +46,35 @@ Q)saga design pattern ?
 Q)Microservices design pattern.
  
 
+Q)Microservices principles ?
+   1.Single Responsibility Principle.
+       Each microservice is designed to perform one specific function or business.
+   2.Independent Services
+       Each microservice is independent and can be developed, deployed, and scaled independently.
+	   These services can be written in different languages and technologies if needed, but in the Spring ecosystem, they generally use Spring Boot.
+	   each service is typically a standalone Spring application with its own Spring context.
+   3. Data Management
+        Each microservice manages its own database or data store. There is no shared database between services.
+		Spring Boot supports decentralized data management using Spring Data and other database integrations.
+		This principle ensures that each service is loosely coupled and avoids issues related to database contention and scaling.
 
-
+   4.Communication Between Services
+       Microservices communicate with each other using lightweight protocols, usually HTTP/REST/JMS or messaging queues.
+   5.Security
+       : Microservices should be secured with authentication and authorization, usually at the API Gateway level(oauth2,jwt)
+   
+   6.Scalability
+      Microservices are designed to scale independently. Each microservice can be scaled based on demand.
+   7.Logging and Monitoring
+      Since microservices are distributed, centralized logging is essential for debugging and monitoring.
+	  Prometheus and Grafana are commonly used for monitoring metrics.
+  8.Versioning
+      As microservices evolve, you may need to maintain backward compatibility with older versions of APIs.
+	  URL versioning (e.g., /api/v1/resource)
+	  Accept header versioning (e.g., Accept: application/vnd.myapp.v1+json)
+   
+   
+   
 Q) microservices charactristics:                                        
 
 	1)individual development.                               

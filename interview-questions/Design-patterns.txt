@@ -1,3 +1,5 @@
+Singleton,factory,abstract factory, prototype,builder,Observbility,template.
+
 Q) what are design pattrens are know?
     Creational design pateren : singleton, factory mehtod,abstract factory,Prototype,builder
 	 Structural Design Pattern: Adapter,Bridge,composite,decorator,Facade,flyweight,Proxy

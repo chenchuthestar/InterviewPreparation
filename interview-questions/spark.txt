@@ -343,3 +343,58 @@ Q) How to improve performance of Spark?
 	11)avoid UDF/UDAF.
 	12)use G1GC garbage collector.
 	13)partition maintanance / data skew avoid techniques.
+
+Adaptive Query Execution:
+------------------------
+ basically spark shuffle operation is critical for spark performance.
+ you can tune it using spark.sql.shuffle.partitions. default is 200
+ Tuning spark.sql.shuffle.partitions is complex for following reasons
+    1.large partition size
+    2.Task needs large amount of memory
+    3.May cause OOM exception.
+ Large number if partitions cause
+    1.small/tiny partition size
+    2.many network  fetch causing in efficient network I/O
+    3.More burden for spark task schedular.
+
+
+Enable AQE to dynamically set shuffle partitions.
+  1.Determine and set the best shuffle partition number.
+  2.Combine or coalesce the small partitions.
+
+AQE Configuration
+  1.spark,sql.adaptive.enaled
+  2.spark.sql.adaptive.coalescePartitions.initialPartitionNum
+  3.spark.sql.adaptive.coalescePartitions.minPartitionNum
+  4.spark.sql.adaptive.advisoryPartitionSizeBytes
+  5.spark.sql.adaptive.coalescePartitions.enabled
+
+Spark Query Execution Adaptive Dynamic Join Optimization:
+---------------------------------------------------------
+  Broadcast join shuffle join is the most performant join strategy.
+  you can apply broadcase join if one side of the join can fit well in memory,
+  One table must me shorter than spark.sql.BroadCaseJoinThreshold
+  Estimating the table size is problematic in following scenarios.
+  1.you applied a highly selective filter on the table.
+  2.your join table is generated at runtime after a series of complex operation.
+
+  Spark AQE can help 
+    AQE computes the table size at shuffle time.
+     Replans the join strategy at runtime converting sort merge join to a broadcase hash join.
+
+
+Handling Dataskew in spark joins.
+--------------------------------
+  
+   use Spark AQE:
+      1.spark.sql.adaptive.enabled=true
+      2.spark.sql.adaptive.skewJoin.enabled=true
+      3.spark.sql.adaptive.skewjoimn.skewedPartitionFactor=5
+      4.spark.sql.adaptive.skewJoin.skewPartitionThresholdBytes=256MB
+
+Spark dynamic Partition Pruning(DPP):
+-------------------------------------
+by default enabled in spark 3.0 v
+
+
+

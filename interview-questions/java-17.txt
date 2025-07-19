@@ -1,12 +1,11 @@
-
 java-17
 -------
-1.Text blocks
+1.Text blocks 
 2.Improved Switch statements.
 3.Record classes
 4.Sealed classes.
 5.Pattern matching with swicth.
-6.Pseudorandom number generators are upgraded
+6.Pseudorandom number generators are upgraded 
 
 
 1.Text blocks

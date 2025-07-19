@@ -80,7 +80,7 @@ Q)How to deploy spring boot application in External Server?
 		}	 
 
 Spring boot Actuator:
---------------------
+---------------------
 	1.monitor and manage your application when you push it to production.
 	2.it is used to access current state of application in prod environment.
 	3.provides rest end points which you can simply use and check vaious metrics.
@@ -361,5 +361,3 @@ Q) Exception handling in spring boot rest
 	@ControllerAdvice/@RestControlerAdvice -- at handler class level
 	@ExceptionHandler - at method level
 	ResponseEntity<T> -- method return type
-
-

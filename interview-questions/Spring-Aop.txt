@@ -10,18 +10,32 @@ Spring-Aop Modules:
    3.Easy maintanance of service.
    
  -> Spring AOP will combine the services with business logics at runtime.
+ Spring aop will take care of integrating business logic with secondary logic in runtime and excecute it.
 -> AOP is not an alternative for OOPs. AOP runs on top of oops.
 
 ASPECT: 
   an Aspect is a class used to modularise a concern that cuts across multiple classes.
   Aspect is a class which one or ore cross cutting concerns defines.
+  The class contains secondary logic(cross cutting logic).
+    LoggingAspect,AuditingAspect,SecurityAspect,TransactionAspect,ExceptionHandlingAspect.
+	
+	When the actual Aspect logic will be executed decided by Advice.
 JoinPoint:
 ---------
+it represents where secondary logic should integrate with primary logic, Spring AOP supports method level join point.
+
  it is a Specific Poit in a application,where the concenrs are combined with business methods.
  in Spring AOP we have method execution joinpoints.it means the Aspects are combined when business methods are executing st runtime.
 ADVICE:
 ------
+It represent when aspect logic should execute.
 it is a functionality added by an Aspect at a JoinPoint.
+There are 4 tyopes of advices.
+
+  1.BeforeAdvice  (it will execute before business logic )
+  2.After Returning advice (will execute before and after business logic)
+  3.Around Advice (will execute before  and after business logic )
+  4.Throws advice  (Will executed when exception occured in Business logic)
 
 PointCut:
 --------
@@ -29,8 +43,11 @@ it is a collection of joinpoint . A pointcut Identifies join point based on some
 A Pointcut verifies weather a particular method of a particular method of a class is matching with condition or not.
 If yes then that method execution is idenfied as Joinpoint.
 
+it represent for which business methods secondary logic should apply.by default aspect logic apply for all the methods.
+
 Target:
 -------
+The class contains business logic called as Target.
 it is an object Which is going to be advised by ine or more Aspect.
 in other words  a target is business class object  before aspect are added to it.
 
@@ -41,6 +58,8 @@ it is an object Created by AOP framework after combining aspect with target.
 Weavig :
 It is a linking process of aspect with Target to create a proxy ,weaving can be done at compile time or at class load or at runtime.SPring Supports onlt runtime Viewing.
 
+
+The process of combining  target and aspect is called weving , Weaving will generate one new  class by commbining Target and Aspect that  
 Type of Advices:
 ----------------
   1.Before Advice: Before Advice executes,before a matching business method executed.

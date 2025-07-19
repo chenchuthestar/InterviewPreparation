@@ -190,7 +190,7 @@ Q) Difference between String and StringBuffer and  StringBuilder?
 	
 Q) Object Class methods? 
       toString( ) ,hashCode() ,equals(),clone(), getClass(), finalize() , wait()  ,wait(long ms),wait(long ms,int ns) ,notify(), notifyAll()
-  
+      
 Q) In How many ways an object of class can be restricted?
    1. private default constructor.
    2. make class as abstract.

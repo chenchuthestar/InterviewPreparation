@@ -38,6 +38,25 @@ CHECK - Ensures that the values in a column satisfies a specific condition
 DEFAULT - Sets a default value for a column if no value is specified
 CREATE INDEX - Used to create and retrieve data from the database very quickly
 
+
+Synonyms:
+--------
+ - it is a db Object
+ - to Create a duplicate name for a table.
+ - it is a perminant name(saved in DB).
+ 
+   purpose :
+     1.to reduce the lengthy table name
+	 2.to hide username and object name.
+	
+    types of synonyms:
+	  1.private synonyms
+	         these synonyms are created by user who are having access.
+			 syntax: create synonym <synonym name> for <username>.<tablename/object name>
+	  2.public synonyms
+	         these are created by DBA only
+			 			 syntax: create public synonym <synonym name> for <username>.<tablename/object name>
+
 	
 Q)Difference between Primary key and Unique Key.
       Primary Key                                                  Unique Key
@@ -61,6 +80,39 @@ Q) Difference between synonyms and views ?
 Q) Constriant in SQL ?	
 
 Q)SubQueries ?
+
+  a query inside another query is called as "sub query/nested query".
+   a nested query is having two more queries,those are 
+      1.outee/parent/main query
+	  2.inner/chaild/sub query
+	  
+   as per the execution process of sub query/nested query is again classified into two ways
+      1.non correlated sub query
+	  2.corelated sub query.
+	     
+		  1.non correlated sub query:
+		       in this mechanishm , first inner query is executed and later outer query executed.
+			      i. single row sub query.
+				         sub query returns only single value.
+						 we can use following operators (=  < > <= >= !=)
+				  ii.multiple row sub query.
+				           sub query returns multiple value.
+						   we can use following operators( IN,ANY,ALL)
+				  iii.multiple column sub query.
+				      multiple columns of inner query comparing with multiple columns of outer query
+				  iv.inline view
+				       it is special type of sub query.
+					   we can provide a select query inplace of table name in select statement is called as inline view.
+					   in this the result of subquery will act as a table for outer query.
+					   Generally we cannot use a column alias name under where  clause condition ,so that to overcome this problem we use inline view.
+					   generally subquery not allowed the order by caluse.if want to achive then we can use the inline view.
+					   Ex: select * from (Select query)
+		2.Correlated subquery.
+
+        3.scalar subquery
+               providing a select query in place of column in select statement is called scalar sub query.
+			   ex: select (select count(*) from emp) , (select max(sal) from emp)  from dual;
+				  
 	
 2nd higest salary:
 ------------------
@@ -74,6 +126,15 @@ Q) Find the details of most recent joinee from all departments?
 	select lead(hire_date) over (partition by department_id  order by hire_date ) as recent_joinee,.a.* from employee a order by recent_joiners;
 Q) Second higest salry in each department?
 	select * from (select sal,dense_rank() over (partitionby deptno order by sal desc) rnk from emp) where rnk=2;
+	
+	ORACLE:
+	-------
+	Select * from (Select * from EMP order by sal desc) where rownum <= 5
+	MINUS 
+	Select * from (select * from EMP order by sal desc) where rownum <= 4;
+	
+  with correlated subquery approach:
+   Select * from emp  E1 where 2=(select count(Distinct sal from Emp  E2 where E2.sal> E1.sal);
 
 Analytic Functions:
 -------------------
@@ -182,14 +243,14 @@ Q)Identify the employees below avg sal and above avg sal of their dept (new col,
 Q) what are pseudo columns ?
 	1.these  columns behave like a table column,but is not actual stored in table.
 	2.on psuedo columns only select queries can be permited,but not INSERT ,UPDATE,DELETE
-	3.Ex: CURVAL,NEXTVAl,lEVEL,ROWID,ROWNUM
+	3.Ex: CURVAL,NEXTVAl,LEVEL,ROWID,ROWNUM
 Q)What are Indexes ?
 	1.index is schema object ,which pointer locates the physical address.
 	2.this is used by oracle server to speed up the retrival,manupulate rows.
 	3.index can be create explicity/automatially.
 	4.index is activated when index column is used in where condition.
 	5.index is necessary of disk i/o by using an indexed path to locate data quckyly.
-	6.when table drop ,corresonding indexes also dropped.
+	6.when table drop ,corresponding indexes also dropped.
 	Automatic Index : creates automatially when you define PRIMARY/UNIQUE constrint in a table definition.
 	Manual index: user can create non unique indexes or columns to speed up the acess rows  eg: create index indexname;
 	CREATE UNIQUE INDEX college_index ON Colleges(college_code);
@@ -207,6 +268,22 @@ Q) select duplicate records from table?
   
   3rd approach : CREATE TABLE TempTable SELECT DISTINCT id, day, month, year FROM dates;
 	
+   WITH cte AS (
+    SELECT 
+        *,
+        ROW_NUMBER() OVER (PARTITION BY column1, column2, column3 ORDER BY some_column) AS rn
+    FROM your_table
+   )
+    DELETE FROM your_table
+   WHERE id IN (
+    SELECT id
+    FROM cte
+    WHERE rn > 1
+);
+
+Q) duplicate the  duplicate rows from table?
+  Delete from table where rowid not in (select  max(rowid) from Test group by sno);
+	
 Q) difference between rowid and rownum ?
 	Rowid 															ROWNUM
   1.rowid is a permanent unique identifier for that row       1.the rownum is temporary
@@ -217,8 +294,8 @@ Q) difference between rowid and rownum ?
 Q)Difference between procedure and functions?
 			Prodecure											function
            -------------   	 						 -----------------------------
-	1)procedure may/may not return value         	 1)function must return value     
-	2)procedure call is plsql stmt itself     	  	 2)function call is part of an expression
+	1)procedure may/may not return value.         	 1)function must return value.     
+	2)procedure call is plsql stmt itself.     	  	 2)function call is part of an expression
 	3)procedure will do action                     	 3)fuction will do the calculations.
 	4)procedue cannot not use with select stmt    	 4)function can use with select stmt.
 	
@@ -278,16 +355,19 @@ Q)Datbase vs Schema ?
 	Schema is nothing user.
 Q)Normalization and De-Normalization 
 Q)ACID properties?
+     TO maintain accurate & consistancy of data.
+
   Transaction:The transaction is a set of operations. The set of the read/write operation on the 
                 database is called the database transaction.
-  ATOMICITY:   it means ALL or NOTHING , no partial trasactions should happen.
+  ATOMICITY:   it means ALL or NOTHING , no partial trasactions should success.
   CONSISTENCY:  Every attribute in the database has some rules to ensure the stability of the database. 
                 The constraint puts on the data value should be constant before and after the execution of the transaction.
   ISOLATION: If you are performing multiple transactions on the single database, operation from any transaction should not interfere
                with  operation in other transactions. the execution of all transactions should be isolated from other transactions.
   DURABILITY:Sometimes it may happen as all the operation in the transaction completed but the system fails immediately.
-			  In that case, changes made while transactions should persist.
-    
+			          In that case, changes made while transactions should persist.
+ 
+ 
 Q)Triggers ?
   A trigger is defined to activate when a statement inserts, updates, or deletes rows in the associated table. These row operations are trigger events. For example, rows can be inserted by INSERT or LOAD DATA statements, and an insert trigger activates for each inserted row.
  
@@ -391,4 +471,20 @@ ROLLUP and CUBE:
   
   SELECT DEPTNO,COUNT(*) FROM EMP GROUP BY ROLLUP(DEPTNO);
   
-  
+ 
+CTE(Common table Expressions):
+-------------------------------
+A CTE is named subquery defined in With  clause.
+we think og the CTE as a templarary table.the result of query expression is effectively a table.
+We can define CTE once in the query once  can be used at multiple places within the query if needed.
+CTEs can we used in joins as well.
+We can use CTE in all DML Statements along with select statements
+Syntax:
+With cte1 as (...)
+cte2  as (...)
+cte2 as (...)
+Select * from cte1 join cte2;
+
+
+fetch only even/odd rows from table?
+ Select * from (Select RowNum r , Emp.* from EMP ) where MOD(r,2)=0;

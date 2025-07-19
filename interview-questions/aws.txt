@@ -12,8 +12,21 @@ Q)The Difference Between IaaS, Paas, and SaaS ?
 	SaaS:
 		This is a tank service. Why? It provides literally every type of service. From infrastructure to the platform to, 
 		operate it has got you covered. All you need to do is provide the data and relax. Cool isn’t it?
-	
 
+Q)what is aws global infrastructure?
+    Region, avialability zone,datacenters:
+	Edge location:
+    
+	Data center: a data center refers to a physical facility where Amazon Web Services' infrastructure is housed. 
+	Availability zone:  one or more Data centers.
+	Regions : One or more Avaibility zones.
+	
+Q) what is Content Delivery Network (CDN)?
+  Amazon CloudFront is the most common service that uses edge locations. 
+  CloudFront caches content at edge locations so that when a user requests content (like a web page, video, or image), it can be served from a nearby location instead of the origin
+    server (which could be far away).
+   This reduces latency, improves load times, and enhances the overall performance of websites or applications.
+ 
 Q)What is auto-scaling?
         Auto-scaling is a function that allows you to provision and launch new instances whenever there is a demand.
 		It allows you to automatically increase or decrease resource capacity in relation to the demand.	
@@ -46,12 +59,6 @@ Q)Name some of the AWS services that are not region-specific
 		Route 53
 		Web Application Firewall 
 		CloudFront
-Q) What is S3 in AWS ?
-	Amazon Simple Storage Service (Amazon S3) is an object storage service that offers industry-leading scalability, data availability, security, and performance.
-	This means customers of all sizes and industries can use it to store and protect any amount of data for a range of use cases, such as data lakes, websites, mobile applications,
-	backup and restore, archive, enterprise applications, IoT devices, and big data analytics. Amazon S3 provides easy-to-use management features so you can organize your data and
-	configure finely-tuned access controls to meet your specific business, organizational, and compliance requirements. Amazon S3 is designed for 99.999999999% (11 9's) of durability,
-	and stores data for millions of applications for companies all around the world
 
 Q) What is EMR in AWS ?
 	Amazon EMR is the industry-leading cloud big data platform for processing vast amounts of data using open source tools such as Apache Spark,
@@ -63,19 +70,148 @@ Q)What is the difference between stopping and terminating an EC2 instance?
 	When you stop an EC2 instance, it performs a normal shutdown on the instance and moves to a stopped state.
 	However, when you terminate the instance, it is transferred to a stopped state, and the EBS volumes attached to
 	it are deleted and can never be recovered.
+
+Q)what are steps to create EC2 instance?
+	1.OS/AMI 
+	2.instance type
+	3.choose Key pair 
+	4.choose networking (VPC/subnet/ENI/SECURITY Group)
+	5.Storage
+	6.Advanced details(user data/Active directory(domain registry)/IAM role)
 	
+
+Q) what is USerData option in EC2 instace creation?
+    To run boot strap script.once instance is created these scripts run automatically.
+	once EC2 is ready to to install some service package and  start any server(ex httpd/tomcat).
+	
+
+Q)What is AMI(Amazon mechine image): 
+    AMI is regional based, means we have to select particuar region .     
+	 Which mananges the Undelaying OS and required packages for our requirement. Aws provide amazon linux,ubuntu,redhat,macos,suse,debian.........
+                                      Aws provides many predefined AMIS which can include softwares like java,tomcat,sql,server,git,docker.....
+									   Based on requirement we can create custom AMI also.
+		The three types of EC2 instances are:
+Q) Types of AMIS 
+        1.Market place AMIS : required market demanding softwares included
+		2.community AMIS :  ubuntu,redhat,windows....
+		3.Quick Start AMIs: Aws suggested  free tire AMIS by default like AMazon linux,Ubtuntu,Windows.
+		4.Custom AMIS/GOlden AMI: Our custom create AMIs.
+		
+Q)What is Diff between AMI/Snapshot?
+   	AMI is EC2 instace backup which include OS and attached volumes also.
+	SnapShot: just Backup of one single volumes , ex SDA,SDB
 	
 Q) What are the different types of EC2 instances based on their costs?
-		The three types of EC2 instances are:
+        Ec2 IAAS as platform, it provides servers pay as you go model.
+				
+		On-demand Instance:  when we want create/termiante the instace anytime , willpay what we used, It is cheap for a short time but not when taken for the long term.
+		Spot Instance:  	its used for testing purpose/batch jobs. aws provide bidding option for these types instance,if we bid more price it will available for us.
+                            if some other purpose bid for more we loose the instance in middle of work.
+							It is less expensive than the on-demand instance and can be bought through bidding. 
+		Reserved Instance: 	If you are planning to use an instance for a year or more, then this is the right one for you.in this we should know System usage, in this type  we will get upto 70% discount.
+		                    we have 1 yr/3yr plan,(we have to pay for these type in upfront)
+							We will reserve the instance for 1yr/3yr.
+		Dedicated Host: some softwares does not support shared infra,in this case we have go for dedicated infra servers.aws provided dedicated host which canoot share with any other users.
+		                Cost is high.
 
-		On-demand Instance :It is cheap for a short time but not when taken for the long term
-		Spot Instance :	It is less expensive than the on-demand instance and can be bought through bidding. 
-		Reserved Instance :	If you are planning to use an instance for a year or more, then this is the right one for you.
-		
+Q)AWS EC2 instance Family types?
+      General Purpose :  t type famity 
+	  Memory optimized:  R type
+	  Compute optimized: C
+	  Graming/Scientific Usage: G Series (GPU- Graphics Processing Unit)
+Q)Aws is Key pair?
+  a key pair is a set of security credentials used to securely connect to your EC2 instances .
+  A key pair consists of two parts:
+
+Public Key: AWS stores this on the server.
+Private Key: You download and store this key securely on your local machine. You use the private key to authenticate and establish a secure connection to your EC2 instance.
+  it is encrypted format of password of Ec2  instance user.
+  it contains 256 character.
+  We can create custom key pair other than Ec2 provided
+  ssh-keygen -t rsa -b 2048 -f ~/my-key-pair
+  
+Q) what is golden AMI?
+    in prod env we use golden AMI.it is same as custom AMI.
+	
+Q)AWS global services/Non-regional servieces.
+   1.S3,Route53,IAM,CloudFront,CLoudTrail,cognito...
+   2.EC2,RDS,VPC,Lambda,cloudWatch,Elastic Bean stack, Elastic cache, light sale.
+Q) What is VPC?
+    to segregate our server as seperate public and private like webserver,database servers.
+	private ip: 172.168...
+	            192.168....
+				10.0...
+				
+	public : other than private
+Q)What is loop back ip?
+  127.0.0.1	
+  
+  
+Q) What is S3 in AWS ?
+	Amazon Simple Storage Service (Amazon S3) is an object storage service that offers industry-leading scalability, data availability, security, and performance.
+	This means customers of all sizes and industries can use it to store and protect any amount of data for a range of use cases, such as data lakes, websites, mobile applications,
+	backup and restore, archive, enterprise applications, IoT devices, and big data analytics. Amazon S3 provides easy-to-use management features so you can organize your data and
+	configure finely-tuned access controls to meet your specific business, organizational, and compliance requirements. Amazon S3 is designed for 99.999999999% (11 9's) of durability,
+	and stores data for millions of applications for companies all around the world.
+Q) S3 bucket creation steps?
+   1.Name : should be unique in world
+   2.ACL : permisions of bucket
+   3.Object Ownership : owner of bucket
+   4.Block all public access: disable/enable public access of bucket.
+   5.Object Lock: Enable for only read access
+ 
+Q S3 Object Request pays?
+    Who are accessing the s3 object need to pay  to download/access.
+	
+Q)S3 Storage classes?
+
+   Intelligent-Tiering: Automatic cost savings for data with unknown or changing access patterns.
+  Standard( Frequence Access):  Regualr access 
+ Standard IA  (In prequent access):   ralely once
+    glacier( Archive) : it will achive the data, so size reduced, low charge for storage. Retrival time in 15 minutues 
+   glacier Deep Archive: it will  deep achive the deep dataso size reduced, Retrival time upto  12 hours, cheap storage
+
+Q)S3 bucket lifecycle?
+        bucket lifecycle tells after how many days files in the bucket move to correcpoding Object class.
+Q)What is Bucket policy?  
+  to grant persmisiions for aws service/users.
+  
+Q)What is cross region replication?
+     You can use replication to enable automatic, asynchronous copying of objects across Amazon S3 buckets. Buckets that are configured for object replication 
+	 can be owned by the same AWS account or by different accounts. You can replicate objects to a single destination bucket or to multiple destination buckets.
+	 The destination buckets can be in different AWS Regions or within the same Region as the source bucket.
+
+Q) S3 is Regional or global?
+   S3 is global service but bucket is reginal service.
+
+Q) AWS S3 Versions? 
+     
+Q)what is AWS RDS(Relation Database Service)?
+  it is PAAS, we dont have OS level  controll.  
+  it supports many databases like aurora mysql or postgress, MYSQL,postgress ,mariadb,oracle,SQLserver,IBM DB2.
+  it support multi AZ DB instance means its create in multiple avaiable zone but we can see only one mysql at a time, in case dizaster then it create in another zone.its a optional feature.
+  
+Q) what is parameter group in RDS ? 
+   a parameter group is a collection of settings that control the behavior and configuration of a DB instance. These settings can include things like memory allocation, database-specific options, and other system parameters that influence the performance and behavior of your database.
+   Examples of Parameters:
+	max_connections: Defines the maximum number of concurrent connections to the database.
+	innodb_buffer_pool_size (for MySQL): Specifies the amount of memory allocated to the InnoDB buffer pool.
+	shared_buffers (for PostgreSQL): Sets the amount of memory PostgreSQL uses for shared memory buffers.
+	autocommit: Controls whether SQL statements are automatically committed.
+  
+ Q) What is read replica  vs   Snapshot in RDS?
+      Snapshot: its backup of database.
+	  Read Replica: For read purpose we can seperate RDs server for same db.
+	  Writer Replica : it is replica for write operation 
+	  These are used for improve the performance of RDS.
+	  
+Q) What is server less in RDS?
+    yes avaiavble in Aurora.
+  
 Q) Aws Lambda ?
-    it is a serverless computing services provided by amazon to reduce the configuration of server,OD.
+    it is a serverless computing services provided by amazon to reduce the configuration of server.
 	this let you run code without provisioning or managing server.it scales automatically and only charge for the time your code is running.
-	 
+    throtting in lambda:	 
     advantages:
 	   1.Zero Server management.
 	   2.Flexible Scaling  
